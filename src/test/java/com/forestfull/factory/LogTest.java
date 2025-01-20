@@ -10,5 +10,8 @@ class LogTest {
     @Test
     void test() throws IOException {
         Log.getInstance().warn("아 재밋당", "sfasd", 12).error("error???");
+
+        KorLoggerStarter.builder()
+                .build();
     }
 }
