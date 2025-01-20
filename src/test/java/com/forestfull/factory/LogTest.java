@@ -9,7 +9,6 @@ class LogTest {
 
     @Test
     void test() throws IOException {
-        Log log = Log.getInstance();
-        log.trace("Hello World").debug("Hello World").info("Hello World").warn("Hello World").error("Hello World").fatal("Hello World").next();
+        Log.getInstance().warn("아 재밋당", "sfasd", 12).error("error???");
     }
 }

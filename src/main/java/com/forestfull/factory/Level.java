@@ -1,5 +1,5 @@
 package com.forestfull.factory;
 
-enum Level {
+public enum Level {
     TRACE, DEBUG, INFO, WARN, ERROR, FATAL;
 }

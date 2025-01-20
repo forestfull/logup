@@ -11,8 +11,8 @@ public class Log {
 
 
     private final static String CHARSET_UTF_8 = "UTF-8";
-    private static Log instance = null;
     private static LogFactory logFactory = null;
+    private static Log instance = null;
 
     private final static String newLine = System.getProperty("line.separator");
 
@@ -20,83 +20,46 @@ public class Log {
     }
 
     public static Log getInstance() {
-        if (instance == null) {
-            instance = new Log();
-            logFactory = new LogFactory();
-        }
+        if (instance == null) instance = new Log();
+        if (logFactory == null) logFactory = new LogFactory();
 
         return instance;
     }
 
+    public Log trace(Object... messages) {
+        return instance.write(messages).next();
+    }
+
+    public Log debug(Object... messages) {
+        return instance.write(messages).next();
+    }
+
+    public Log info(Object... messages) {
+        return instance.write(messages).next();
+    }
+
+    public Log warn(Object... messages) {
+        return instance.write(messages).next();
+    }
+
+    public Log error(Object... messages) {
+        return instance.write(messages).next();
+    }
+
+    public Log fatal(Object... messages) {
+        return instance.write(messages).next();
+    }
+
     public Log next() {
-        try {
-            logFactory.console(Log.newLine);
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
-
-        return this;
+        return instance.write(Log.newLine);
     }
 
-    public Log trace(String msg) {
+    private Log write(Object... messages) {
+        if (messages == null || messages.length == 0) return this;
+
         try {
-            logFactory.console(msg);
-            next();
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
+            for (Object message : messages) logFactory.console(String.valueOf(message));
 
-        return this;
-    }
-
-    public Log debug(String msg) {
-        try {
-            logFactory.console(msg);
-            next();
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
-
-        return this;
-    }
-
-    public Log info(String msg) {
-        try {
-            logFactory.console(msg);
-            next();
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
-
-        return this;
-    }
-
-    public Log warn(String msg) {
-        try {
-            logFactory.console(msg);
-            next();
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
-
-        return this;
-    }
-
-    public Log error(String msg) {
-        try {
-            logFactory.console(msg);
-            next();
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
-
-        return this;
-    }
-
-    public Log fatal(String msg) {
-        try {
-            logFactory.console(msg);
-            next();
         } catch (IOException e) {
             e.printStackTrace(System.err);
         }
