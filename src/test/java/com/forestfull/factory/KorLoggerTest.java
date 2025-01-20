@@ -11,6 +11,7 @@ class KorLoggerTest {
 
     @Test
     void test() throws IOException {
-        KorLogger korLogger = new KorLogger();
+        KorLogger log = KorLogger.getInstance();
+        log.test("Hello World").next();
     }
 }
