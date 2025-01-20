@@ -1,7 +1,5 @@
 package com.forestfull.factory.configuration;
 
-import com.forestfull.factory.Level;
-
 import java.lang.annotation.*;
 
 
@@ -11,7 +9,5 @@ import java.lang.annotation.*;
 public @interface Observer {
 
     String pattern() default "";
-
-    Level level();
 
 }
