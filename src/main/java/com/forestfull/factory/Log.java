@@ -58,7 +58,11 @@ public class Log {
         if (messages == null || messages.length == 0) return this;
 
         try {
-            for (Object message : messages) logFactory.console(String.valueOf(message));
+            final StringBuilder msgBuilder = new StringBuilder();
+            for (Object message : messages)
+                msgBuilder.append(message);
+
+            logFactory.console(msgBuilder.toString());
 
         } catch (IOException e) {
             e.printStackTrace(System.err);
