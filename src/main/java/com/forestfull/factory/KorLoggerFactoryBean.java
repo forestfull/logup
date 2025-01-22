@@ -44,23 +44,23 @@ public class KorLoggerFactoryBean {
         private Level level;
     }
 
-    public static KorLoggerStarterBuilder builder() {
-        return new KorLoggerStarterBuilder();
+    public static KorLoggerFactoryBeanBuilder builder() {
+        return new KorLoggerFactoryBeanBuilder();
     }
 
-    public static class KorLoggerStarterBuilder {
+    public static class KorLoggerFactoryBeanBuilder {
         private Formatter formatter;
         private String logFileDirectory;
 
-        KorLoggerStarterBuilder() {
+        KorLoggerFactoryBeanBuilder() {
         }
 
-        public KorLoggerStarterBuilder formatter(Formatter formatter) {
+        public KorLoggerFactoryBeanBuilder formatter(Formatter formatter) {
             this.formatter = formatter;
             return this;
         }
 
-        public KorLoggerStarterBuilder logFileDirectory(String logFileDirectory) {
+        public KorLoggerFactoryBeanBuilder logFileDirectory(String logFileDirectory) {
             this.logFileDirectory = logFileDirectory;
             return this;
         }
