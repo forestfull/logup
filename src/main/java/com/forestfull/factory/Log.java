@@ -9,7 +9,6 @@ import java.nio.charset.Charset;
 
 public class Log {
 
-
     private final static String CHARSET_UTF_8 = "UTF-8";
     private static LogFactory logFactory = null;
     private static Log instance = null;
@@ -25,31 +24,44 @@ public class Log {
         if (Log.instance == null) Log.instance = new Log();
         if (Log.logFactory == null) Log.logFactory = new LogFactory();
         if (Log.factoryBean == null) Log.factoryBean = new KorLoggerFactoryBean();
+        // 어노테이션 스타일도 고려필요
 
         return instance;
     }
 
     public Log trace(Object... messages) {
+        if (Level.TRACE.compareTo(factoryBean.getFormatter().getLevel()) < 0) return this;
+
         return instance.write(messages).next();
     }
 
     public Log debug(Object... messages) {
+        if (Level.DEBUG.compareTo(factoryBean.getFormatter().getLevel()) < 0) return this;
+
         return instance.write(messages).next();
     }
 
     public Log info(Object... messages) {
+        if (Level.INFO.compareTo(factoryBean.getFormatter().getLevel()) < 0) return this;
+
         return instance.write(messages).next();
     }
 
     public Log warn(Object... messages) {
+        if (Level.WARN.compareTo(factoryBean.getFormatter().getLevel()) < 0) return this;
+
         return instance.write(messages).next();
     }
 
     public Log error(Object... messages) {
+        if (Level.ERROR.compareTo(factoryBean.getFormatter().getLevel()) < 0) return this;
+
         return instance.write(messages).next();
     }
 
     public Log fatal(Object... messages) {
+        if (Level.FATAL.compareTo(factoryBean.getFormatter().getLevel()) < 0) return this;
+
         return instance.write(messages).next();
     }
 
@@ -75,7 +87,6 @@ public class Log {
     }
 
     private static class LogFactory {
-
         private void console(String msg) throws IOException {
             if (msg == null) return;
 

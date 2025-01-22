@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
  *      <h3>{@link Formatter}</h3>
  *      <p>placeHolder - "{datetime}{thread}:{level} - {msg}{new-line}"</p>
  *      <p>datetime - new {@link SimpleDateFormat}("yyyy-MM-dd HH:mm:ss")</p>
- *      <p>{@link Level} - {@link Level}.INFO</p>
+ *      <p>{@link Level} - {@link Level}.TRACE</p>
  * </div>
  * @version JDK 1.6
  * @author Hyeonseok Ko
@@ -32,11 +32,12 @@ public class KorLoggerFactoryBean {
     private Formatter formatter = Formatter.builder()
             .placeHolder("{datetime}{thread}:{level} - {msg}{new-line}")
             .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-            .level(Level.INFO)
+            .level(Level.TRACE)
             .build();
 
     private String logFileDirectory = "classpath:logs/";
 
+    @Getter
     @Builder
     public static class Formatter {
         private String placeHolder;
