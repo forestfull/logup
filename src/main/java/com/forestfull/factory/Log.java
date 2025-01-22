@@ -98,6 +98,8 @@ public class Log {
         if (messages == null || messages.length == 0)
             return;
 
+        final String currentThreadName = Thread.currentThread().getName();
+
         KorLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
             @Override
             public void run() {
@@ -111,7 +113,7 @@ public class Log {
                 final String logMessage = formatter
                         .getPlaceHolder()
                         .replace(Pattern.DATETIME, now)
-                        .replace(Pattern.THREAD, Thread.currentThread().getName())
+                        .replace(Pattern.THREAD, currentThreadName)
                         .replace(Pattern.LEVEL, level.name())
                         .replace(Pattern.MESSAGE, msgBuilder.toString())
                         .replace(Pattern.NEW_LINE, Log.newLine);
