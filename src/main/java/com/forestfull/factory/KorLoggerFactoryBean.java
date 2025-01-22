@@ -5,7 +5,10 @@ import lombok.*;
 import java.text.SimpleDateFormat;
 
 /**
- * korLogger's Configuration for spring project
+ * korLogger's general Configuration (korLogger 전역 환경 설정)
+ * <p><b>This class's instance must be initialized only once</b>
+ * <br>(이 클래스의 인스턴스는 한 번만 초기화하여야 합니다.)</p>
+ *
  * @default-value
  * <div>
  *      <h3>log file path</h3>
