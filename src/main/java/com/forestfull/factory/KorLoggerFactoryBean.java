@@ -4,10 +4,10 @@ import lombok.*;
 
 import java.text.SimpleDateFormat;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class KorLoggerStarter {
+public class KorLoggerFactoryBean {
 
     private Formatter formatter = Formatter.builder()
             .placeHolder("{datetime}{thread}:{level} - {msg}{new-line}")
@@ -47,8 +47,7 @@ public class KorLoggerStarter {
 
         public Log build() {
             /*TODO 여기다가 이니셜라이징*/
-            KorLoggerStarter starter = new KorLoggerStarter(this.formatter, this.logFileDirectory);
-
+            Log.factoryBean = new KorLoggerFactoryBean(this.formatter, this.logFileDirectory);
             return Log.getInstance();
         }
     }

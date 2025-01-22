@@ -14,14 +14,17 @@ public class Log {
     private static LogFactory logFactory = null;
     private static Log instance = null;
 
+    protected static KorLoggerFactoryBean factoryBean = null;
+
     private final static String newLine = System.getProperty("line.separator");
 
     private Log() {
     }
 
     public static Log getInstance() {
-        if (instance == null) instance = new Log();
-        if (logFactory == null) logFactory = new LogFactory();
+        if (Log.instance == null) Log.instance = new Log();
+        if (Log.logFactory == null) Log.logFactory = new LogFactory();
+        if (Log.factoryBean == null) Log.factoryBean = new KorLoggerFactoryBean();
 
         return instance;
     }
