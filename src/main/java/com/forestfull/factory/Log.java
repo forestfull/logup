@@ -98,23 +98,28 @@ public class Log {
         if (messages == null || messages.length == 0)
             return;
 
-        KorLoggerFactoryBean.Formatter formatter = factoryBean.getFormatter();
-        final String now = formatter.getDatetime().format(new Date());
-        final StringBuilder msgBuilder = new StringBuilder();
+        KorLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                KorLoggerFactoryBean.Formatter formatter = factoryBean.getFormatter();
+                final String now = formatter.getDatetime().format(new Date());
+                final StringBuilder msgBuilder = new StringBuilder();
 
-        for (Object message : messages)
-            msgBuilder.append(message);
+                for (Object message : messages)
+                    msgBuilder.append(message);
 
-        final String logMessage = formatter
-                .getPlaceHolder()
-                .replace(Pattern.DATETIME, now)
-                .replace(Pattern.THREAD, Thread.currentThread().getName())
-                .replace(Pattern.LEVEL, level.name())
-                .replace(Pattern.MESSAGE, msgBuilder.toString())
-                .replace(Pattern.NEW_LINE, Log.newLine);
+                final String logMessage = formatter
+                        .getPlaceHolder()
+                        .replace(Pattern.DATETIME, now)
+                        .replace(Pattern.THREAD, Thread.currentThread().getName())
+                        .replace(Pattern.LEVEL, level.name())
+                        .replace(Pattern.MESSAGE, msgBuilder.toString())
+                        .replace(Pattern.NEW_LINE, Log.newLine);
 
-        logFactory.console(logMessage);
-        logFactory.file(logMessage);
+                logFactory.console(logMessage);
+                logFactory.file(logMessage);
+            }
+        });
     }
 
     private static class LogFactory {

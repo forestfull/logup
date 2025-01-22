@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  * <hr>
  * <div>
  *      <h3>{@link Formatter}</h3>
- *      <p>placeHolder({@link com.forestfull.factory.Log.Pattern}) - "{datetime} [{thread}]:{level} - {msg}{new-line}"</p>
+ *      <p>placeHolder({@link com.forestfull.factory.Log.Pattern}) - "{datetime} [{thread}:{level}] - {msg}{new-line}"</p>
  *      <p>datetime - new {@link SimpleDateFormat}("yyyy-MM-dd HH:mm:ss")</p>
  *      <p>{@link Level} - {@link Level}.TRACE</p>
  * </div>
@@ -34,7 +34,7 @@ public class KorLoggerFactoryBean {
     protected final static ExecutorService logConsoleExecutor = Executors.newSingleThreadExecutor();
 
     private Formatter formatter = Formatter.builder()
-            .placeHolder("{datetime} [{thread}]:{level} - {msg}{new-line}")
+            .placeHolder("{datetime} [{thread}:{level}] - {msg}{new-line}")
             .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
             .level(Level.TRACE)
             .build();
