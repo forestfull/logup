@@ -14,7 +14,7 @@ class LogTest {
         StringBuilder test2 = new StringBuilder();
         extracted(test2);
         StringBuilder test3 = new StringBuilder();
-        extracted(test2);
+        extracted(test3);
 
 
         Log.getInstance()

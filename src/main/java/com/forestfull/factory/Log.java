@@ -30,12 +30,12 @@ public class Log {
     }
 
     public static Log getInstance() {
-        if (Log.instance == null) Log.instance = new Log();
+        if (Log.instance == null)
+            Log.instance = new Log();
         if (Log.logFactory == null)
             Log.logFactory = new LogFactory();
         if (Log.factoryBean == null)
             Log.factoryBean = new KorLoggerFactoryBean();
-        // 어노테이션 스타일도 고려필요
 
         return instance;
     }
