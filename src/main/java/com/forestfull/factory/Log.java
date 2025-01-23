@@ -99,7 +99,6 @@ public class Log {
             return;
 
         final String currentThreadName = Thread.currentThread().getName();
-
         KorLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
             @Override
             public void run() {
@@ -125,7 +124,7 @@ public class Log {
     }
 
     private static class LogFactory {
-        private void console(final String msg) {
+        private synchronized void console(final String msg) {
             final byte[] msgStream = msg.getBytes(Charset.forName(CHARSET_UTF_8));
             final FileOutputStream fdOut = new FileOutputStream(FileDescriptor.out);
 
@@ -144,7 +143,7 @@ public class Log {
         }
 
         /* TODO: 파일 쓰기 */
-        private void file(String msg) {
+        private synchronized void file(String msg) {
 
         }
     }

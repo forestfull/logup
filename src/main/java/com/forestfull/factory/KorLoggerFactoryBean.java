@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 @AllArgsConstructor
 public class KorLoggerFactoryBean {
 
-    protected final static ExecutorService logConsoleExecutor = Executors.newSingleThreadExecutor();
+    protected final static ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
 
     private Formatter formatter = Formatter.builder()
             .placeHolder("{datetime} [{thread}:{level}] - {msg}{new-line}")
