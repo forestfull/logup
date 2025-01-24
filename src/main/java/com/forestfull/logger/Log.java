@@ -140,7 +140,7 @@ public class Log {
             @Override
             public void run() {
                 KorLoggerFactoryBean.Formatter formatter = factoryBean.getFormatter();
-                final String now = formatter.getDatetime().format(new Date());
+                final String now = formatter.getDatetime() != null ? formatter.getDatetime().format(new Date()) : "";
                 final StringBuilder msgBuilder = new StringBuilder();
 
                 for (Object message : messages)

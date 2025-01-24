@@ -49,14 +49,14 @@ public class KorLoggerFactoryBean {
 
     @Getter
     @Builder
-    protected static class FileRecorder {
+    public static class FileRecorder {
         private String nameFormat;
         private String logFileDirectory;
     }
 
     @Getter
     @Builder
-    protected static class Formatter {
+    public static class Formatter {
         private String placeHolder;
         private SimpleDateFormat datetime;
         private Level level;
