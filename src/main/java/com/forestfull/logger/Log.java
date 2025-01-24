@@ -61,7 +61,7 @@ public class Log {
         return getInstanceAndWrite(Level.FINE, msg);
     }
 
-    public static Log config(String msg) {
+    public static Log conf(String msg) {
         return getInstanceAndWrite(Level.CONFIG, msg);
     }
 
@@ -78,7 +78,7 @@ public class Log {
         return this;
     }
 
-    public Log andConfig(String msg) {
+    public Log andConf(String msg) {
         write(Level.CONFIG, msg);
         return this;
     }
@@ -119,7 +119,7 @@ public class Log {
                         .getPlaceHolder()
                         .replace(Pattern.DATETIME, now)
                         .replace(Pattern.THREAD, currentThreadName)
-                        .replace(Pattern.LEVEL, level.getName())
+                        .replace(Pattern.LEVEL, level.getName().substring(0, 4))
                         .replace(Pattern.MESSAGE, msgBuilder.toString())
                         .replace(Pattern.NEW_LINE, Log.newLine);
 

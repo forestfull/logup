@@ -13,7 +13,7 @@ class LogTest {
 
 
         Log.fine("Hello World")
-                .andConfig(")write(")
+                .andConf(")write(")
                 .andInfo("this Info")
                 .andWarn("this High Level")
         ;
