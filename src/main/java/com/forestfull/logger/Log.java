@@ -34,7 +34,9 @@ public class Log {
     }
 
     public static class FilePattern {
-        public final static String DEFAULT = FilePattern.DATE + ".log";
+        private final static String[] filePath = System.getProperty("user.dir").split(System.lineSeparator().equals("\r\n") ? File.separator + File.separator : File.separator);
+        public final static String PROJECT_NAME = filePath[filePath.length - 1];
+        public final static String DEFAULT = PROJECT_NAME + ".log";
         public final static String DATE = "{date}";
     }
 
