@@ -5,7 +5,9 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.logging.Level;
 
 
 public class Log {
@@ -40,63 +42,19 @@ public class Log {
         return instance;
     }
 
-    public Log trace(final Object... messages) {
-        if (Level.TRACE.compareTo(factoryBean.getFormatter().getLevel()) < 0)
-            return this;
-
-        instance.write(Level.TRACE, messages);
-        return this;
-    }
-
-    public Log debug(final Object... messages) {
-        if (Level.DEBUG.compareTo(factoryBean.getFormatter().getLevel()) < 0)
-            return this;
-
-        instance.write(Level.DEBUG, messages);
-        return this;
-    }
-
-    public Log info(final Object... messages) {
-        if (Level.INFO.compareTo(factoryBean.getFormatter().getLevel()) < 0)
-            return this;
-
-        instance.write(Level.INFO, messages);
-        return this;
-    }
-
-    public Log warn(final Object... messages) {
-        if (Level.WARN.compareTo(factoryBean.getFormatter().getLevel()) < 0)
-            return this;
-
-        instance.write(Level.WARN, messages);
-        return this;
-    }
-
-    public Log error(final Object... messages) {
-        if (Level.ERROR.compareTo(factoryBean.getFormatter().getLevel()) < 0)
-            return this;
-
-        instance.write(Level.ERROR, messages);
-        return this;
-    }
-
-    public Log fatal(final Object... messages) {
-        if (Level.FATAL.compareTo(factoryBean.getFormatter().getLevel()) < 0)
-            return this;
-
-        instance.write(Level.FATAL, messages);
-        return this;
-    }
-
     public Log next() {
         logFactory.console(Log.newLine);
         logFactory.file(Log.newLine);
         return this;
     }
 
-    private void write(final Level level, final Object... messages) {
-        if (messages == null || messages.length == 0)
-            return;
+
+
+    public Log write(final Level level, final Object... messages) {
+        if (messages == null || messages.length == 0) return this;
+
+        Level configLevel = Log.factoryBean.getFormatter().getLevel();
+        if (configLevel.intValue() > level.intValue()) return this;
 
         final String currentThreadName = Thread.currentThread().getName();
         KorLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
@@ -113,7 +71,7 @@ public class Log {
                         .getPlaceHolder()
                         .replace(Pattern.DATETIME, now)
                         .replace(Pattern.THREAD, currentThreadName)
-                        .replace(Pattern.LEVEL, level.name())
+                        .replace(Pattern.LEVEL, level.getName())
                         .replace(Pattern.MESSAGE, msgBuilder.toString())
                         .replace(Pattern.NEW_LINE, Log.newLine);
 
@@ -121,6 +79,8 @@ public class Log {
                 logFactory.file(logMessage);
             }
         });
+
+        return this;
     }
 
     private static class LogFactory {

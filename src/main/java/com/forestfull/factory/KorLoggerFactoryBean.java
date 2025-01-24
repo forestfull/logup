@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 
 /**
  * korLogger's general Configuration (korLogger 전역 환경 설정)
@@ -23,8 +24,20 @@ import java.util.concurrent.Executors;
  *      <h3>{@link Formatter}</h3>
  *      <p>placeHolder({@link com.forestfull.factory.Log.Pattern}) - "{datetime} [{thread}:{level}] - {msg}{new-line}"</p>
  *      <p>datetime - new {@link SimpleDateFormat}("yyyy-MM-dd HH:mm:ss")</p>
- *      <p>{@link Level} - {@link Level}.TRACE</p>
+ *      <p>{@link Level} - {@link Level}.ALL</p>
  * </div>
+ * <hr>
+ * <ul>
+ * <li>OFF
+ * <li>SEVERE (highest value)
+ * <li>WARNING
+ * <li>INFO
+ * <li>CONFIG
+ * <li>FINE
+ * <li>FINER
+ * <li>FINEST  (lowest value)
+ * <li>ALL
+ * </ul>
  */
 @Getter
 @Builder
@@ -35,10 +48,10 @@ public class KorLoggerFactoryBean {
     protected final static ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
 
     private Formatter formatter = Formatter.builder()
-                                           .placeHolder("{datetime} [{thread}:{level}] - {msg}{new-line}")
-                                           .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-                                           .level(Level.TRACE)
-                                           .build();
+            .placeHolder("{datetime} [{thread}:{level}] - {msg}{new-line}")
+            .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+            .level(Level.ALL)
+            .build();
 
     private FileRecorder fileRecorder = FileRecorder
             .builder().logFileDirectory("classpath:logs/")
