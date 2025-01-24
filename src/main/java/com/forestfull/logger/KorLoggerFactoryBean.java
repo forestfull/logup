@@ -38,24 +38,14 @@ import java.util.logging.Level;
  * <li><b>ALL</b>
  * </ul>
  */
+@Setter
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-class KorLoggerFactoryBean {
+public class KorLoggerFactoryBean {
 
     protected final static ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
-
-    private Formatter formatter = Formatter.builder()
-            .placeHolder("{datetime} [{thread}:{level}] - {msg}{new-line}")
-            .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-            .level(Level.ALL)
-            .build();
-
-    private FileRecorder fileRecorder = FileRecorder
-            .builder().logFileDirectory("classpath:logs/")
-            .nameFormat("")
-            .build();
+    private Formatter formatter;
+    private FileRecorder fileRecorder;
 
     @Getter
     @Builder

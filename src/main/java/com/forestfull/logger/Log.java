@@ -5,6 +5,7 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -33,11 +34,38 @@ public class Log {
     private static LogFactory logFactory = null;
     private static Log instance = null;
 
-    protected static KorLoggerFactoryBean factoryBean = null;
+    private static KorLoggerFactoryBean factoryBean = null;
 
     private final static String newLine = System.getProperty("line.separator");
 
     private Log() {
+    }
+
+    /**
+     * 직접 선언할 경우 쓰는 함수
+     */
+    public static void customConfiguration(KorLoggerFactoryBean factoryBean) {
+        optionalDefaultFactoryBean(factoryBean);
+        Log.factoryBean = factoryBean;
+
+        /*TODO: 이 때 최초 초기화 일 것으로 기대하여 어노테이션 스캔도 살짝 넣어야 함*/
+    }
+
+    private static void optionalDefaultFactoryBean(KorLoggerFactoryBean factoryBean) {
+        if (factoryBean.getFormatter() == null) {
+            factoryBean.setFormatter(KorLoggerFactoryBean.Formatter.builder()
+                    .placeHolder(Pattern.DATETIME + " [" + Pattern.THREAD + ":" + Pattern.LEVEL + "] - " + Pattern.MESSAGE + Pattern.NEW_LINE)
+                    .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+                    .level(Level.ALL)
+                    .build());
+
+        }
+        if (factoryBean.getFileRecorder() == null) {
+            factoryBean.setFileRecorder(KorLoggerFactoryBean.FileRecorder.builder()
+                    .logFileDirectory("classpath:logs/")
+                    .nameFormat("")
+                    .build());
+        }
     }
 
     public static Log getInstance() {
@@ -45,8 +73,11 @@ public class Log {
             Log.instance = new Log();
         if (Log.logFactory == null)
             Log.logFactory = new LogFactory();
-        if (Log.factoryBean == null)
-            Log.factoryBean = new KorLoggerFactoryBean();
+        if (Log.factoryBean == null) {
+            final KorLoggerFactoryBean bean = KorLoggerFactoryBean.builder().build();
+            optionalDefaultFactoryBean(bean);
+            Log.factoryBean = bean;
+        }
 
         return instance;
     }
