@@ -50,7 +50,7 @@ public class KorLoggerFactoryBean {
     @Getter
     @Builder
     public static class FileRecorder {
-        private String nameFormat;
+        private SimpleDateFormat nameFormat;
         private String logFileDirectory;
     }
 

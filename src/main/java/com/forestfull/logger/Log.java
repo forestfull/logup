@@ -63,7 +63,7 @@ public class Log {
         if (factoryBean.getFileRecorder() == null) {
             factoryBean.setFileRecorder(KorLoggerFactoryBean.FileRecorder.builder()
                     .logFileDirectory("classpath:logs/")
-                    .nameFormat("")
+                    .nameFormat(new SimpleDateFormat("yyyy_MM_dd.log"))
                     .build());
         }
     }
@@ -179,9 +179,11 @@ public class Log {
             }
         }
 
-        /* TODO: 파일 쓰기 */
+        /* TODO: 파일 쓰기  이거부터 하자*/
         private synchronized void file(String msg) {
-
+            final KorLoggerFactoryBean.FileRecorder fileRecorder = factoryBean.getFileRecorder();
+            fileRecorder.getLogFileDirectory();
+            fileRecorder.getNameFormat();
         }
     }
 }
