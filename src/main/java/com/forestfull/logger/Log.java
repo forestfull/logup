@@ -1,6 +1,7 @@
 package com.forestfull.logger;
 
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -62,8 +63,9 @@ public class Log {
         }
         if (factoryBean.getFileRecorder() == null) {
             factoryBean.setFileRecorder(KorLoggerFactoryBean.FileRecorder.builder()
-                    .logFileDirectory("classpath:logs/")
-                    .nameFormat(new SimpleDateFormat("yyyy_MM_dd.log"))
+                    .logFileDirectory("")
+                    .dateFormat(new SimpleDateFormat("yyyy_MM_dd"))
+                    .placeHolder(Pattern.DATETIME + ".log")
                     .build());
         }
     }
@@ -179,11 +181,42 @@ public class Log {
             }
         }
 
-        /* TODO: 파일 쓰기  이거부터 하자*/
         private synchronized void file(String msg) {
             final KorLoggerFactoryBean.FileRecorder fileRecorder = factoryBean.getFileRecorder();
-            fileRecorder.getLogFileDirectory();
-            fileRecorder.getNameFormat();
+
+            String logFileDirectory = fileRecorder.getLogFileDirectory();
+
+            if (logFileDirectory == null || logFileDirectory.isEmpty()) return;
+
+            if (!File.separator.equals(logFileDirectory.substring(0, 1)) && !"/".equals(logFileDirectory.substring(0, 1)))
+                logFileDirectory = System.getProperty("user.dir") + File.separator + logFileDirectory;
+
+            if (!File.separator.equals(logFileDirectory.substring(logFileDirectory.length() - 1))
+                    && !"/".equals(logFileDirectory.substring(logFileDirectory.length() - 1)))
+                logFileDirectory += File.separator;
+
+            try {
+                final File rootDirectory = new File(logFileDirectory);
+                if (!rootDirectory.exists()) {
+                    if (!rootDirectory.isDirectory()) rootDirectory.deleteOnExit();
+                    boolean isSucceed = rootDirectory.mkdirs();
+                    if (!isSucceed) throw new IOException("Failed to create log directory: " + rootDirectory);
+                }
+
+                final File logFile = new File(logFileDirectory + File.separator + fileRecorder.getPlaceHolder().replace(Pattern.DATETIME, fileRecorder.getDateFormat().format(new Date())));
+                if (!logFile.exists()) {
+                    if (!logFile.isFile()) logFile.deleteOnExit();
+                    boolean isSucceed = logFile.createNewFile();
+                    if (!isSucceed) throw new IOException("Failed to create log directory: " + rootDirectory);
+                }
+
+                final FileOutputStream outputStream = new FileOutputStream(logFile, true);
+                outputStream.write((msg.getBytes(Charset.forName(CHARSET_UTF_8))));
+                outputStream.flush();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
