@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -211,6 +212,16 @@ public class Log {
                 }
 
                 final File logFile = new File(logFileDirectory + File.separator + fileRecorder.getPlaceHolder().replace(FilePattern.DATE, ""));
+                if (logFile.isFile()) {
+                    final String currentTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date()));
+                    final String existedTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date(logFile.lastModified())));
+                    if (!currentTimeFormatName.equals(existedTimeFormatName)) {
+                        boolean isSucceed = logFile.renameTo(new File(existedTimeFormatName));
+                        if (!isSucceed) throw new IOException("Failed to rename log file: " + existedTimeFormatName);
+                        logFile.deleteOnExit();
+                    }
+                }
+
                 if (!logFile.exists()) {
                     if (!logFile.isFile()) logFile.deleteOnExit();
                     boolean isSucceed = logFile.createNewFile();
