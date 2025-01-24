@@ -57,43 +57,43 @@ public class Log {
         return this;
     }
 
-    public static Log fine(String msg) {
+    public static Log fine(Object... msg) {
         return getInstanceAndWrite(Level.FINE, msg);
     }
 
-    public static Log conf(String msg) {
+    public static Log conf(Object... msg) {
         return getInstanceAndWrite(Level.CONFIG, msg);
     }
 
-    public static Log info(String msg) {
+    public static Log info(Object... msg) {
         return getInstanceAndWrite(Level.INFO, msg);
     }
 
-    public static Log warn(String msg) {
+    public static Log warn(Object... msg) {
         return getInstanceAndWrite(Level.WARNING, msg);
     }
 
-    public Log andFine(String msg) {
+    public Log andFine(Object... msg) {
         write(Level.FINE, msg);
         return this;
     }
 
-    public Log andConf(String msg) {
+    public Log andConf(Object... msg) {
         write(Level.CONFIG, msg);
         return this;
     }
 
-    public Log andInfo(String msg) {
+    public Log andInfo(Object... msg) {
         write(Level.INFO, msg);
         return this;
     }
 
-    public Log andWarn(String msg) {
+    public Log andWarn(Object... msg) {
         write(Level.WARNING, msg);
         return this;
     }
 
-    private static Log getInstanceAndWrite(Level level, String msg) {
+    private static Log getInstanceAndWrite(Level level, Object... msg) {
         Log.getInstance().write(level, msg);
         return Log.instance;
     }
