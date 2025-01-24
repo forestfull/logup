@@ -1,4 +1,4 @@
-package com.forestfull.factory.configuration;
+package com.forestfull.config;
 
 
 import java.lang.annotation.*;

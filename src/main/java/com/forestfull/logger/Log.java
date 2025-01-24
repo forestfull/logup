@@ -1,15 +1,24 @@
-package com.forestfull.factory;
+package com.forestfull.logger;
 
 
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Level;
 
-
+/**
+ * <ul>
+ * <li><s>SEVERE</s> (deprecated)
+ * <li><b>WARNING</b> (highest value)
+ * <li><b>INFO</b>
+ * <li><b>CONFIG</b>
+ * <li><b>FINE</b> (lowest value)
+ * <li><s>FINER</s> (deprecated)
+ * <li><s>FINEST</s> (deprecated)
+ * </ul>
+ */
 public class Log {
 
     public static class Pattern {
@@ -48,13 +57,52 @@ public class Log {
         return this;
     }
 
+    public static Log fine(String msg) {
+        return getInstanceAndWrite(Level.FINE, msg);
+    }
 
+    public static Log config(String msg) {
+        return getInstanceAndWrite(Level.CONFIG, msg);
+    }
 
-    public Log write(final Level level, final Object... messages) {
-        if (messages == null || messages.length == 0) return this;
+    public static Log info(String msg) {
+        return getInstanceAndWrite(Level.INFO, msg);
+    }
+
+    public static Log warn(String msg) {
+        return getInstanceAndWrite(Level.WARNING, msg);
+    }
+
+    public Log andFine(String msg) {
+        write(Level.FINE, msg);
+        return this;
+    }
+
+    public Log andConfig(String msg) {
+        write(Level.CONFIG, msg);
+        return this;
+    }
+
+    public Log andInfo(String msg) {
+        write(Level.INFO, msg);
+        return this;
+    }
+
+    public Log andWarn(String msg) {
+        write(Level.WARNING, msg);
+        return this;
+    }
+
+    private static Log getInstanceAndWrite(Level level, String msg) {
+        Log.getInstance().write(level, msg);
+        return Log.instance;
+    }
+
+    private void write(final Level level, final Object... messages) {
+        if (messages == null || messages.length == 0) return;
 
         Level configLevel = Log.factoryBean.getFormatter().getLevel();
-        if (configLevel.intValue() > level.intValue()) return this;
+        if (configLevel.intValue() > level.intValue()) return;
 
         final String currentThreadName = Thread.currentThread().getName();
         KorLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
@@ -79,8 +127,6 @@ public class Log {
                 logFactory.file(logMessage);
             }
         });
-
-        return this;
     }
 
     private static class LogFactory {

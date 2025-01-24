@@ -1,8 +1,7 @@
-package com.forestfull.factory;
+package com.forestfull.logger;
 
 import lombok.*;
 
-import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,28 +21,28 @@ import java.util.logging.Level;
  * <hr>
  * <div>
  *      <h3>{@link Formatter}</h3>
- *      <p>placeHolder({@link com.forestfull.factory.Log.Pattern}) - "{datetime} [{thread}:{level}] - {msg}{new-line}"</p>
+ *      <p>placeHolder({@link Log.Pattern}) - "{datetime} [{thread}:{level}] - {msg}{new-line}"</p>
  *      <p>datetime - new {@link SimpleDateFormat}("yyyy-MM-dd HH:mm:ss")</p>
  *      <p>{@link Level} - {@link Level}.ALL</p>
  * </div>
  * <hr>
  * <ul>
- * <li>OFF
- * <li>SEVERE (highest value)
- * <li>WARNING
- * <li>INFO
- * <li>CONFIG
- * <li>FINE
- * <li>FINER
- * <li>FINEST  (lowest value)
- * <li>ALL
+ * <li><b>OFF</b>
+ * <li><s>SEVERE</s> (deprecated)
+ * <li><b>WARNING</b> (highest value)
+ * <li><b>INFO</b>
+ * <li><b>CONFIG</b>
+ * <li><b>FINE</b> (lowest value)
+ * <li><s>FINER</s> (deprecated)
+ * <li><s>FINEST</s> (deprecated)
+ * <li><b>ALL</b>
  * </ul>
  */
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class KorLoggerFactoryBean {
+class KorLoggerFactoryBean {
 
     protected final static ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
 
@@ -60,14 +59,14 @@ public class KorLoggerFactoryBean {
 
     @Getter
     @Builder
-    public static class FileRecorder {
+    protected static class FileRecorder {
         private String nameFormat;
         private String logFileDirectory;
     }
 
     @Getter
     @Builder
-    public static class Formatter {
+    protected static class Formatter {
         private String placeHolder;
         private SimpleDateFormat datetime;
         private Level level;
