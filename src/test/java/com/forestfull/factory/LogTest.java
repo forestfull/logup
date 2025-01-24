@@ -16,20 +16,23 @@ class LogTest {
 
         Log.customConfiguration(KorLoggerFactoryBean.builder()
                 .formatter(KorLoggerFactoryBean.Formatter.builder()
-                        .level(Level.WARNING)
-                        .placeHolder(Log.Pattern.MESSAGE + Log.Pattern.NEW_LINE)
+                        .level(Level.CONFIG)
+                        .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+                        .placeHolder(Log.MessagePattern.DEFAULT)
                         .build())
                 .fileRecorder(KorLoggerFactoryBean.FileRecorder.builder()
                         .logFileDirectory("logs")
                         .dateFormat(new SimpleDateFormat("yyyy-MM-dd"))
-                        .placeHolder(Log.Pattern.DATETIME + "test-log.log")
+                        .placeHolder(Log.FilePattern.DEFAULT)
                         .build())
                 .build());
 
-        Log.fine("Hello World")
-                .andConf(")write(")
-                .andInfo("this Info")
-                .andWarn("this High Level")
+        for (int i = 0; i < 1000; i++) {
+            Log.fine("Hello World")
+                    .andConf(")write(")
+                    .andInfo("this Info")
+                    .andWarn("this High Level");
+        }
         ;
     }
 }

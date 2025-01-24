@@ -21,7 +21,7 @@ import java.util.logging.Level;
  * <hr>
  * <div>
  *      <h3>{@link Formatter}</h3>
- *      <p>placeHolder({@link Log.Pattern}) - "{datetime} [{thread}:{level}] - {msg}{new-line}"</p>
+ *      <p>placeHolder({@link Log.MessagePattern}) - "{datetime} [{thread}:{level}] - {msg}{new-line}"</p>
  *      <p>datetime - new {@link SimpleDateFormat}("yyyy-MM-dd HH:mm:ss")</p>
  *      <p>{@link Level} - {@link Level}.ALL</p>
  * </div>

@@ -23,13 +23,20 @@ import java.util.logging.Level;
  */
 public class Log {
 
-    public static class Pattern {
+    public static class MessagePattern {
+        public final static String DEFAULT = MessagePattern.DATETIME + " [" + MessagePattern.THREAD + ":" + MessagePattern.LEVEL + "] - " + MessagePattern.MESSAGE + MessagePattern.NEW_LINE;
         public final static String DATETIME = "{datetime}";
         public final static String THREAD = "{thread}";
         public final static String LEVEL = "{level}";
         public final static String MESSAGE = "{msg}";
         public final static String NEW_LINE = "{new-line}";
     }
+
+    public static class FilePattern {
+        public final static String DEFAULT = FilePattern.DATE + ".log";
+        public final static String DATE = "{date}";
+    }
+
 
     private final static String CHARSET_UTF_8 = "UTF-8";
     private static LogFactory logFactory = null;
@@ -55,7 +62,7 @@ public class Log {
     private static void optionalDefaultFactoryBean(KorLoggerFactoryBean factoryBean) {
         if (factoryBean.getFormatter() == null) {
             factoryBean.setFormatter(KorLoggerFactoryBean.Formatter.builder()
-                    .placeHolder(Pattern.DATETIME + " [" + Pattern.THREAD + ":" + Pattern.LEVEL + "] - " + Pattern.MESSAGE + Pattern.NEW_LINE)
+                    .placeHolder(MessagePattern.DEFAULT)
                     .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
                     .level(Level.ALL)
                     .build());
@@ -65,7 +72,7 @@ public class Log {
             factoryBean.setFileRecorder(KorLoggerFactoryBean.FileRecorder.builder()
                     .logFileDirectory("")
                     .dateFormat(new SimpleDateFormat("yyyy_MM_dd"))
-                    .placeHolder(Pattern.DATETIME + ".log")
+                    .placeHolder(MessagePattern.DATETIME + ".log")
                     .build());
         }
     }
@@ -150,11 +157,11 @@ public class Log {
 
                 final String logMessage = formatter
                         .getPlaceHolder()
-                        .replace(Pattern.DATETIME, now)
-                        .replace(Pattern.THREAD, currentThreadName)
-                        .replace(Pattern.LEVEL, level.getName().substring(0, 4))
-                        .replace(Pattern.MESSAGE, msgBuilder.toString())
-                        .replace(Pattern.NEW_LINE, Log.newLine);
+                        .replace(MessagePattern.DATETIME, now)
+                        .replace(MessagePattern.THREAD, currentThreadName)
+                        .replace(MessagePattern.LEVEL, level.getName().substring(0, 4))
+                        .replace(MessagePattern.MESSAGE, msgBuilder.toString())
+                        .replace(MessagePattern.NEW_LINE, Log.newLine);
 
                 logFactory.console(logMessage);
                 logFactory.file(logMessage);
@@ -203,7 +210,7 @@ public class Log {
                     if (!isSucceed) throw new IOException("Failed to create log directory: " + rootDirectory);
                 }
 
-                final File logFile = new File(logFileDirectory + File.separator + fileRecorder.getPlaceHolder().replace(Pattern.DATETIME, fileRecorder.getDateFormat().format(new Date())));
+                final File logFile = new File(logFileDirectory + File.separator + fileRecorder.getPlaceHolder().replace(FilePattern.DATE, ""));
                 if (!logFile.exists()) {
                     if (!logFile.isFile()) logFile.deleteOnExit();
                     boolean isSucceed = logFile.createNewFile();
