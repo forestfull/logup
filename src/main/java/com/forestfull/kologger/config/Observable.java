@@ -1,4 +1,4 @@
-package com.forestfull.config;
+package com.forestfull.kologger.config;
 
 
 import java.lang.annotation.*;

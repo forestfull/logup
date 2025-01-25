@@ -1,4 +1,4 @@
-package com.forestfull.logger;
+package com.forestfull.kologger.logger;
 
 import lombok.*;
 
@@ -14,7 +14,7 @@ import java.util.logging.Level;
  *
  * @author Hyeonseok Ko
  * @version JDK 1.6
- * @default-value <div>
+ * <div>
  * <h3>log file path</h3>
  * <p>logFileDirectory - "classpath:logs/"</p>
  * </div>

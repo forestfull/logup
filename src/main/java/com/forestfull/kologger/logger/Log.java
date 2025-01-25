@@ -1,4 +1,4 @@
-package com.forestfull.logger;
+package com.forestfull.kologger.logger;
 
 
 import java.io.File;
