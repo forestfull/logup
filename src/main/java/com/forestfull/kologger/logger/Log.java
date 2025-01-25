@@ -10,33 +10,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
-/**
- * <ul>
- * <li><s>SEVERE</s> (deprecated)
- * <li><b>WARNING</b> (highest value)
- * <li><b>INFO</b>
- * <li><b>CONFIG</b>
- * <li><b>FINE</b> (lowest value)
- * <li><s>FINER</s> (deprecated)
- * <li><s>FINEST</s> (deprecated)
- * </ul>
- */
+
 public class Log {
 
     public static class MessagePattern {
-        public final static String DEFAULT = MessagePattern.DATETIME + " [" + MessagePattern.THREAD + ":" + MessagePattern.LEVEL + "] - " + MessagePattern.MESSAGE + MessagePattern.NEW_LINE;
-        public final static String DATETIME = "{datetime}";
-        public final static String THREAD = "{thread}";
-        public final static String LEVEL = "{level}";
-        public final static String MESSAGE = "{msg}";
-        public final static String NEW_LINE = "{new-line}";
+        private final static String DEFAULT = MessagePattern.DATETIME + " [" + MessagePattern.THREAD + ":" + MessagePattern.LEVEL + "] - " + MessagePattern.MESSAGE + MessagePattern.NEW_LINE;
+        private final static String DATETIME = "{datetime}";
+        private final static String THREAD = "{thread}";
+        private final static String LEVEL = "{level}";
+        private final static String MESSAGE = "{msg}";
+        private final static String NEW_LINE = "{new-line}";
     }
 
     public static class FilePattern {
         private final static String[] filePath = System.getProperty("user.dir").split(System.lineSeparator().equals("\r\n") ? File.separator + File.separator : File.separator);
-        public final static String PROJECT_NAME = filePath[filePath.length - 1];
-        public final static String DATE = "{date}";
-        public final static String DEFAULT = DATE + "-" + PROJECT_NAME + ".log";
+        private final static String PROJECT_NAME = filePath[filePath.length - 1];
+        private final static String DATE = "{date}";
+        private final static String DEFAULT = DATE + "-" + PROJECT_NAME + ".log";
     }
 
 
@@ -62,6 +52,9 @@ public class Log {
     }
 
     private static void optionalDefaultFactoryBean(KoLoggerFactoryBean factoryBean) {
+        if (factoryBean.getLevel() == null) {
+            factoryBean.setLevel(Level.ALL);
+        }
         if (factoryBean.getFormatter() == null) {
             factoryBean.setFormatter(KoLoggerFactoryBean.Formatter.builder()
                     .placeHolder(MessagePattern.DEFAULT)
