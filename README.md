@@ -1,11 +1,19 @@
-# log-kor
+# KoLogger
+
+---
+> ### Feature 1
+> be available: JDK 1.6 ~ Current
+
+> ### Feature 2
+> be unrestrained: FrameWork
+
+
+> ### Feature 3
+> is simple configuration
 
 ---
 
-- JDK 1.6까지 지원 목표
-- 프레임워크 없이 순수 자바로 코딩
-- 프레임워크에도 별도로 추가 사용할 수 있도록 편의구성 필요
-- 로그용 쓰레드 분리(데몬)
-- 애노테이션으로 클래스별 패턴 등록 가능
+## Comming Soon
+
+- 애노테이션으로 클래스별 추적 가능
 - jdbc 로그 찍기
-- 파일 쓰기
