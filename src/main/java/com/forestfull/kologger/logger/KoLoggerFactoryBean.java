@@ -12,8 +12,7 @@ import java.util.logging.Level;
  * <p><b>This class's instance must be initialized only once</b>
  * <br>(이 클래스의 인스턴스는 한 번만 초기화하여야 합니다.)</p>
  *
- * @author Hyeonseok Ko
- * @version JDK 1.6
+ * <ul>
  * <li><b>OFF</b>
  * <li><s>SEVERE</s> (deprecated)
  * <li><b>WARNING</b> (highest value)
@@ -24,6 +23,10 @@ import java.util.logging.Level;
  * <li><s>FINEST</s> (deprecated)
  * <li><b>ALL</b>
  * </ul>
+ *
+ * @author Vigfoot
+ * @version 1.0
+ * @since JDK 1.6
  */
 @Setter
 @Getter
