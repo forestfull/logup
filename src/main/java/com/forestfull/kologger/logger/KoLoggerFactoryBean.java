@@ -14,19 +14,6 @@ import java.util.logging.Level;
  *
  * @author Hyeonseok Ko
  * @version JDK 1.6
- * <div>
- * <h3>log file path</h3>
- * <p>logFileDirectory - "classpath:logs/"</p>
- * </div>
- * <hr>
- * <div>
- *      <h3>{@link Formatter}</h3>
- *      <p>placeHolder({@link Log.MessagePattern}) - "{datetime} [{thread}:{level}] - {msg}{new-line}"</p>
- *      <p>datetime - new {@link SimpleDateFormat}("yyyy-MM-dd HH:mm:ss")</p>
- *      <p>{@link Level} - {@link Level}.ALL</p>
- * </div>
- * <hr>
- * <ul>
  * <li><b>OFF</b>
  * <li><s>SEVERE</s> (deprecated)
  * <li><b>WARNING</b> (highest value)
@@ -46,6 +33,7 @@ public class KoLoggerFactoryBean {
     protected final static ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
     private Formatter formatter;
     private FileRecorder fileRecorder;
+    private Level level;
 
     @Getter
     @Builder
@@ -60,6 +48,5 @@ public class KoLoggerFactoryBean {
     public static class Formatter {
         private String placeHolder;
         private SimpleDateFormat datetime;
-        private Level level;
     }
 }

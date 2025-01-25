@@ -35,8 +35,8 @@ public class Log {
     public static class FilePattern {
         private final static String[] filePath = System.getProperty("user.dir").split(System.lineSeparator().equals("\r\n") ? File.separator + File.separator : File.separator);
         public final static String PROJECT_NAME = filePath[filePath.length - 1];
-        public final static String DEFAULT = PROJECT_NAME + ".log";
         public final static String DATE = "{date}";
+        public final static String DEFAULT = DATE + "-" + PROJECT_NAME + ".log";
     }
 
 
@@ -66,15 +66,14 @@ public class Log {
             factoryBean.setFormatter(KoLoggerFactoryBean.Formatter.builder()
                     .placeHolder(MessagePattern.DEFAULT)
                     .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-                    .level(Level.ALL)
                     .build());
 
         }
         if (factoryBean.getFileRecorder() == null) {
             factoryBean.setFileRecorder(KoLoggerFactoryBean.FileRecorder.builder()
-                    .logFileDirectory("")
+                    .logFileDirectory("logs/")
                     .dateFormat(new SimpleDateFormat("yyyy_MM_dd"))
-                    .placeHolder(MessagePattern.DATETIME + ".log")
+                    .placeHolder(FilePattern.DATE + FilePattern.DEFAULT)
                     .build());
         }
     }
@@ -143,7 +142,7 @@ public class Log {
     private void write(final Level level, final Object... messages) {
         if (messages == null || messages.length == 0) return;
 
-        Level configLevel = Log.factoryBean.getFormatter().getLevel();
+        Level configLevel = Log.factoryBean.getLevel();
         if (configLevel.intValue() > level.intValue()) return;
 
         final String currentThreadName = Thread.currentThread().getName();
@@ -178,15 +177,10 @@ public class Log {
 
             try {
                 fdOut.write(msgStream);
+                fdOut.flush();
 
             } catch (IOException e) {
                 e.printStackTrace(System.err);
-
-            } finally {
-                try {
-                    fdOut.flush();
-                } catch (IOException ignore) {
-                }
             }
         }
 
@@ -213,7 +207,11 @@ public class Log {
                 }
 
                 final File logFile = new File(logFileDirectory + File.separator + fileRecorder.getPlaceHolder().replace(FilePattern.DATE, ""));
-                if (logFile.isFile()) {
+                if (!logFile.exists()) {
+                    boolean isSucceed = logFile.createNewFile();
+                    if (!isSucceed) throw new IOException("Failed to create log file: " + logFile);
+
+                } else if (logFile.isFile()) {
                     final String currentTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date()));
                     final String existedTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date(logFile.lastModified())));
                     if (!currentTimeFormatName.equals(existedTimeFormatName)) {
@@ -223,18 +221,13 @@ public class Log {
                     }
                 }
 
-                if (!logFile.exists()) {
-                    if (!logFile.isFile()) logFile.deleteOnExit();
-                    boolean isSucceed = logFile.createNewFile();
-                    if (!isSucceed) throw new IOException("Failed to create log directory: " + rootDirectory);
-                }
-
                 final FileOutputStream outputStream = new FileOutputStream(logFile, true);
                 outputStream.write((msg.getBytes(Charset.forName(CHARSET_UTF_8))));
                 outputStream.flush();
+                outputStream.close();
 
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace(System.err);
             }
         }
     }
