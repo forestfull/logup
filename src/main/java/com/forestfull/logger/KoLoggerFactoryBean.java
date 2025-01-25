@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 /**
- * korLogger's general Configuration (korLogger 전역 환경 설정)
+ * KoLooger's general Configuration (KoLooger 전역 환경 설정)
  * <p><b>This class's instance must be initialized only once</b>
  * <br>(이 클래스의 인스턴스는 한 번만 초기화하여야 합니다.)</p>
  *
@@ -41,7 +41,7 @@ import java.util.logging.Level;
 @Setter
 @Getter
 @Builder
-public class KorLoggerFactoryBean {
+public class KoLoggerFactoryBean {
 
     protected final static ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
     private Formatter formatter;

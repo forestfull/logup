@@ -44,7 +44,7 @@ public class Log {
     private static LogFactory logFactory = null;
     private static Log instance = null;
 
-    private static KorLoggerFactoryBean factoryBean = null;
+    private static KoLoggerFactoryBean factoryBean = null;
 
     private final static String newLine = System.getProperty("line.separator");
 
@@ -54,16 +54,16 @@ public class Log {
     /**
      * 직접 선언할 경우 쓰는 함수
      */
-    public static void customConfiguration(KorLoggerFactoryBean factoryBean) {
+    public static void customConfiguration(KoLoggerFactoryBean factoryBean) {
         optionalDefaultFactoryBean(factoryBean);
         Log.factoryBean = factoryBean;
 
         /*TODO: 이 때 최초 초기화 일 것으로 기대하여 어노테이션 스캔도 살짝 넣어야 함*/
     }
 
-    private static void optionalDefaultFactoryBean(KorLoggerFactoryBean factoryBean) {
+    private static void optionalDefaultFactoryBean(KoLoggerFactoryBean factoryBean) {
         if (factoryBean.getFormatter() == null) {
-            factoryBean.setFormatter(KorLoggerFactoryBean.Formatter.builder()
+            factoryBean.setFormatter(KoLoggerFactoryBean.Formatter.builder()
                     .placeHolder(MessagePattern.DEFAULT)
                     .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
                     .level(Level.ALL)
@@ -71,7 +71,7 @@ public class Log {
 
         }
         if (factoryBean.getFileRecorder() == null) {
-            factoryBean.setFileRecorder(KorLoggerFactoryBean.FileRecorder.builder()
+            factoryBean.setFileRecorder(KoLoggerFactoryBean.FileRecorder.builder()
                     .logFileDirectory("")
                     .dateFormat(new SimpleDateFormat("yyyy_MM_dd"))
                     .placeHolder(MessagePattern.DATETIME + ".log")
@@ -85,7 +85,7 @@ public class Log {
         if (Log.logFactory == null)
             Log.logFactory = new LogFactory();
         if (Log.factoryBean == null) {
-            final KorLoggerFactoryBean bean = KorLoggerFactoryBean.builder().build();
+            final KoLoggerFactoryBean bean = KoLoggerFactoryBean.builder().build();
             optionalDefaultFactoryBean(bean);
             Log.factoryBean = bean;
         }
@@ -147,10 +147,10 @@ public class Log {
         if (configLevel.intValue() > level.intValue()) return;
 
         final String currentThreadName = Thread.currentThread().getName();
-        KorLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
+        KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                KorLoggerFactoryBean.Formatter formatter = factoryBean.getFormatter();
+                KoLoggerFactoryBean.Formatter formatter = factoryBean.getFormatter();
                 final String now = formatter.getDatetime() != null ? formatter.getDatetime().format(new Date()) : "";
                 final StringBuilder msgBuilder = new StringBuilder();
 
@@ -191,7 +191,7 @@ public class Log {
         }
 
         private synchronized void file(String msg) {
-            final KorLoggerFactoryBean.FileRecorder fileRecorder = factoryBean.getFileRecorder();
+            final KoLoggerFactoryBean.FileRecorder fileRecorder = factoryBean.getFileRecorder();
 
             String logFileDirectory = fileRecorder.getLogFileDirectory();
 
