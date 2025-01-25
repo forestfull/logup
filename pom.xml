@@ -3,10 +3,30 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.forestfull</groupId>
-    <artifactId>korLogger</artifactId>
+    <artifactId>koLogger</artifactId>
     <version>1.0</version>
+
+    <name>KoLogger</name>
+    <description>Ready to use, Any class you want to use</description>
+    <url>https://github.com/forestfull/koLogger</url>
+
+    <developers>
+        <developer>
+            <email>vigfoot@forestfull.com</email>
+            <id>vigfoot</id>
+            <name>vigfoot</name>
+            <organization>forestfull</organization>
+            <organizationUrl>https://forestfull.com</organizationUrl>
+            <timezone>KST</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com:forestfull/koLogger.git</connection>
+        <developerConnection>scm:git:ssh://github.com:forestfull/koLogger.git</developerConnection>
+        <url>https://github.com/forestfull/koLogger/tree/master</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -15,7 +35,6 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
