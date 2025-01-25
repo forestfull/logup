@@ -8,5 +8,5 @@ import java.util.logging.Level;
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Observable {
-    Level level = null;
+    Level level = Level.ALL;
 }
