@@ -4,13 +4,9 @@ import com.forestfull.devops.config.Observable;
 
 public class Method {
 
-
     @Observable
-    public Object someMethod() {
-
-        @Observable Object o = someMethod();
-
-
-        return null;
+    void someMethod(Object someParameter) {
+        System.out.println(someParameter);
     }
+
 }
