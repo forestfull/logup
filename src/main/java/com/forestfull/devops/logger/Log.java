@@ -1,6 +1,8 @@
 package com.forestfull.devops.logger;
 
 
+import com.forestfull.devops.config.Observable;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 
 
@@ -41,14 +44,20 @@ public class Log {
     private Log() {
     }
 
+    public static void customConfiguration(){
+        customConfiguration(KoLoggerFactoryBean.builder().build());
+    }
+
     /**
      * 직접 선언할 경우 쓰는 함수
      */
     public static void customConfiguration(KoLoggerFactoryBean factoryBean) {
+        Objects.requireNonNull(factoryBean);
         optionalDefaultFactoryBean(factoryBean);
         Log.factoryBean = factoryBean;
 
-        /*TODO: 이 때 최초 초기화 일 것으로 기대하여 어노테이션 스캔도 살짝 넣어야 함*/
+        Class<?>[] annotatedClasses = LogAnnotationScanner.builder().annotation(Observable.class).build().getAnnotatedClasses();
+        ObservableLogHandler.builder().target(annotatedClasses).build();
     }
 
     private static void optionalDefaultFactoryBean(KoLoggerFactoryBean factoryBean) {
