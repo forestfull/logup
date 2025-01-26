@@ -1,4 +1,4 @@
-package com.forestfull.kologger.logger;
+package com.forestfull.devops.logger;
 
 import lombok.*;
 
