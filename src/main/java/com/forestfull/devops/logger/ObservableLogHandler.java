@@ -4,11 +4,13 @@ import lombok.Builder;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Set;
 
 @Builder
 class ObservableLogHandler implements InvocationHandler {
 
-    private Class<?>[] target;
+    private Set<Class<?>> target;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

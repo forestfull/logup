@@ -1,8 +1,6 @@
 package com.forestfull.devops.logger;
 
 
-import com.forestfull.devops.config.Observable;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -10,7 +8,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 
 
@@ -44,7 +44,7 @@ public class Log {
     private Log() {
     }
 
-    public static void customConfiguration(){
+    public static void customConfiguration() {
         customConfiguration(KoLoggerFactoryBean.builder().build());
     }
 
@@ -56,7 +56,7 @@ public class Log {
         optionalDefaultFactoryBean(factoryBean);
         Log.factoryBean = factoryBean;
 
-        Class<?>[] annotatedClasses = LogAnnotationScanner.builder().annotation(Observable.class).build().getAnnotatedClasses();
+        Set<Class<?>> annotatedClasses = LogAnnotationScanner.builder().build().getAnnotatedClasses();
         ObservableLogHandler.builder().target(annotatedClasses).build();
     }
 
