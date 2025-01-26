@@ -71,7 +71,7 @@ public class Log {
         }
     }
 
-    public static Log getInstance() {
+    private static Log getInstance() {
         if (Log.instance == null)
             Log.instance = new Log();
         if (Log.logFactory == null)
@@ -104,7 +104,8 @@ public class Log {
     }
 
     public static Log warn(Object... msg) {
-        return getInstanceAndWrite(Level.WARNING, msg);
+        Log instanceAndWrite = getInstanceAndWrite(Level.WARNING, msg);
+        return Log.instance;
     }
 
     public Log andFine(Object... msg) {
