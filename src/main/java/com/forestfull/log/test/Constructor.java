@@ -2,6 +2,7 @@ package com.forestfull.log.test;
 
 import com.forestfull.log.config.Observable;
 
+    @Observable
 public class Constructor {
 
     private String test;
@@ -12,7 +13,6 @@ public class Constructor {
         System.out.println(a);
     }
 
-    @Observable
     public void testMethod(String param1, int param2) {
         System.out.println("Executing testMethod with param1: " + param1 + ", param2: " + param2);
     }
