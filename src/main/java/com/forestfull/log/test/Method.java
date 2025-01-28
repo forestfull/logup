@@ -1,6 +1,6 @@
-package com.forestfull.devops.test;
+package com.forestfull.log.test;
 
-import com.forestfull.devops.config.Observable;
+import com.forestfull.log.config.Observable;
 
 public class Method {
 

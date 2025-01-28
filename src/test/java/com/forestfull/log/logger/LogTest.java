@@ -1,4 +1,4 @@
-package com.forestfull.devops.logger;
+package com.forestfull.log.logger;
 
 import org.junit.jupiter.api.Test;
 class LogTest {

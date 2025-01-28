@@ -1,11 +1,8 @@
-package com.forestfull.devops.test;
+package com.forestfull.log;
 
-import com.forestfull.devops.logger.Log;
-import com.forestfull.devops.logger.LogAnnotationScanner;
+import com.forestfull.log.logger.Log;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
-import java.net.URL;
 import java.util.List;
 
 public class Main {

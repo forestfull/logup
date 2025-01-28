@@ -1,5 +1,4 @@
-package com.forestfull.devops.logger;
-
+package com.forestfull.log.logger;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -8,11 +7,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
-
 
 public class Log {
 

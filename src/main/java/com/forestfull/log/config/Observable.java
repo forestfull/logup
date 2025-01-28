@@ -1,4 +1,4 @@
-package com.forestfull.devops.config;
+package com.forestfull.log.config;
 
 
 import java.lang.annotation.*;
