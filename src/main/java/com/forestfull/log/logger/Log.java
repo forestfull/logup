@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -23,7 +22,7 @@ public class Log {
     }
 
     public static class FilePattern {
-        private final static String[] filePath = System.getProperty("user.dir").split(System.lineSeparator().equals("\r\n") ? File.separator + File.separator : File.separator);
+        private final static String[] filePath = System.getProperty("user.dir").split("\\\\"); //TODO 윈도우 구분 필요 나주엥
         private final static String PROJECT_NAME = filePath[filePath.length - 1];
         private final static String DATE = "{date}";
         private final static String DEFAULT = PROJECT_NAME + DATE + ".log";
