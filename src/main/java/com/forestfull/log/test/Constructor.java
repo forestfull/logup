@@ -3,7 +3,6 @@ package com.forestfull.log.test;
 import com.forestfull.log.config.Observable;
 import lombok.Builder;
 
-@Builder
 @Observable
 public class Constructor {
 

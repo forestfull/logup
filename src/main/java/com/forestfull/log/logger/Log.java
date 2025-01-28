@@ -48,12 +48,12 @@ public class Log {
      * 직접 선언할 경우 쓰는 함수
      */
     public static void customConfiguration(KoLoggerFactoryBean factoryBean) {
-        Objects.requireNonNull(factoryBean);
+        if (factoryBean == null) throw new NullPointerException("customConfiguration(KoLoggerFactoryBean)");
+
         optionalDefaultFactoryBean(factoryBean);
         Log.factoryBean = factoryBean;
 
-        final String callerClassPackageName = ObservableAspect.getCallerClassPackageName();
-        ObservableAspect.setPackageName(callerClassPackageName);
+
 
 
 //        LogAnnotationScanner.builder().build().getAnnotatedTarget();
