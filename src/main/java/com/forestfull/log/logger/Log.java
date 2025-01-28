@@ -26,7 +26,7 @@ public class Log {
         private final static String[] filePath = System.getProperty("user.dir").split(System.lineSeparator().equals("\r\n") ? File.separator + File.separator : File.separator);
         private final static String PROJECT_NAME = filePath[filePath.length - 1];
         private final static String DATE = "{date}";
-        private final static String DEFAULT = DATE + "-" + PROJECT_NAME + ".log";
+        private final static String DEFAULT = PROJECT_NAME + DATE + ".log";
     }
 
 
@@ -53,8 +53,11 @@ public class Log {
         optionalDefaultFactoryBean(factoryBean);
         Log.factoryBean = factoryBean;
 
-        Set<Class<?>> annotatedClasses = LogAnnotationScanner.builder().build().getAnnotatedClasses();
+        Set<Class<?>> annotatedClasses = LogAnnotationScanner.builder().build().getAnnotatedTarget();
         ObservableLogHandler.builder().target(annotatedClasses).build();
+
+        //TODO: JDBC 읽기 구현
+
     }
 
     private static void optionalDefaultFactoryBean(KoLoggerFactoryBean factoryBean) {
@@ -71,8 +74,8 @@ public class Log {
         if (factoryBean.getFileRecorder() == null) {
             factoryBean.setFileRecorder(KoLoggerFactoryBean.FileRecorder.builder()
                     .logFileDirectory("logs/")
-                    .dateFormat(new SimpleDateFormat("yyyy_MM_dd"))
-                    .placeHolder(FilePattern.DATE + FilePattern.DEFAULT)
+                    .dateFormat(new SimpleDateFormat("yyyy-MM-dd"))
+                    .placeHolder(FilePattern.DEFAULT)
                     .build());
         }
     }
