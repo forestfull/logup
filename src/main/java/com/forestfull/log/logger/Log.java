@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class Log {
@@ -53,6 +54,7 @@ public class Log {
         optionalDefaultFactoryBean(factoryBean);
         Log.factoryBean = factoryBean;
 
+        Set<Class<?>> annotatedTarget = LogAnnotationScanner.builder().build().getAnnotatedTarget();
 
 
 
