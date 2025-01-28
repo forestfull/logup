@@ -1,9 +1,11 @@
 package com.forestfull.log.logger;
 
+import com.forestfull.log.config.Observable;
 import lombok.Builder;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 
@@ -16,10 +18,19 @@ public class LogAnnotationScanner {
             final String rootPackageName = getCallerClass().getPackage().getName();
             final Set<Class<?>> classes = getClasses(rootPackageName);
 
-            for (Class<?> aClass : classes) {
-                // TODO: 클래스에서 @observable 어노테이션 검색 및 IO 프록시 등록
+            for (Class<?> clazz : classes) {
+
                 // TODO: 메서드 @observable 어노테이션 검색 및 IO 프록시 등록
-                // TODO: 로컬 변수 @observable 어노테이션 검색 및 IO 프록시 등록
+                for (Method declaredMethod : clazz.getDeclaredMethods()) {
+                    if (declaredMethod.isAnnotationPresent(Observable.class)) continue;
+
+
+                }
+
+                // TODO: 클래스에서 @observable 어노테이션 검색 및 IO 프록시 등록
+                if (clazz.isAnnotationPresent(Observable.class)) continue;
+
+
             }
             
         } catch (Exception e) {
