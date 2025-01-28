@@ -1,6 +1,8 @@
 package com.forestfull.log;
 
 import com.forestfull.log.logger.Log;
+import com.forestfull.log.logger.ObservableAspect;
+import com.forestfull.log.test.Constructor;
 
 import java.io.File;
 import java.util.List;
@@ -16,7 +18,12 @@ public class Main {
 
     public static void main(String[] args) throws ClassNotFoundException {
 
-Log.customConfiguration();
+        Log.customConfiguration();
+
+        ObservableAspect.setPackageName("com.forestfull");
+
+        Constructor build = Constructor.builder().t1test("123").test("324").build();
+        build.test("a");
 
 //        String property = System.getProperty("user.dir");
 //        File[] files = new File(property).listFiles();

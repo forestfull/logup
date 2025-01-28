@@ -8,7 +8,6 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Set;
 import java.util.logging.Level;
 
 public class Log {
@@ -53,8 +52,11 @@ public class Log {
         optionalDefaultFactoryBean(factoryBean);
         Log.factoryBean = factoryBean;
 
-        Set<Class<?>> annotatedClasses = LogAnnotationScanner.builder().build().getAnnotatedTarget();
-        ObservableLogHandler.builder().target(annotatedClasses).build();
+        final String callerClassPackageName = ObservableAspect.getCallerClassPackageName();
+        ObservableAspect.setPackageName(callerClassPackageName);
+
+
+//        LogAnnotationScanner.builder().build().getAnnotatedTarget();
 
         //TODO: JDBC 읽기 구현
 

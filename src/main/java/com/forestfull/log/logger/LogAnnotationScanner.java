@@ -1,11 +1,9 @@
 package com.forestfull.log.logger;
 
-import com.forestfull.log.config.Observable;
 import lombok.Builder;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 
@@ -13,40 +11,13 @@ import java.util.*;
 public class LogAnnotationScanner {
 
 
-    protected Set<Class<?>> getAnnotatedClasses() {
-        try {
-            final String rootPackageName = getCallerClass().getPackage().getName();
-            final Set<Class<?>> classes = getClasses(rootPackageName);
-
-            for (Class<?> clazz : classes) {
-
-                // TODO: 메서드 @observable 어노테이션 검색 및 IO 프록시 등록
-                for (Method declaredMethod : clazz.getDeclaredMethods()) {
-                    if (declaredMethod.isAnnotationPresent(Observable.class)) continue;
-
-
-                }
-
-                // TODO: 클래스에서 @observable 어노테이션 검색 및 IO 프록시 등록
-                if (clazz.isAnnotationPresent(Observable.class)) continue;
-
-
-            }
-            
-        } catch (Exception e) {
-            Log.warn(e.getMessage());
-            e.printStackTrace(System.err);
-        }
+    protected Set<Class<?>> getAnnotatedTarget() {
         return null;
-    }
-
-    private Class<?> getCallerClass() throws ClassNotFoundException {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        return Class.forName(stackTraceElements[5].getClassName());
     }
 
     /**
      * 패키지에 해당하는 클래스 셋 반환
+     *
      * @param packageName
      * @return
      * @throws IOException
@@ -57,13 +28,13 @@ public class LogAnnotationScanner {
         final String path = packageName.replace('.', '/');
         final Enumeration<URL> resources = classLoader.getResources(path);
 
-        final List<File> dirs = new ArrayList<>();
+        final List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
             dirs.add(new File(resource.getFile()));
         }
 
-        final Set<Class<?>> classes = new HashSet<>();
+        final Set<Class<?>> classes = new HashSet<Class<?>>();
         for (File directory : dirs)
             classes.addAll(findClasses(directory, packageName));
 
@@ -71,14 +42,15 @@ public class LogAnnotationScanner {
     }
 
     /**
-     *  재귀 호출 구조로 하위 클래스 스캔
+     * 재귀 호출 구조로 하위 클래스 스캔
+     *
      * @param directory
      * @param packageName
      * @return
      * @throws ClassNotFoundException
      */
     private Set<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        final Set<Class<?>> classes = new HashSet<>();
+        final Set<Class<?>> classes = new HashSet<Class<?>>();
         if (!directory.exists()) return classes;
 
         final File[] files = directory.listFiles();
