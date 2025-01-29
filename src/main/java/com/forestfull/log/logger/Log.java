@@ -1,5 +1,7 @@
 package com.forestfull.log.logger;
 
+import com.forestfull.log.config.Level;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -8,7 +10,6 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
-import java.util.logging.Level;
 
 public class Log {
 
@@ -103,31 +104,13 @@ public class Log {
         return this;
     }
 
-    public static Log fine(Object... msg) {
-        return getInstanceAndWrite(Level.FINE, msg);
-    }
-
-    public static Log conf(Object... msg) {
-        return getInstanceAndWrite(Level.CONFIG, msg);
-    }
-
     public static Log info(Object... msg) {
         return getInstanceAndWrite(Level.INFO, msg);
     }
 
     public static Log warn(Object... msg) {
-        Log instanceAndWrite = getInstanceAndWrite(Level.WARNING, msg);
+        Log instanceAndWrite = getInstanceAndWrite(Level.WARN, msg);
         return Log.instance;
-    }
-
-    public Log andFine(Object... msg) {
-        write(Level.FINE, msg);
-        return this;
-    }
-
-    public Log andConf(Object... msg) {
-        write(Level.CONFIG, msg);
-        return this;
     }
 
     public Log andInfo(Object... msg) {
@@ -136,7 +119,7 @@ public class Log {
     }
 
     public Log andWarn(Object... msg) {
-        write(Level.WARNING, msg);
+        write(Level.WARN, msg);
         return this;
     }
 
@@ -149,7 +132,7 @@ public class Log {
         if (messages == null || messages.length == 0) return;
 
         Level configLevel = Log.factoryBean.getLevel();
-        if (configLevel.intValue() > level.intValue()) return;
+        if (configLevel.compareTo(level) > 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
         KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {

@@ -1,11 +1,11 @@
 package com.forestfull.log.logger;
 
+import com.forestfull.log.config.Level;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
 
 /**
  * KoLooger's general Configuration (KoLooger 전역 환경 설정)
@@ -14,13 +14,9 @@ import java.util.logging.Level;
  *
  * <ul>
  * <li><b>OFF</b>
- * <li><s>SEVERE</s> (deprecated)
- * <li><b>WARNING</b> (highest value)
+ * <li><s>ERROR</s>
+ * <li><b>WARN</b>
  * <li><b>INFO</b>
- * <li><b>CONFIG</b>
- * <li><b>FINE</b> (lowest value)
- * <li><s>FINER</s> (deprecated)
- * <li><s>FINEST</s> (deprecated)
  * <li><b>ALL</b>
  * </ul>
  *
