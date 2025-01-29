@@ -57,7 +57,6 @@ public class Log {
         Set<Class<?>> annotatedTarget = LogAnnotationScanner.builder().build().getAnnotatedTarget();
 
 
-
 //        LogAnnotationScanner.builder().build().getAnnotatedTarget();
 
         //TODO: JDBC 읽기 구현
@@ -109,8 +108,11 @@ public class Log {
     }
 
     public static Log warn(Object... msg) {
-        Log instanceAndWrite = getInstanceAndWrite(Level.WARN, msg);
-        return Log.instance;
+        return getInstanceAndWrite(Level.WARN, msg);
+    }
+
+    public static Log error(Object... msg) {
+        return getInstanceAndWrite(Level.ERROR, msg);
     }
 
     public Log andInfo(Object... msg) {
@@ -120,6 +122,11 @@ public class Log {
 
     public Log andWarn(Object... msg) {
         write(Level.WARN, msg);
+        return this;
+    }
+
+    public Log andError(Object... msg) {
+        write(Level.ERROR, msg);
         return this;
     }
 
@@ -149,7 +156,7 @@ public class Log {
                         .getPlaceHolder()
                         .replace(MessagePattern.DATETIME, now)
                         .replace(MessagePattern.THREAD, currentThreadName)
-                        .replace(MessagePattern.LEVEL, level.getName().substring(0, 4))
+                        .replace(MessagePattern.LEVEL, level.name().substring(0, 4))
                         .replace(MessagePattern.MESSAGE, msgBuilder.toString())
                         .replace(MessagePattern.NEW_LINE, Log.newLine);
 

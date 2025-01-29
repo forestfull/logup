@@ -1,6 +1,7 @@
 package com.forestfull.log.test;
 
 import com.forestfull.log.config.Observable;
+import com.forestfull.log.logger.Log;
 
 public class Constructor {
 
@@ -8,11 +9,11 @@ public class Constructor {
     private String t1test;
 
     public void test(String a) {
-        System.out.println(a);
+        Log.error(a);
     }
 
     @Observable
     public void testMethod(String param1, int param2) {
-        System.out.println(param1);;
+        Log.warn(param1);;
     }
 }
