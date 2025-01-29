@@ -20,4 +20,13 @@ public class LoggingAspect {
 
         }
     }
+
+    protected Class<?> getCallerClass() {
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        try {
+            return Class.forName(stackTraceElements[5].getClassName());
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
 }

@@ -12,10 +12,7 @@ public class Main {
         Log.customConfiguration();
 
         Constructor constructor = new Constructor();
-        constructor.testMethod("d", 2123);
         constructor.test("1");
-
-
-        Log.conf("hi");
+        constructor.testMethod("d", 2123);
     }
 }

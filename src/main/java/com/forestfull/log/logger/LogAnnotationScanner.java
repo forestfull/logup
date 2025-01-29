@@ -4,9 +4,6 @@ import lombok.Builder;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 
@@ -18,15 +15,6 @@ public class LogAnnotationScanner {
 
 
         return null;
-    }
-
-    protected Class<?> getCallerClass() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        try {
-            return Class.forName(stackTraceElements[5].getClassName());
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
     }
 
     /**
