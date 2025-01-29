@@ -1,5 +1,6 @@
 package com.forestfull.log.logger;
 
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -16,7 +17,6 @@ public class LoggingAspect {
         System.out.println("Method " + joinPoint.getSignature().getName() + " is called with args: ");
         for (Object arg : joinPoint.getArgs()) {
             System.out.println("Parameter: " + arg);
-
 
         }
     }
