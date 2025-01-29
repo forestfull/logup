@@ -45,6 +45,10 @@ public class Log {
         customConfiguration(KoLoggerFactoryBean.builder().build());
     }
 
+    public static void customConfiguration(Level level) {
+        customConfiguration(KoLoggerFactoryBean.builder().level(level).build());
+    }
+
     /**
      * 직접 선언할 경우 쓰는 함수
      */
