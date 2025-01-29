@@ -215,7 +215,7 @@ public class Log {
                     final String currentTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date()));
                     final String existedTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date(logFile.lastModified())));
                     if (!currentTimeFormatName.equals(existedTimeFormatName)) {
-                        boolean isSucceed = logFile.renameTo(new File(existedTimeFormatName));
+                        boolean isSucceed = logFile.renameTo(new File(logFileDirectory + File.separator + existedTimeFormatName));
                         if (!isSucceed) throw new IOException("Failed to rename log file: " + existedTimeFormatName);
                         logFile.deleteOnExit();
                     }
