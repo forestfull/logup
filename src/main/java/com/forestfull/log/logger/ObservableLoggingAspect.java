@@ -8,7 +8,8 @@ import org.aspectj.lang.annotation.Before;
 @Aspect
 public class ObservableLoggingAspect {
 
-    @Before("@within(com.forestfull.log.config.Observable) || @annotation(com.forestfull.log.config.Observable)")
+    //    @Before("@within(com.forestfull.log.config.Observable) || @annotation(com.forestfull.log.config.Observable)")
+    @Before("execution(* *(..))")
     public void logMethodCall(JoinPoint joinPoint) {
         System.out.println("Method " + joinPoint.getSignature().getName() + " is called with args: ");
         for (Object arg : joinPoint.getArgs()) {
