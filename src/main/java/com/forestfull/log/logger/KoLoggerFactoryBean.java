@@ -37,6 +37,18 @@ public class KoLoggerFactoryBean {
         private SimpleDateFormat dateFormat;
         private String logFileDirectory;
 
+        public static class Builder {
+            private String placeHolder;
+            private SimpleDateFormat dateFormat;
+            private String logFileDirectory;
+        }
+
+        public FileRecorder(String placeHolder, SimpleDateFormat dateFormat, String logFileDirectory) {
+            this.placeHolder = placeHolder;
+            this.dateFormat = dateFormat;
+            this.logFileDirectory = logFileDirectory;
+        }
+
         public SimpleDateFormat getDateFormat() {
             return dateFormat;
         }

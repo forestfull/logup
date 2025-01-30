@@ -1,14 +1,14 @@
 package com.forestfull.log.logger;
 
-import lombok.Builder;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-@Builder
 public class LogAnnotationScanner {
+
+
 
 
     protected Set<Class<?>> getAnnotatedTarget() {
