@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
  *
  * <ul>
  * <li><b>OFF</b>
- * <li><s>ERROR</s>
+ * <li><b>ERROR</b>
  * <li><b>WARN</b>
  * <li><b>INFO</b>
  * <li><b>ALL</b>
