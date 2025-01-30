@@ -1,7 +1,6 @@
 package com.forestfull.log.logger;
 
 import com.forestfull.log.config.Level;
-import lombok.*;
 
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutorService;
@@ -24,8 +23,6 @@ import java.util.concurrent.Executors;
  * @version 1.0
  * @since JDK 1.6
  */
-@Setter
-@Getter
 @Builder
 public class KoLoggerFactoryBean {
 
@@ -34,18 +31,60 @@ public class KoLoggerFactoryBean {
     private FileRecorder fileRecorder;
     private Level level;
 
-    @Getter
     @Builder
     public static class FileRecorder {
         private String placeHolder;
         private SimpleDateFormat dateFormat;
         private String logFileDirectory;
+
+        public SimpleDateFormat getDateFormat() {
+            return dateFormat;
+        }
+
+        public String getPlaceHolder() {
+            return placeHolder;
+        }
+
+        public String getLogFileDirectory() {
+            return logFileDirectory;
+        }
     }
 
-    @Getter
     @Builder
     public static class Formatter {
         private String placeHolder;
         private SimpleDateFormat datetime;
+
+        public String getPlaceHolder() {
+            return placeHolder;
+        }
+
+        public SimpleDateFormat getDatetime() {
+            return datetime;
+        }
+    }
+
+    public Formatter getFormatter() {
+        return formatter;
+    }
+
+    public void setFormatter(Formatter formatter) {
+        this.formatter = formatter;
+    }
+
+    public FileRecorder getFileRecorder() {
+        return fileRecorder;
+    }
+
+    public void setFileRecorder(FileRecorder fileRecorder) {
+        this.fileRecorder = fileRecorder;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
     }
 }
