@@ -1,8 +1,6 @@
 package com.forestfull.log.logger.util;
 
-import com.forestfull.log.logger.FileRecorder;
 import com.forestfull.log.logger.Level;
-import com.forestfull.log.logger.LogFormatter;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -24,18 +22,22 @@ public class Log {
     private Log() {
     }
 
-    protected static Log getInstance() {
-        if (Log.instance == null)
-            Log.instance = new Log();
+    public static Log getInstance() {
+        return getInstance(KoLoggerFactoryBean.builder().logFormatter(LogFormatter.getInstance()).build());
+    }
 
-        if (Log.logFactory == null)
-            Log.logFactory = new LogFactory();
+    public static Log getInstance(KoLoggerFactoryBean factoryBean) {
+        if (Log.instance == null) {
+			Log.instance = new Log();
 
-        if (Log.factoryBean == null) {
-            Log.factoryBean = KoLoggerFactoryBean.builder().logFormatter(LogFormatter.getInstance()).build();
+			if (Log.logFactory == null)
+				Log.logFactory = new LogFactory();
+
+			if (Log.factoryBean == null)
+				Log.factoryBean = factoryBean.clone();
         }
 
-        return instance;
+        return Log.instance;
     }
 
     public Log next() {
@@ -45,30 +47,53 @@ public class Log {
     }
 
     public static Log info(Object... msg) {
-        return getInstanceAndWrite(Level.INFO, msg);
+        Level configLevel = Log.factoryBean.getLevel();
+        return configLevel.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
     }
 
     public static Log warn(Object... msg) {
-        return getInstanceAndWrite(Level.WARN, msg);
+        Level configLevel = Log.factoryBean.getLevel();
+		return configLevel.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
     }
 
     public static Log error(Object... msg) {
-        return getInstanceAndWrite(Level.ERROR, msg);
+        Level configLevel = Log.factoryBean.getLevel();
+        return configLevel.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
     }
 
     public Log andInfo(Object... msg) {
-        write(Level.INFO, msg);
-        return this;
+        Level configLevel = Log.factoryBean.getLevel();
+        if (configLevel.compareTo(Level.INFO) > 0){
+			return Log.instance;
+
+		} else {
+            write(Level.INFO, msg);
+            return this;
+
+		}
     }
 
     public Log andWarn(Object... msg) {
-        write(Level.WARN, msg);
-        return this;
+        Level configLevel = Log.factoryBean.getLevel();
+        if (configLevel.compareTo(Level.WARN) > 0){
+			return Log.instance;
+
+		} else {
+            write(Level.WARN, msg);
+            return this;
+		}
     }
 
     public Log andError(Object... msg) {
-        write(Level.ERROR, msg);
-        return this;
+        Level configLevel = Log.factoryBean.getLevel();
+        if (configLevel.compareTo(Level.ERROR) > 0) {
+            return Log.instance;
+
+        } else {
+            write(Level.ERROR, msg);
+            return this;
+
+        }
     }
 
     private static Log getInstanceAndWrite(Level level, Object... msg) {
@@ -76,11 +101,8 @@ public class Log {
         return Log.instance;
     }
 
-    private void write(final Level level, final Object... messages) {
+    protected void write(final Level level, final Object... messages) {
         if (messages == null || messages.length == 0) return;
-
-        Level configLevel = Log.factoryBean.getLevel();
-        if (configLevel.compareTo(level) > 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
         KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
@@ -94,11 +116,11 @@ public class Log {
 					msgBuilder.append(message);
 				}
 
-                final String logMessage = formatter
+				final String logMessage = formatter
                         .getPlaceholder()
                         .replace(LogFormatter.MessagePattern.DATETIME, now)
                         .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
-                        .replace(LogFormatter.MessagePattern.LEVEL, level.name().substring(0, 4))
+                        .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level.name().substring(0, 4))
                         .replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
                         .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
 

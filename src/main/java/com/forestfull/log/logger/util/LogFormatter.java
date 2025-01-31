@@ -1,4 +1,4 @@
-package com.forestfull.log.logger;
+package com.forestfull.log.logger.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,11 +43,11 @@ public class LogFormatter {
 		return this;
 	}
 
-	public String getPlaceholder() {
+	protected String getPlaceholder() {
 		return placeholder;
 	}
 
-	public SimpleDateFormat getDateTimeFormat() {
+	protected SimpleDateFormat getDateTimeFormat() {
 		return dateTimeFormat;
 	}
 }

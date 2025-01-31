@@ -1,29 +1,29 @@
 package com.forestfull.log.logger.util;
 
+import com.forestfull.log.logger.Level;
+import com.forestfull.log.logger.annotation.ObservableArguments;
+import com.forestfull.log.logger.annotation.ObservableReturnValue;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.reflect.MethodSignature;
+
+import java.lang.reflect.Method;
 
 public class LoggingAspect {
 
-	private static void logStepByLevel(Log log, StringBuilder argumentString) {
-		switch (Log.factoryBean.getLevel()) {
-			case ALL:
-			case INFO:
-				log.andInfo(argumentString.toString()); break;
-			case WARN:
-				log.andWarn(argumentString.toString()); break;
-			case ERROR:
-				log.andError(argumentString.toString()); break;
-		}
-	}
-
 	@Aspect
 	public static class Observable {
-		@Before("@annotation(com.forestfull.log.logger.annotation.ObservableArguments) && execution(* *(..)) && !within(com.forestfull.log.logger.util.ObservableLoggingAspect)")
+		@Before("@annotation(com.forestfull.log.logger.annotation.ObservableArguments) && execution(* *(..)) && !within(com.forestfull.log.logger.util.LoggingAspect$Observable)")
 		public void methodArguments(JoinPoint joinPoint) {
-			Log log = Log.getInstance();
+			final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+			final Method method = signature.getMethod();
+			final Level annotationLevel = method.getAnnotation(ObservableArguments.class).level();
+
+			if (annotationLevel == null) return;
+			if (annotationLevel == Level.OFF) return;
+			if (annotationLevel != Level.ALL && annotationLevel.compareTo(Log.factoryBean.getLevel()) < 0) return;
 
 			final Object[] args = joinPoint.getArgs();
 			final StringBuilder argumentString = new StringBuilder();
@@ -50,12 +50,18 @@ public class LoggingAspect {
 
 			argumentString.append(")");
 
-			logStepByLevel(log, argumentString);
+			Log.getInstance().write(annotationLevel, argumentString);
 		}
 
-		@AfterReturning(value = "@annotation(com.forestfull.log.logger.annotation.ObservableReturnValue) && execution(* *(..)) && !within(com.forestfull.log.logger.util.ObservableLoggingAspect)", returning = "returnValue")
+		@AfterReturning(value = "@annotation(com.forestfull.log.logger.annotation.ObservableReturnValue) && execution(* *(..)) && !within(com.forestfull.log.logger.util.LoggingAspect$Observable)", returning = "returnValue")
 		public void methodReturns(JoinPoint joinPoint, Object returnValue) {
-			Log log = Log.getInstance();
+			final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+			final Method method = signature.getMethod();
+			final Level annotationLevel = method.getAnnotation(ObservableReturnValue.class).level();
+
+			if (annotationLevel == null) return;
+			if (annotationLevel == Level.OFF) return;
+			if (annotationLevel != Level.ALL && annotationLevel.compareTo(Log.factoryBean.getLevel()) < 0) return;
 
 			final StringBuilder argumentString = new StringBuilder();
 			final String className = joinPoint
@@ -68,7 +74,7 @@ public class LoggingAspect {
 						  .append(" -> {")
 						  .append(returnValue).append("}");
 
-			logStepByLevel(log, argumentString);
+			Log.getInstance().write(annotationLevel, argumentString);
 		}
 	}
 
@@ -86,8 +92,6 @@ public class LoggingAspect {
 		}
 
 		private void sqlQueryLogging(JoinPoint joinPoint, String sql) {
-			Log log = Log.getInstance();
-
 			if (Boolean.FALSE.equals(Log.factoryBean.getJdbc())) return;
 
 			final StringBuilder argumentString = new StringBuilder();
@@ -100,7 +104,7 @@ public class LoggingAspect {
 						  .append(methodName)
 						  .append(Log.newLine).append(sql);
 
-			logStepByLevel(log, argumentString);
+			Log.getInstance().write(Log.factoryBean.getLevel(), argumentString);
 		}
 	}
 }

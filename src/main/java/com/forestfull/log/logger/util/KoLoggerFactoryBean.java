@@ -1,8 +1,6 @@
 package com.forestfull.log.logger.util;
 
-import com.forestfull.log.logger.FileRecorder;
 import com.forestfull.log.logger.Level;
-import com.forestfull.log.logger.LogFormatter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,7 +23,7 @@ import java.util.concurrent.Executors;
  * @since JDK 1.6
  */
 
-public class KoLoggerFactoryBean {
+public class KoLoggerFactoryBean implements Cloneable {
 
 	protected static final ExecutorService logConsoleExecutor = Executors.newSingleThreadExecutor();
 	private final LogFormatter logFormatter;
@@ -36,8 +34,7 @@ public class KoLoggerFactoryBean {
 	KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level, final Boolean jdbc) {
 		this.logFormatter = logFormatter;
 		this.fileRecorder = fileRecorder;
-		this.level = level;
-		this.jdbc = jdbc;
+		this.level = level; this.jdbc = jdbc;
 	}
 
 	public static KoLoggerFactoryBeanBuilder builder() {
@@ -54,23 +51,19 @@ public class KoLoggerFactoryBean {
 		}
 
 		public KoLoggerFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
-			this.logFormatter = logFormatter;
-			return this;
+			this.logFormatter = logFormatter; return this;
 		}
 
 		public KoLoggerFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
-			this.fileRecorder = fileRecorder;
-			return this;
+			this.fileRecorder = fileRecorder; return this;
 		}
 
 		public KoLoggerFactoryBeanBuilder level(final Level level) {
-			this.level = level;
-			return this;
+			this.level = level; return this;
 		}
 
 		public KoLoggerFactoryBeanBuilder jdbc(final Boolean jdbc) {
-			this.jdbc = jdbc;
-			return this;
+			this.jdbc = jdbc; return this;
 		}
 
 		public KoLoggerFactoryBean build() {
@@ -96,7 +89,7 @@ public class KoLoggerFactoryBean {
 					fileRecorder.dateFormat("yyyy-MM-dd");
 			}
 
- 			return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level, false);
+			return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level, false);
 		}
 
 		public String toString() {
@@ -105,19 +98,26 @@ public class KoLoggerFactoryBean {
 		}
 	}
 
-	public LogFormatter getLogFormatter() {
+	protected LogFormatter getLogFormatter() {
 		return logFormatter;
 	}
 
-	public FileRecorder getFileRecorder() {
+	protected FileRecorder getFileRecorder() {
 		return fileRecorder;
 	}
 
-	public Level getLevel() {
+	protected Level getLevel() {
 		return level;
 	}
 
-	public Boolean getJdbc() {
+	protected Boolean getJdbc() {
 		return jdbc;
+	}
+
+	public KoLoggerFactoryBean clone() {
+		try {
+			return (KoLoggerFactoryBean) super.clone();
+		} catch (CloneNotSupportedException ignore) {
+		} return null;
 	}
 }

@@ -1,4 +1,4 @@
-package com.forestfull.log.logger;
+package com.forestfull.log.logger.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,15 +47,15 @@ public class FileRecorder {
 		return this;
 	}
 
-	public String getPlaceholder() {
+	protected String getPlaceholder() {
 		return placeholder;
 	}
 
-	public SimpleDateFormat getDateFormat() {
+	protected SimpleDateFormat getDateFormat() {
 		return dateFormat;
 	}
 
-	public String getLogFileDirectory() {
+	protected String getLogFileDirectory() {
 		return logFileDirectory;
 	}
 }
