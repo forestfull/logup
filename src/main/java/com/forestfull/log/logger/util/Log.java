@@ -9,7 +9,6 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Log {
@@ -20,7 +19,7 @@ public class Log {
 
     protected static KoLoggerFactoryBean factoryBean = null;
 
-    private final static String newLine = System.getProperty("line.separator");
+    protected final static String newLine = System.getProperty("line.separator");
 
     private Log() {
     }
