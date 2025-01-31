@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 
 public class KoLoggerFactoryBean {
 
-	protected static final ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
+	protected static final ExecutorService logConsoleExecutor = Executors.newSingleThreadExecutor();
 	private final LogFormatter logFormatter;
 	private final FileRecorder fileRecorder;
 	private final Level level;

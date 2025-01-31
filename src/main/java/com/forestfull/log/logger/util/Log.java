@@ -18,14 +18,14 @@ public class Log {
     private static LogFactory logFactory = null;
     private static Log instance = null;
 
-    private static KoLoggerFactoryBean factoryBean = null;
+    protected static KoLoggerFactoryBean factoryBean = null;
 
     private final static String newLine = System.getProperty("line.separator");
 
     private Log() {
     }
 
-    private static Log getInstance() {
+    protected static Log getInstance() {
         if (Log.instance == null)
             Log.instance = new Log();
 
