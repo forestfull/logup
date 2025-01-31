@@ -1,18 +1,33 @@
 package com.forestfull.test;
 
-import com.forestfull.log.logger.annotation.Observable;
-import com.forestfull.log.logger.util.Log;
+import com.forestfull.log.logger.annotation.ObservableArguments;
+import com.forestfull.log.logger.annotation.ObservableReturnValue;
 
-@Observable
 public class Test {
 
+	public static Test getInstance() {
+		return new Test();
+	}
+
+
+	@ObservableArguments
+	@ObservableReturnValue
+	public String test(Object s, Object s3, Object s22){
+		return "testShit";
+	}
+
+	@ObservableArguments
+	@ObservableReturnValue
+	public void test1(Object s){
+
+	}
 
 	public static void main(String[] args) {
-		Test test1 = new Test();
-		Test test = TestClass.getInstance();
+		Test test = new Test();
 
-		TestClass testClass = new TestClass();
-		testClass.test(1, 23423, 2342);
+		test.test(1, 23423, 2342);
+		test.test1(1);
+
 	}
 
 }
