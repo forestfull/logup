@@ -1,6 +1,6 @@
-package com.forestfull.log.logger.util;
+package com.forestfull.logger.util;
 
-import com.forestfull.log.logger.Level;
+import com.forestfull.logger.Level;
 
 import java.io.File;
 import java.io.FileDescriptor;

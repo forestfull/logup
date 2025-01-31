@@ -42,6 +42,26 @@
     </scm>
 
     <dependencies>
+        <!-- Spring Core (Spring 4.x는 JDK 1.6 지원) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>4.3.30.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.3.30.RELEASE</version>
+        </dependency>
+
+        <!-- Spring Yaml Parser (JDK 1.6 지원 가능) -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.26</version>
+        </dependency>
+
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>

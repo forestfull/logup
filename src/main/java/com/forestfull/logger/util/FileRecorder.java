@@ -1,4 +1,4 @@
-package com.forestfull.log.logger.util;
+package com.forestfull.logger.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

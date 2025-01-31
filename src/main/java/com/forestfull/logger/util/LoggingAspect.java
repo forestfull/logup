@@ -1,8 +1,8 @@
-package com.forestfull.log.logger.util;
+package com.forestfull.logger.util;
 
-import com.forestfull.log.logger.Level;
-import com.forestfull.log.logger.annotation.ObservableArguments;
-import com.forestfull.log.logger.annotation.ObservableReturnValue;
+import com.forestfull.logger.Level;
+import com.forestfull.logger.annotation.ObservableArguments;
+import com.forestfull.logger.annotation.ObservableReturnValue;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,7 +15,7 @@ public class LoggingAspect {
 
 	@Aspect
 	public static class Observable {
-		@Before("@annotation(com.forestfull.log.logger.annotation.ObservableArguments) && execution(* *(..)) && !within(com.forestfull.log.logger.util.LoggingAspect$Observable)")
+		@Before("@annotation(com.forestfull.logger.annotation.ObservableArguments) && execution(* *(..)) && !within(com.forestfull.logger.util.LoggingAspect$Observable)")
 		public void methodArguments(JoinPoint joinPoint) {
 			final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 			final Method method = signature.getMethod();
@@ -53,7 +53,7 @@ public class LoggingAspect {
 			Log.getInstance().write(annotationLevel, argumentString);
 		}
 
-		@AfterReturning(value = "@annotation(com.forestfull.log.logger.annotation.ObservableReturnValue) && execution(* *(..)) && !within(com.forestfull.log.logger.util.LoggingAspect$Observable)", returning = "returnValue")
+		@AfterReturning(value = "@annotation(com.forestfull.logger.annotation.ObservableReturnValue) && execution(* *(..)) && !within(com.forestfull.logger.util.LoggingAspect$Observable)", returning = "returnValue")
 		public void methodReturns(JoinPoint joinPoint, Object returnValue) {
 			final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 			final Method method = signature.getMethod();
