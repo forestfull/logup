@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 
 public class KoLoggerFactoryBean implements Cloneable {
 
-	protected static final ExecutorService logConsoleExecutor = Executors.newSingleThreadExecutor();
+	protected static final ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
 	private final LogFormatter logFormatter;
 	private final FileRecorder fileRecorder;
 	private final Level level;
