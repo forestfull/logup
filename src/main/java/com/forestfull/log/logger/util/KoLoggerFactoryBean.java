@@ -31,11 +31,13 @@ public class KoLoggerFactoryBean {
 	private final LogFormatter logFormatter;
 	private final FileRecorder fileRecorder;
 	private final Level level;
+	private final Boolean jdbc;
 
-	KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level) {
+	KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level, final Boolean jdbc) {
 		this.logFormatter = logFormatter;
 		this.fileRecorder = fileRecorder;
 		this.level = level;
+		this.jdbc = jdbc;
 	}
 
 	public static KoLoggerFactoryBeanBuilder builder() {
@@ -46,6 +48,7 @@ public class KoLoggerFactoryBean {
 		private LogFormatter logFormatter;
 		private FileRecorder fileRecorder;
 		private Level level;
+		private Boolean jdbc;
 
 		KoLoggerFactoryBeanBuilder() {
 		}
@@ -65,8 +68,14 @@ public class KoLoggerFactoryBean {
 			return this;
 		}
 
+		public KoLoggerFactoryBeanBuilder jdbc(final Boolean jdbc) {
+			this.jdbc = jdbc;
+			return this;
+		}
+
 		public KoLoggerFactoryBean build() {
 			this.level = level == null ? Level.ALL : level;
+			this.jdbc = jdbc != null;
 
 			if (logFormatter != null) {
 				if (logFormatter.getPlaceholder() == null)
@@ -87,7 +96,7 @@ public class KoLoggerFactoryBean {
 					fileRecorder.dateFormat("yyyy-MM-dd");
 			}
 
- 			return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level);
+ 			return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level, false);
 		}
 
 		public String toString() {
@@ -106,5 +115,9 @@ public class KoLoggerFactoryBean {
 
 	public Level getLevel() {
 		return level;
+	}
+
+	public Boolean getJdbc() {
+		return jdbc;
 	}
 }

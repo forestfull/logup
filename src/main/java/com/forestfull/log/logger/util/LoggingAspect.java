@@ -88,6 +88,8 @@ public class LoggingAspect {
 		private void sqlQueryLogging(JoinPoint joinPoint, String sql) {
 			Log log = Log.getInstance();
 
+			if (Boolean.FALSE.equals(Log.factoryBean.getJdbc())) return;
+
 			final StringBuilder argumentString = new StringBuilder();
 			final String className = joinPoint
 					.getSignature().getDeclaringType()
