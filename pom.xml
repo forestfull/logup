@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>4.3.30.RELEASE</version>
+            <version>6.1.14</version>
         </dependency>
 
         <!-- Spring Yaml Parser (JDK 1.6 지원 가능) -->
