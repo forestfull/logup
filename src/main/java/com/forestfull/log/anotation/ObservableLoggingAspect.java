@@ -1,4 +1,4 @@
-package com.forestfull.log.logger;
+package com.forestfull.log.anotation;
 
 
 import org.aspectj.lang.JoinPoint;

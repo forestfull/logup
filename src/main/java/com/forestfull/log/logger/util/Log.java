@@ -1,6 +1,8 @@
-package com.forestfull.log.logger;
+package com.forestfull.log.logger.util;
 
-import com.forestfull.log.config.Level;
+import com.forestfull.log.logger.FileRecorder;
+import com.forestfull.log.logger.Level;
+import com.forestfull.log.logger.LogFormatter;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -9,26 +11,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
 
 public class Log {
-
-    public static class MessagePattern {
-        private final static String DEFAULT = MessagePattern.DATETIME + " [" + MessagePattern.THREAD + ":" + MessagePattern.LEVEL + "] - " + MessagePattern.MESSAGE + MessagePattern.NEW_LINE;
-        private final static String DATETIME = "{datetime}";
-        private final static String THREAD = "{thread}";
-        private final static String LEVEL = "{level}";
-        private final static String MESSAGE = "{msg}";
-        private final static String NEW_LINE = "{new-line}";
-    }
-
-    public static class FilePattern {
-        private final static String[] filePath = System.getProperty("user.dir").split("\\\\"); //TODO 윈도우 구분 필요 나주엥
-        private final static String PROJECT_NAME = filePath[filePath.length - 1];
-        private final static String DATE = "{date}";
-        private final static String DEFAULT = PROJECT_NAME + DATE + ".log";
-    }
-
 
     private final static String CHARSET_UTF_8 = "UTF-8";
     private static LogFactory logFactory = null;
@@ -41,61 +25,15 @@ public class Log {
     private Log() {
     }
 
-    public static void customConfiguration() {
-        customConfiguration(KoLoggerFactoryBean.builder().build());
-    }
-
-    public static void customConfiguration(Level level) {
-        customConfiguration(KoLoggerFactoryBean.builder().level(level).build());
-    }
-
-    /**
-     * 직접 선언할 경우 쓰는 함수
-     */
-    public static void customConfiguration(KoLoggerFactoryBean factoryBean) {
-        if (factoryBean == null) throw new NullPointerException("customConfiguration(KoLoggerFactoryBean)");
-
-        optionalDefaultFactoryBean(factoryBean);
-        Log.factoryBean = factoryBean;
-
-        Set<Class<?>> annotatedTarget = LogAnnotationScanner.builder().build().getAnnotatedTarget();
-
-
-//        LogAnnotationScanner.builder().build().getAnnotatedTarget();
-
-        //TODO: JDBC 읽기 구현
-
-    }
-
-    private static void optionalDefaultFactoryBean(KoLoggerFactoryBean factoryBean) {
-        if (factoryBean.getLevel() == null) {
-            factoryBean.setLevel(Level.ALL);
-        }
-        if (factoryBean.getFormatter() == null) {
-            factoryBean.setFormatter(KoLoggerFactoryBean.Formatter.builder()
-                    .placeHolder(MessagePattern.DEFAULT)
-                    .datetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-                    .build());
-
-        }
-        if (factoryBean.getFileRecorder() == null) {
-            factoryBean.setFileRecorder(KoLoggerFactoryBean.FileRecorder.builder()
-                    .logFileDirectory("logs/")
-                    .dateFormat(new SimpleDateFormat("yyyy-MM-dd"))
-                    .placeHolder(FilePattern.DEFAULT)
-                    .build());
-        }
-    }
-
     private static Log getInstance() {
         if (Log.instance == null)
             Log.instance = new Log();
+
         if (Log.logFactory == null)
             Log.logFactory = new LogFactory();
+
         if (Log.factoryBean == null) {
-            final KoLoggerFactoryBean bean = KoLoggerFactoryBean.builder().build();
-            optionalDefaultFactoryBean(bean);
-            Log.factoryBean = bean;
+            Log.factoryBean = KoLoggerFactoryBean.builder().logFormatter(LogFormatter.getInstance()).build();
         }
 
         return instance;
@@ -149,20 +87,20 @@ public class Log {
         KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                KoLoggerFactoryBean.Formatter formatter = factoryBean.getFormatter();
-                final String now = formatter.getDatetime() != null ? formatter.getDatetime().format(new Date()) : "";
+                LogFormatter formatter = factoryBean.getLogFormatter();
+                final String now = formatter.getDateTimeFormat() != null ? formatter.getDateTimeFormat().format(new Date()) : "";
                 final StringBuilder msgBuilder = new StringBuilder();
 
                 for (Object message : messages)
                     msgBuilder.append(message);
 
                 final String logMessage = formatter
-                        .getPlaceHolder()
-                        .replace(MessagePattern.DATETIME, now)
-                        .replace(MessagePattern.THREAD, currentThreadName)
-                        .replace(MessagePattern.LEVEL, level.name().substring(0, 4))
-                        .replace(MessagePattern.MESSAGE, msgBuilder.toString())
-                        .replace(MessagePattern.NEW_LINE, Log.newLine);
+                        .getPlaceholder()
+                        .replace(LogFormatter.MessagePattern.DATETIME, now)
+                        .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
+                        .replace(LogFormatter.MessagePattern.LEVEL, level.name().substring(0, 4))
+                        .replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
+                        .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
 
                 logFactory.console(logMessage);
                 logFactory.file(logMessage);
@@ -185,7 +123,7 @@ public class Log {
         }
 
         private synchronized void file(String msg) {
-            final KoLoggerFactoryBean.FileRecorder fileRecorder = factoryBean.getFileRecorder();
+            final FileRecorder fileRecorder = factoryBean.getFileRecorder();
 
             String logFileDirectory = fileRecorder.getLogFileDirectory();
 
@@ -206,14 +144,14 @@ public class Log {
                     if (!isSucceed) throw new IOException("Failed to create log directory: " + rootDirectory);
                 }
 
-                final File logFile = new File(logFileDirectory + File.separator + fileRecorder.getPlaceHolder().replace(FilePattern.DATE, ""));
+                final File logFile = new File(logFileDirectory + File.separator + fileRecorder.getPlaceholder().replace(FileRecorder.FilePattern.DATE, ""));
                 if (!logFile.exists()) {
                     boolean isSucceed = logFile.createNewFile();
                     if (!isSucceed) throw new IOException("Failed to create log file: " + logFile);
 
                 } else if (logFile.isFile()) {
-                    final String currentTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date()));
-                    final String existedTimeFormatName = fileRecorder.getPlaceHolder().replace(FilePattern.DATE, fileRecorder.getDateFormat().format(new Date(logFile.lastModified())));
+                    final String currentTimeFormatName = fileRecorder.getPlaceholder().replace(FileRecorder.FilePattern.DATE, fileRecorder.getDateFormat().format(new Date()));
+                    final String existedTimeFormatName = fileRecorder.getPlaceholder().replace(FileRecorder.FilePattern.DATE, fileRecorder.getDateFormat().format(new Date(logFile.lastModified())));
                     if (!currentTimeFormatName.equals(existedTimeFormatName)) {
                         boolean isSucceed = logFile.renameTo(new File(logFileDirectory + File.separator + existedTimeFormatName));
                         if (!isSucceed) throw new IOException("Failed to rename log file: " + existedTimeFormatName);
