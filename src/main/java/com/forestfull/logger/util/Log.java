@@ -109,8 +109,8 @@ public class Log {
         if (messages == null || messages.length == 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
-        KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
-            public void run() {
+//        KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
+//            public void run() {
                 LogFormatter formatter = factoryBean.getLogFormatter();
                 final String now = formatter.getDateTimeFormat() != null ? formatter.getDateTimeFormat().format(new Date()) : "";
                 final StringBuilder msgBuilder = new StringBuilder();
@@ -130,8 +130,8 @@ public class Log {
 
                 logFactory.console(logMessage);
                 logFactory.file(logMessage);
-            }
-        });
+//            }
+//        });
     }
 
     private static class LogFactory {
@@ -149,6 +149,8 @@ public class Log {
         }
 
         private void file(String msg) {
+            if (factoryBean.getFileRecorder() == null) return;
+
             final FileRecorder fileRecorder = factoryBean.getFileRecorder();
 
             String logFileDirectory = fileRecorder.getLogFileDirectory();
