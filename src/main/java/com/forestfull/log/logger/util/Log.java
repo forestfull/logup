@@ -85,14 +85,15 @@ public class Log {
 
         final String currentThreadName = Thread.currentThread().getName();
         KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
-            @Override
             public void run() {
                 LogFormatter formatter = factoryBean.getLogFormatter();
                 final String now = formatter.getDateTimeFormat() != null ? formatter.getDateTimeFormat().format(new Date()) : "";
                 final StringBuilder msgBuilder = new StringBuilder();
 
-                for (Object message : messages)
-                    msgBuilder.append(message);
+				for (int i = 0; i < messages.length; i++) {
+					Object message = messages[i];
+					msgBuilder.append(message);
+				}
 
                 final String logMessage = formatter
                         .getPlaceholder()
