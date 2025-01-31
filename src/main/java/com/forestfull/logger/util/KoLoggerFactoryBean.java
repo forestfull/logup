@@ -25,99 +25,106 @@ import java.util.concurrent.Executors;
 
 public class KoLoggerFactoryBean implements Cloneable {
 
-	protected static final ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
-	private final LogFormatter logFormatter;
-	private final FileRecorder fileRecorder;
-	private final Level level;
-	private final Boolean jdbc;
+    protected static final ExecutorService logConsoleExecutor = Executors.newCachedThreadPool();
+    private final LogFormatter logFormatter;
+    private final FileRecorder fileRecorder;
+    private final Level level;
+    private final Boolean jdbc;
 
-	KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level, final Boolean jdbc) {
-		this.logFormatter = logFormatter;
-		this.fileRecorder = fileRecorder;
-		this.level = level; this.jdbc = jdbc;
-	}
+    KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level, final Boolean jdbc) {
+        this.logFormatter = logFormatter;
+        this.fileRecorder = fileRecorder;
+        this.level = level;
+        this.jdbc = jdbc;
+    }
 
-	public static KoLoggerFactoryBeanBuilder builder() {
-		return new KoLoggerFactoryBeanBuilder();
-	}
+    public static KoLoggerFactoryBeanBuilder builder() {
+        return new KoLoggerFactoryBeanBuilder();
+    }
 
-	public static class KoLoggerFactoryBeanBuilder {
-		private LogFormatter logFormatter;
-		private FileRecorder fileRecorder;
-		private Level level;
-		private Boolean jdbc;
+    public static class KoLoggerFactoryBeanBuilder {
+        private LogFormatter logFormatter;
+        private FileRecorder fileRecorder;
+        private Level level;
+        private Boolean jdbc;
 
-		KoLoggerFactoryBeanBuilder() {
-		}
+        KoLoggerFactoryBeanBuilder() {
+        }
 
-		public KoLoggerFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
-			this.logFormatter = logFormatter; return this;
-		}
+        public KoLoggerFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
+            this.logFormatter = logFormatter;
+            return this;
+        }
 
-		public KoLoggerFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
-			this.fileRecorder = fileRecorder; return this;
-		}
+        public KoLoggerFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
+            this.fileRecorder = fileRecorder;
+            return this;
+        }
 
-		public KoLoggerFactoryBeanBuilder level(final Level level) {
-			this.level = level; return this;
-		}
+        public KoLoggerFactoryBeanBuilder level(final Level level) {
+            this.level = level;
+            return this;
+        }
 
-		public KoLoggerFactoryBeanBuilder jdbc(final Boolean jdbc) {
-			this.jdbc = jdbc; return this;
-		}
+        public KoLoggerFactoryBeanBuilder jdbc(final Boolean jdbc) {
+            this.jdbc = jdbc;
+            return this;
+        }
 
-		public KoLoggerFactoryBean build() {
-			this.level = level == null ? Level.ALL : level;
-			this.jdbc = jdbc != null;
+        public KoLoggerFactoryBean build() {
+            this.level = level == null ? Level.ALL : level;
+            this.jdbc = jdbc != null;
 
-			if (logFormatter != null) {
-				if (logFormatter.getPlaceholder() == null)
-					logFormatter.placeholder(LogFormatter.MessagePattern.DEFAULT);
+            if (logFormatter == null)
+                this.logFormatter = LogFormatter.getInstance();
 
-				if (logFormatter.getDateTimeFormat() == null)
-					logFormatter.datetime("yyyy-MM-dd HH:mm:ss");
-			}
+			if (this.logFormatter.getPlaceholder() == null)
+                this.logFormatter.placeholder(LogFormatter.MessagePattern.DEFAULT);
 
-			if (fileRecorder != null) {
-				if (fileRecorder.getPlaceholder() == null)
-					fileRecorder.placeholder(FileRecorder.FilePattern.DEFAULT);
+			if (this.logFormatter.getDateTimeFormat() == null)
+                this.logFormatter.datetime("yyyy-MM-dd HH:mm:ss");
 
-				if (fileRecorder.getLogFileDirectory() == null)
-					fileRecorder.logFileDirectory("logs/");
+            if (fileRecorder != null) {
+                if (fileRecorder.getPlaceholder() == null)
+                    fileRecorder.placeholder(FileRecorder.FilePattern.DEFAULT);
 
-				if (fileRecorder.getDateFormat() == null)
-					fileRecorder.dateFormat("yyyy-MM-dd");
-			}
+                if (fileRecorder.getLogFileDirectory() == null)
+                    fileRecorder.logFileDirectory("logs/");
 
-			return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level, false);
-		}
+                if (fileRecorder.getDateFormat() == null)
+                    fileRecorder.dateFormat("yyyy-MM-dd");
+            }
 
-		public String toString() {
-			String var10000 = String.valueOf(this.logFormatter);
-			return "KoLoggerFactoryBean.KoLoggerFactoryBeanBuilder(logFormatter=" + var10000 + ", fileRecorder=" + String.valueOf(this.fileRecorder) + ", level=" + String.valueOf(this.level) + ")";
-		}
-	}
+            return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level, false);
+        }
 
-	protected LogFormatter getLogFormatter() {
-		return logFormatter;
-	}
+        public String toString() {
+            String var10000 = String.valueOf(this.logFormatter);
+            return "KoLoggerFactoryBean.KoLoggerFactoryBeanBuilder(logFormatter=" + var10000 + ", fileRecorder=" + String.valueOf(this.fileRecorder) + ", level=" + String.valueOf(this.level) + ")";
+        }
+    }
 
-	protected FileRecorder getFileRecorder() {
-		return fileRecorder;
-	}
+    protected LogFormatter getLogFormatter() {
+        return logFormatter;
+    }
 
-	protected Level getLevel() {
-		return level;
-	}
+    protected FileRecorder getFileRecorder() {
+        return fileRecorder;
+    }
 
-	protected Boolean getJdbc() {
-		return jdbc;
-	}
+    protected Level getLevel() {
+        return level;
+    }
 
-	public KoLoggerFactoryBean clone() {
-		try {
-			return (KoLoggerFactoryBean) super.clone();
-		} catch (CloneNotSupportedException ignore) {
-		} return null;
-	}
+    protected Boolean getJdbc() {
+        return jdbc;
+    }
+
+    public KoLoggerFactoryBean clone() {
+        try {
+            return (KoLoggerFactoryBean) super.clone();
+        } catch (CloneNotSupportedException ignore) {
+        }
+        return null;
+    }
 }

@@ -24,7 +24,7 @@ public class Log {
     }
 
     public static Log getInstance() {
-        return getInstance(KoLoggerFactoryBean.builder().logFormatter(LogFormatter.getInstance()).build());
+        return Log.instance == null ? getInstance(KoLoggerFactoryBean.builder().build()) : Log.instance;
     }
 
     public static Log getInstance(KoLoggerFactoryBean factoryBean) {
@@ -51,20 +51,17 @@ public class Log {
     }
 
     public static Log info(Object... msg) {
-        Log.getInstance();
-        Level configLevel = Log.factoryBean.getLevel();
+        Level configLevel = Log.factoryBean == null? Level.ALL : Log.factoryBean.getLevel();
         return configLevel.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
     }
 
     public static Log warn(Object... msg) {
-        Log.getInstance();
-        Level configLevel = Log.factoryBean.getLevel();
+        Level configLevel = Log.factoryBean == null? Level.ALL : Log.factoryBean.getLevel();
 		return configLevel.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
     }
 
     public static Log error(Object... msg) {
-        Log.getInstance();
-        Level configLevel = Log.factoryBean.getLevel();
+        Level configLevel = Log.factoryBean == null? Level.ALL : Log.factoryBean.getLevel();
         return configLevel.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
     }
 
@@ -138,7 +135,7 @@ public class Log {
     }
 
     private static class LogFactory {
-        private synchronized void console(final String msg) {
+        private void console(final String msg) {
             final byte[] msgStream = msg.getBytes(Charset.forName(CHARSET_UTF_8));
             final FileOutputStream fdOut = new FileOutputStream(FileDescriptor.out);
 
@@ -151,7 +148,7 @@ public class Log {
             }
         }
 
-        private synchronized void file(String msg) {
+        private void file(String msg) {
             final FileRecorder fileRecorder = factoryBean.getFileRecorder();
 
             String logFileDirectory = fileRecorder.getLogFileDirectory();
