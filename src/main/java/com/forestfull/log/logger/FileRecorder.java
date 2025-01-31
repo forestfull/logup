@@ -31,8 +31,9 @@ public class FileRecorder {
 
 		try {
 			format.format(new Date());
-		} catch (NullPointerException |
-				 IllegalArgumentException e) {
+		} catch (NullPointerException e) {
+			format = null;
+		} catch (IllegalArgumentException e) {
 			format = null;
 		} finally {
 			this.dateFormat = format;

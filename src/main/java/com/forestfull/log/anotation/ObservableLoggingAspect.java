@@ -14,7 +14,6 @@ public class ObservableLoggingAspect {
         System.out.println("Method " + joinPoint.getSignature().getName() + " is called with args: ");
         for (Object arg : joinPoint.getArgs()) {
             System.out.println("Parameter: " + arg);
-
         }
     }
 
