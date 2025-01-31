@@ -1,6 +1,7 @@
 package com.forestfull.logger.util;
 
 import com.forestfull.logger.Level;
+import com.forestfull.logger.config.ConfigLoader;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -28,9 +29,12 @@ public class Log {
 
     public static Log getInstance(KoLoggerFactoryBean factoryBean) {
         if (Log.instance == null) {
-			Log.instance = new Log();
+            Log.instance = new Log();
 
-			if (Log.logFactory == null)
+            // TODO: 스프링 연동 작업 필요
+            final ConfigLoader configLoader = new ConfigLoader();
+
+            if (Log.logFactory == null)
 				Log.logFactory = new LogFactory();
 
 			if (Log.factoryBean == null)
@@ -47,16 +51,19 @@ public class Log {
     }
 
     public static Log info(Object... msg) {
+        Log.getInstance();
         Level configLevel = Log.factoryBean.getLevel();
         return configLevel.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
     }
 
     public static Log warn(Object... msg) {
+        Log.getInstance();
         Level configLevel = Log.factoryBean.getLevel();
 		return configLevel.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
     }
 
     public static Log error(Object... msg) {
+        Log.getInstance();
         Level configLevel = Log.factoryBean.getLevel();
         return configLevel.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
     }
