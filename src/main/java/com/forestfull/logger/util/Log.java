@@ -6,14 +6,13 @@ import com.forestfull.logger.config.ConfigLoader;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class Log {
 
     private final static String CHARSET_UTF_8 = "UTF-8";
     private static LogFactory logFactory = null;
     private static Log instance = null;
+    private static Object[] placeOrder = new Object[]{};
 
     protected static KoLoggerFactoryBean factoryBean = null;
 
@@ -38,6 +37,41 @@ public class Log {
 
 			if (Log.factoryBean == null)
 				Log.factoryBean = factoryBean.clone();
+
+            int index = placeOrder.length;
+
+            char[] charArray = factoryBean.getLogFormatter()
+                                          .getPlaceholder()
+                                          .toCharArray();
+
+            for (int i = 0; i < charArray.length; i++) {
+                if (charArray[i] == '{'){
+                    StringBuilder mask = new StringBuilder();
+                    while (charArray[i] != '}' && i < charArray.length){
+                        mask.append(charArray[i]);
+                        i++;
+                    }
+
+                    if (LogFormatter.MessagePattern.DATETIME.equals(mask)){
+//                        placeOrder[index++] =
+                    } else if (LogFormatter.MessagePattern.LEVEL.equals(mask)){
+
+                    } else if (LogFormatter.MessagePattern.THREAD.equals(mask)){
+
+                    } else if (LogFormatter.MessagePattern.NEW_LINE.equals(mask)){
+
+                    } else if (LogFormatter.MessagePattern.MESSAGE.equals(mask)){
+
+                    }
+
+                } else {
+                    placeOrder[index++] = charArray[i];
+
+                }
+            }
+//            placeOrder[index++] = ;
+//            System.out.println(split);
+
         }
 
         return Log.instance;
