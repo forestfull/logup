@@ -108,9 +108,9 @@ public class Log {
         if (messages == null || messages.length == 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
-		try {
-			KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
-				public void run() {
+//		try {
+//			KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
+//				public void run() {
 					LogFormatter formatter = factoryBean.getLogFormatter();
 					final String now = formatter.getDateTimeFormat() != null ? formatter
 							.getDateTimeFormat()
@@ -133,13 +133,13 @@ public class Log {
 
 					logFactory.console(logMessage);
 					logFactory.file(logMessage);
-				}
-			}).get();
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
-		}
+//				}
+//			}).get();
+//		} catch (InterruptedException e) {
+//			throw new RuntimeException(e);
+//		} catch (ExecutionException e) {
+//			throw new RuntimeException(e);
+//		}
 	}
 
     private static class LogFactory {
