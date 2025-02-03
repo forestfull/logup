@@ -5,6 +5,7 @@ import com.forestfull.logger.config.ConfigLoader;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Log {
@@ -52,12 +53,22 @@ public class Log {
                         i++;
                     }
 
+                    /*
+							.replace(LogFormatter.MessagePattern.DATETIME, now)
+							.replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
+							.replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level
+									.name().substring(0, 4))
+							.replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
+							.replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
+*/
+
+
                     if (LogFormatter.MessagePattern.DATETIME.equals(mask)){
-//                        placeOrder[index++] =
+                        placeOrder[index++] = Log.factoryBean.getLogFormatter().getDateTimeFormat();
                     } else if (LogFormatter.MessagePattern.LEVEL.equals(mask)){
-
+                        placeOrder[index++] = Level.ALL;
                     } else if (LogFormatter.MessagePattern.THREAD.equals(mask)){
-
+                        placeOrder[index++] = new Thread();
                     } else if (LogFormatter.MessagePattern.NEW_LINE.equals(mask)){
 
                     } else if (LogFormatter.MessagePattern.MESSAGE.equals(mask)){
