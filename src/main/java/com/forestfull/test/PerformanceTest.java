@@ -45,11 +45,11 @@ public class PerformanceTest {
 
 
 
-        Log.getInstance(KoLoggerFactoryBean.builder().build());
+        Log.getInstance();
         // 싱글 스레드 로그 성능 테스트
         long singleThreadStartWithKoLogger = System.currentTimeMillis();
         for (int i = 0; i < 1000; i++) {
-            Log.info("KoLogging in single thread: " + i);
+            Log.info("KoLogging in single thread: ", i);
         }
         long singleThreadEndWithKoLogger = System.currentTimeMillis();
         System.out.println("Single thread Kologging time: " + (singleThreadEndWithKoLogger - singleThreadStartWithKoLogger) + " ms");
@@ -62,7 +62,7 @@ public class PerformanceTest {
                 @Override
                 public void run() {
                     for (int i = 0; i < 1000; i++) {
-                        Log.info("KoLogging in multi thread: " + i);
+                        Log.info("KoLogging in multi thread: ", i);
                     }
                 }
             });

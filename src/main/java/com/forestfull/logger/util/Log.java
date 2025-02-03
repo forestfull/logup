@@ -3,12 +3,11 @@ package com.forestfull.logger.util;
 import com.forestfull.logger.Level;
 import com.forestfull.logger.config.ConfigLoader;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Log {
 
@@ -109,38 +108,46 @@ public class Log {
         if (messages == null || messages.length == 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
-//        KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
-//            public void run() {
-                LogFormatter formatter = factoryBean.getLogFormatter();
-                final String now = formatter.getDateTimeFormat() != null ? formatter.getDateTimeFormat().format(new Date()) : "";
-                final StringBuilder msgBuilder = new StringBuilder();
+		try {
+			KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
+				public void run() {
+					LogFormatter formatter = factoryBean.getLogFormatter();
+					final String now = formatter.getDateTimeFormat() != null ? formatter
+							.getDateTimeFormat()
+							.format(new Date()) : "";
+					final StringBuilder msgBuilder = new StringBuilder();
 
-				for (int i = 0; i < messages.length; i++) {
-					Object message = messages[i];
-					msgBuilder.append(message);
+					for (int i = 0; i < messages.length; i++) {
+						Object message = messages[i];
+						msgBuilder.append(message);
+					}
+
+					final String logMessage = formatter
+							.getPlaceholder()
+							.replace(LogFormatter.MessagePattern.DATETIME, now)
+							.replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
+							.replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level
+									.name().substring(0, 4))
+							.replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
+							.replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
+
+					logFactory.console(logMessage);
+					logFactory.file(logMessage);
 				}
-
-				final String logMessage = formatter
-                        .getPlaceholder()
-                        .replace(LogFormatter.MessagePattern.DATETIME, now)
-                        .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
-                        .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level.name().substring(0, 4))
-                        .replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
-                        .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
-
-                logFactory.console(logMessage);
-                logFactory.file(logMessage);
-//            }
-//        });
-    }
+			}).get();
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		} catch (ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
     private static class LogFactory {
         private void console(final String msg) {
-            final byte[] msgStream = msg.getBytes(Charset.forName(CHARSET_UTF_8));
-            final FileOutputStream fdOut = new FileOutputStream(FileDescriptor.out);
+            final Writer fdOut = new FileWriter(FileDescriptor.out);
 
             try {
-                fdOut.write(msgStream);
+                fdOut.write(msg);
                 fdOut.flush();
 
             } catch (IOException e) {
