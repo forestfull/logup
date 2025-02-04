@@ -39,50 +39,6 @@ public class Log {
 			if (Log.factoryBean == null)
 				Log.factoryBean = factoryBean.clone();
 
-            int index = placeOrder.length;
-
-            char[] charArray = factoryBean.getLogFormatter()
-                                          .getPlaceholder()
-                                          .toCharArray();
-
-            for (int i = 0; i < charArray.length; i++) {
-                if (charArray[i] == '{'){
-                    StringBuilder mask = new StringBuilder();
-                    while (charArray[i] != '}' && i < charArray.length){
-                        mask.append(charArray[i]);
-                        i++;
-                    }
-
-                    /*
-							.replace(LogFormatter.MessagePattern.DATETIME, now)
-							.replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
-							.replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level
-									.name().substring(0, 4))
-							.replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
-							.replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
-*/
-
-
-                    if (LogFormatter.MessagePattern.DATETIME.equals(mask)){
-                        placeOrder[index++] = Log.factoryBean.getLogFormatter().getDateTimeFormat();
-                    } else if (LogFormatter.MessagePattern.LEVEL.equals(mask)){
-                        placeOrder[index++] = Level.ALL;
-                    } else if (LogFormatter.MessagePattern.THREAD.equals(mask)){
-                        placeOrder[index++] = new Thread();
-                    } else if (LogFormatter.MessagePattern.NEW_LINE.equals(mask)){
-
-                    } else if (LogFormatter.MessagePattern.MESSAGE.equals(mask)){
-
-                    }
-
-                } else {
-                    placeOrder[index++] = charArray[i];
-
-                }
-            }
-//            placeOrder[index++] = ;
-//            System.out.println(split);
-
         }
 
         return Log.instance;
