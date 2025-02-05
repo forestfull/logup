@@ -40,11 +40,11 @@ public class KoLoggerFactoryBean {
         if (KoLoggerFactoryBean.level == Level.ALL) {
 //            TODO: properties, yml 설명을 써주자
             Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine);
-            Log.LogFactory.console(" # Order.1 - application.properties" + Log.newLine);
+            Log.LogFactory.console(" # Priority.1 - application.properties" + Log.newLine);
             Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
-            Log.LogFactory.console(" # Order.2 - application.yml" + Log.newLine);
+            Log.LogFactory.console(" # Priority.2 - application.yml" + Log.newLine);
             Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
-            Log.LogFactory.console(" # Order.3 - source code" + Log.newLine);
+            Log.LogFactory.console(" # Priority.3 - source code" + Log.newLine);
             Log.LogFactory.console("KoLoggerFactoryBean.builder()" + Log.newLine);
             Log.LogFactory.console("                    .level(Level.INFO)" + Log.newLine);
             Log.LogFactory.console("                    .jdbc(true)" + Log.newLine);
