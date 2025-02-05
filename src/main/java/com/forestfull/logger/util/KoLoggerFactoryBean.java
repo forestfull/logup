@@ -37,8 +37,21 @@ public class KoLoggerFactoryBean {
         ConfigLoader.getProperty("logFormatter");
 
         if (KoLoggerFactoryBean.logFormatter == null) KoLoggerFactoryBean.builder().build();
-        if (KoLoggerFactoryBean.level == null) {
+        if (KoLoggerFactoryBean.level == Level.ALL) {
 //            TODO: properties, yml 설명을 써주자
+            Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine);
+            Log.LogFactory.console(" # Order.1 - application.properties" + Log.newLine);
+            Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
+            Log.LogFactory.console(" # Order.2 - application.yml" + Log.newLine);
+            Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
+            Log.LogFactory.console(" # Order.3 - source code" + Log.newLine);
+            Log.LogFactory.console("KoLoggerFactoryBean.builder()" + Log.newLine);
+            Log.LogFactory.console("                    .level(Level.INFO)" + Log.newLine);
+            Log.LogFactory.console("                    .jdbc(true)" + Log.newLine);
+            Log.LogFactory.console("                    .logFormatter(LogFormatter.getInstance().placeholder(\"{datetime} [{thread}:{level}] - {msg}{new-line}\").datetime(\"yyyy-MM-dd HH:mm:ss\").)" + Log.newLine);
+            Log.LogFactory.console("                    .fileRecorder(FileRecorder.getInstance().placeholder(\"YOUR_PROJECT_NAME{date}.log\").logFileDirectory(\"logs/\").dateFormat(\"yyyy-MM-dd\"))" + Log.newLine);
+            Log.LogFactory.console("                    .build();" + Log.newLine);
+            Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine);
         }
     }
 
