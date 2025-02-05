@@ -23,7 +23,7 @@ public class LoggingAspect {
 
 			if (annotationLevel == null) return;
 			if (annotationLevel == Level.OFF) return;
-			if (annotationLevel != Level.ALL && annotationLevel.compareTo(Log.factoryBean.getLevel()) < 0) return;
+			if (annotationLevel != Level.ALL && annotationLevel.compareTo(KoLoggerFactoryBean.level) < 0) return;
 
 			final Object[] args = joinPoint.getArgs();
 			final StringBuilder argumentString = new StringBuilder();
@@ -61,7 +61,7 @@ public class LoggingAspect {
 
 			if (annotationLevel == null) return;
 			if (annotationLevel == Level.OFF) return;
-			if (annotationLevel != Level.ALL && annotationLevel.compareTo(Log.factoryBean.getLevel()) < 0) return;
+			if (annotationLevel != Level.ALL && annotationLevel.compareTo(KoLoggerFactoryBean.level) < 0) return;
 
 			final StringBuilder argumentString = new StringBuilder();
 			final String className = joinPoint
@@ -92,7 +92,7 @@ public class LoggingAspect {
 		}
 
 		private void sqlQueryLogging(JoinPoint joinPoint, String sql) {
-			if (Boolean.FALSE.equals(Log.factoryBean.getJdbc())) return;
+			if (Boolean.FALSE.equals(KoLoggerFactoryBean.jdbc)) return;
 
 			final StringBuilder argumentString = new StringBuilder();
 			final String className = joinPoint
@@ -104,7 +104,7 @@ public class LoggingAspect {
 						  .append(methodName)
 						  .append(Log.newLine).append(sql);
 
-			Log.getInstance().write(Log.factoryBean.getLevel(), argumentString);
+			Log.getInstance().write(KoLoggerFactoryBean.level, argumentString);
 		}
 	}
 }

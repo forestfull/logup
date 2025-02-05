@@ -13,9 +13,6 @@ public class Log {
     private final static String CHARSET_UTF_8 = "UTF-8";
     private static LogFactory logFactory = null;
     private static Log instance = null;
-    private static Object[] placeOrder = new Object[]{};
-
-    protected static KoLoggerFactoryBean factoryBean = null;
 
     protected final static String newLine = System.getProperty("line.separator");
 
@@ -29,16 +26,10 @@ public class Log {
     public static Log getInstance(KoLoggerFactoryBean factoryBean) {
         if (Log.instance == null) {
             Log.instance = new Log();
+            Log.logFactory = new LogFactory();
 
             // TODO: 스프링 연동 작업 필요
             final ConfigLoader configLoader = new ConfigLoader();
-
-            if (Log.logFactory == null)
-				Log.logFactory = new LogFactory();
-
-			if (Log.factoryBean == null)
-				Log.factoryBean = factoryBean.clone();
-
         }
 
         return Log.instance;
@@ -51,22 +42,22 @@ public class Log {
     }
 
     public static Log info(Object... msg) {
-        Level configLevel = Log.factoryBean == null? Level.ALL : Log.factoryBean.getLevel();
+        Level configLevel = KoLoggerFactoryBean.level == null? Level.ALL : KoLoggerFactoryBean.level;
         return configLevel.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
     }
 
     public static Log warn(Object... msg) {
-        Level configLevel = Log.factoryBean == null? Level.ALL : Log.factoryBean.getLevel();
+        Level configLevel = KoLoggerFactoryBean.level == null? Level.ALL : KoLoggerFactoryBean.level;
 		return configLevel.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
     }
 
     public static Log error(Object... msg) {
-        Level configLevel = Log.factoryBean == null? Level.ALL : Log.factoryBean.getLevel();
+        Level configLevel = KoLoggerFactoryBean.level == null? Level.ALL : KoLoggerFactoryBean.level;
         return configLevel.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
     }
 
     public Log andInfo(Object... msg) {
-        Level configLevel = Log.factoryBean.getLevel();
+        Level configLevel = KoLoggerFactoryBean.level;
         if (configLevel.compareTo(Level.INFO) > 0){
 			return Log.instance;
 
@@ -78,7 +69,7 @@ public class Log {
     }
 
     public Log andWarn(Object... msg) {
-        Level configLevel = Log.factoryBean.getLevel();
+        Level configLevel = KoLoggerFactoryBean.level;
         if (configLevel.compareTo(Level.WARN) > 0){
 			return Log.instance;
 
@@ -89,7 +80,7 @@ public class Log {
     }
 
     public Log andError(Object... msg) {
-        Level configLevel = Log.factoryBean.getLevel();
+        Level configLevel = KoLoggerFactoryBean.level;
         if (configLevel.compareTo(Level.ERROR) > 0) {
             return Log.instance;
 
@@ -112,7 +103,7 @@ public class Log {
 //		try {
 //			KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
 //				public void run() {
-					LogFormatter formatter = factoryBean.getLogFormatter();
+					LogFormatter formatter = KoLoggerFactoryBean.logFormatter;
 					final String now = formatter.getDateTimeFormat() != null ? formatter
 							.getDateTimeFormat()
 							.format(new Date()) : "";
@@ -157,9 +148,9 @@ public class Log {
         }
 
         private void file(String msg) {
-            if (factoryBean.getFileRecorder() == null) return;
+            if (KoLoggerFactoryBean.fileRecorder == null) return;
 
-            final FileRecorder fileRecorder = factoryBean.getFileRecorder();
+            final FileRecorder fileRecorder = KoLoggerFactoryBean.fileRecorder;
 
             String logFileDirectory = fileRecorder.getLogFileDirectory();
 

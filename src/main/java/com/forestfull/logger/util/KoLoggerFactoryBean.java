@@ -26,16 +26,16 @@ import java.util.concurrent.Executors;
 public class KoLoggerFactoryBean implements Cloneable {
 
 //    protected static final ExecutorService logConsoleExecutor = Executors.newSingleThreadExecutor();
-    private final LogFormatter logFormatter;
-    private final FileRecorder fileRecorder;
-    private final Level level;
-    private final Boolean jdbc;
+    protected static LogFormatter logFormatter;
+    protected static FileRecorder fileRecorder;
+    protected static Level level;
+    protected static Boolean jdbc;
 
     KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level, final Boolean jdbc) {
-        this.logFormatter = logFormatter;
-        this.fileRecorder = fileRecorder;
-        this.level = level;
-        this.jdbc = jdbc;
+        KoLoggerFactoryBean.logFormatter = logFormatter;
+        KoLoggerFactoryBean.fileRecorder = fileRecorder;
+        KoLoggerFactoryBean.level = level;
+        KoLoggerFactoryBean.jdbc = jdbc;
     }
 
     public static KoLoggerFactoryBeanBuilder builder() {
@@ -97,27 +97,6 @@ public class KoLoggerFactoryBean implements Cloneable {
 
             return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level, false);
         }
-
-        public String toString() {
-            String var10000 = String.valueOf(this.logFormatter);
-            return "KoLoggerFactoryBean.KoLoggerFactoryBeanBuilder(logFormatter=" + var10000 + ", fileRecorder=" + String.valueOf(this.fileRecorder) + ", level=" + String.valueOf(this.level) + ")";
-        }
-    }
-
-    protected LogFormatter getLogFormatter() {
-        return logFormatter;
-    }
-
-    protected FileRecorder getFileRecorder() {
-        return fileRecorder;
-    }
-
-    protected Level getLevel() {
-        return level;
-    }
-
-    protected Boolean getJdbc() {
-        return jdbc;
     }
 
     public KoLoggerFactoryBean clone() {
