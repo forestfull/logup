@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 public class YamlParser {
-	public Properties parseYaml(InputStream inputStream) throws IOException {
+	public static Properties parseYaml(InputStream inputStream) throws IOException {
 		Properties properties = new Properties();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -31,6 +31,7 @@ public class YamlParser {
 			} else {
 				currentKey = "";
 			}
-		} reader.close(); return properties;
+		}
+		reader.close(); return properties;
 	}
 }

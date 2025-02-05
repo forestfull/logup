@@ -8,17 +8,13 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigLoader {
-    private final Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
-    public ConfigLoader() {
-        loadConfig();
-    }
-
-    private void loadConfig() {
+    public static void loadConfig() {
         String propertiesFile = "application.properties";
         String yamlFile = "application.yml";
 
-        ClassLoader classLoader = getClass().getClassLoader();
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(propertiesFile);
 
         if (inputStream != null) {
@@ -35,7 +31,7 @@ public class ConfigLoader {
         }
     }
 
-    private void loadProperties(InputStream inputStream) {
+    private static void loadProperties(InputStream inputStream) {
         try {
             properties.load(inputStream);
             inputStream.close();
@@ -44,17 +40,16 @@ public class ConfigLoader {
         }
     }
 
-    private void loadYaml(InputStream inputStream) {
+    private static void loadYaml(InputStream inputStream) {
         try {
-            YamlParser yamlParser = new YamlParser();
-            properties.putAll(yamlParser.parseYaml(inputStream));
+            properties.putAll(YamlParser.parseYaml(inputStream));
             inputStream.close();
         } catch (IOException e) {
             Log.error("Failed to load YAML file: " + e.getMessage());
         }
     }
 
-    public String getProperty(String key) {
+    public static String getProperty(String key) {
         return properties.getProperty(key);
     }
 }

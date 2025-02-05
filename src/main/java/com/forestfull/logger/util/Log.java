@@ -20,16 +20,9 @@ public class Log {
     }
 
     public static Log getInstance() {
-        return Log.instance == null ? getInstance(KoLoggerFactoryBean.builder().build()) : Log.instance;
-    }
-
-    public static Log getInstance(KoLoggerFactoryBean factoryBean) {
         if (Log.instance == null) {
             Log.instance = new Log();
             Log.logFactory = new LogFactory();
-
-            // TODO: 스프링 연동 작업 필요
-            final ConfigLoader configLoader = new ConfigLoader();
         }
 
         return Log.instance;
@@ -42,18 +35,22 @@ public class Log {
     }
 
     public static Log info(Object... msg) {
-        Level configLevel = KoLoggerFactoryBean.level == null? Level.ALL : KoLoggerFactoryBean.level;
+        Level configLevel = getConfigLevel();
         return configLevel.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
     }
 
     public static Log warn(Object... msg) {
-        Level configLevel = KoLoggerFactoryBean.level == null? Level.ALL : KoLoggerFactoryBean.level;
+        Level configLevel = getConfigLevel();
 		return configLevel.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
     }
 
     public static Log error(Object... msg) {
-        Level configLevel = KoLoggerFactoryBean.level == null? Level.ALL : KoLoggerFactoryBean.level;
+        Level configLevel = getConfigLevel();
         return configLevel.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
+    }
+
+    private static Level getConfigLevel() {
+        return KoLoggerFactoryBean.level == null ? Level.ALL : KoLoggerFactoryBean.level;
     }
 
     public Log andInfo(Object... msg) {

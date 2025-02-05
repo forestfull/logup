@@ -1,6 +1,7 @@
 package com.forestfull.logger.util;
 
 import com.forestfull.logger.Level;
+import com.forestfull.logger.config.ConfigLoader;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,13 +24,23 @@ import java.util.concurrent.Executors;
  * @since JDK 1.6
  */
 
-public class KoLoggerFactoryBean implements Cloneable {
+public class KoLoggerFactoryBean {
 
 //    protected static final ExecutorService logConsoleExecutor = Executors.newSingleThreadExecutor();
     protected static LogFormatter logFormatter;
     protected static FileRecorder fileRecorder;
     protected static Level level;
     protected static Boolean jdbc;
+
+    static {
+        // TODO: 스프링 연동 작업 필요
+        ConfigLoader.getProperty("logFormatter");
+
+        if (KoLoggerFactoryBean.logFormatter == null) KoLoggerFactoryBean.builder().build();
+        if (KoLoggerFactoryBean.level == null) {
+//            TODO: properties, yml 설명을 써주자
+        }
+    }
 
     KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level, final Boolean jdbc) {
         KoLoggerFactoryBean.logFormatter = logFormatter;
@@ -97,13 +108,5 @@ public class KoLoggerFactoryBean implements Cloneable {
 
             return new KoLoggerFactoryBean(this.logFormatter, this.fileRecorder, this.level, false);
         }
-    }
-
-    public KoLoggerFactoryBean clone() {
-        try {
-            return (KoLoggerFactoryBean) super.clone();
-        } catch (CloneNotSupportedException ignore) {
-        }
-        return null;
     }
 }
