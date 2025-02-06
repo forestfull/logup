@@ -96,7 +96,7 @@
                 <version>0.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <publishingServerId>central</publishingServerId>
+                    <publishingServerId>ossrh</publishingServerId>
                     <autoPublish>true</autoPublish>
                     <waitUntil>published</waitUntil>
                 </configuration>
@@ -124,7 +124,9 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
+                            <!--suppress UnresolvedMavenProperty -->
                             <keyname>${gpg.keyname}</keyname>
+                            <!--suppress UnresolvedMavenProperty -->
                             <passphraseServerId>${gpg.keyname}</passphraseServerId>
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
