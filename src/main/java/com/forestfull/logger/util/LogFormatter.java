@@ -5,7 +5,6 @@ import java.util.Date;
 
 public class LogFormatter {
 
-	private static LogFormatter logFormatter;
 	private static String placeholder;
 	private static SimpleDateFormat dateTimeFormat;
 
@@ -18,40 +17,58 @@ public class LogFormatter {
 		public static final String NEW_LINE = "{new-line}";
 	}
 
-	private LogFormatter() {}
-
-	public static LogFormatter getInstance() {
-		if (LogFormatter.logFormatter == null)
-			LogFormatter.logFormatter =	new LogFormatter();
-
-		return LogFormatter.logFormatter;
+	private LogFormatter(String placeholder, SimpleDateFormat dateTimeFormat) {
+		LogFormatter.placeholder = placeholder;
+		LogFormatter.dateTimeFormat = dateTimeFormat;
 	}
 
-	public static LogFormatter placeholder(String placeHolder) {
-		LogFormatter.placeholder = placeHolder; return LogFormatter.logFormatter;
+	public static LogFormatterBuilder getInstance() {
+		return new LogFormatterBuilder();
 	}
 
-	public static LogFormatter datetime(String datetime) {
-		SimpleDateFormat format = new SimpleDateFormat(datetime);
+	public static class LogFormatterBuilder {
+		private String placeholder;
+		private SimpleDateFormat dateTimeFormat;
 
-		try {
-			format.format(new Date());
-		} catch (NullPointerException e) {
-			format = null;
-		} catch (IllegalArgumentException e) {
-			format = null;
-		} finally {
-			LogFormatter.dateTimeFormat = format;
+		public LogFormatterBuilder placeholder(String placeHolder) {
+			this.placeholder = placeHolder; return this;
 		}
 
-		return LogFormatter.logFormatter;
+		public LogFormatterBuilder datetime(String datetime) {
+			SimpleDateFormat format = new SimpleDateFormat(datetime);
+
+			try {
+				format.format(new Date());
+			} catch (NullPointerException e) {
+				format = null;
+			} catch (IllegalArgumentException e) {
+				format = null;
+			} finally {
+				this.dateTimeFormat = format;
+			}
+
+			return this;
+		}
+
+		public LogFormatter build() {
+			return new LogFormatter(this.placeholder, this.dateTimeFormat);
+		}
+
 	}
 
-	protected static String getPlaceholder() {
+	protected String getPlaceholder() {
 		return placeholder;
 	}
 
-	protected static SimpleDateFormat getDateTimeFormat() {
+	protected SimpleDateFormat getDateTimeFormat() {
 		return dateTimeFormat;
+	}
+
+	protected void setPlaceholder(String placeholder) {
+		LogFormatter.placeholder = placeholder;
+	}
+
+	protected void setDateTimeFormat(String dateTimeFormat) {
+		LogFormatter.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
 	}
 }
