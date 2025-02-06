@@ -25,7 +25,7 @@ public class YamlParser {
 				String value = keyValue.length > 1 ? keyValue[1].trim() : "";
 
 				int bangIndex = value.indexOf("#");
-				if (bangIndex != -1){
+				if (bangIndex != -1) {
 					value = value.substring(0, bangIndex);
 				}
 

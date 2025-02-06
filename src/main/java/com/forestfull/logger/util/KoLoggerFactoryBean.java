@@ -52,13 +52,13 @@ public class KoLoggerFactoryBean {
 		Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
 		Log.LogFactory.console(Log.newLine + " # Priority.2 - application.yml" + Log.newLine);
 		Log.LogFactory.console("kologger:" + Log.newLine);
-		Log.LogFactory.console("  level: INFO" + Log.newLine);
-		Log.LogFactory.console("  jdbc: true" + Log.newLine);
+		Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + Log.newLine);
+		Log.LogFactory.console("  jdbc: true # true, false" + Log.newLine);
 		Log.LogFactory.console("  log-format:" + Log.newLine);
 		Log.LogFactory.console("    placeholder: \"{datetime} [{thread}:{level}] - {msg}{new-line}\"" + Log.newLine);
 		Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + Log.newLine);
 		Log.LogFactory.console("  file-recode:" + Log.newLine);
-		Log.LogFactory.console("    directory: log/ # default: log/" + Log.newLine);
+		Log.LogFactory.console("    directory: log/" + Log.newLine);
 		Log.LogFactory.console("    placeholder: YOUR_PROJECT_NAME{date}.log" + Log.newLine);
 		Log.LogFactory.console("    date-format: yyyy-MM-dd" + Log.newLine + Log.newLine);
 		Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
