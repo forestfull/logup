@@ -38,19 +38,35 @@ public class KoLoggerFactoryBean {
 
         if (KoLoggerFactoryBean.logFormatter == null) KoLoggerFactoryBean.builder().build();
         if (KoLoggerFactoryBean.level == Level.ALL) {
-//            TODO: properties, yml 설명을 써주자
             Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine);
-            Log.LogFactory.console(" # Priority.1 - application.properties" + Log.newLine);
+            Log.LogFactory.console(Log.newLine + " # Priority.1 - application.properties" + Log.newLine);
+            Log.LogFactory.console("kologger.level=INFO" + Log.newLine);
+            Log.LogFactory.console("kologger.jdbc=false" + Log.newLine);
+            Log.LogFactory.console("kologger.log-format.placeholder={datetime} [{thread}:{level}] - {msg}{new-line}" + Log.newLine);
+            Log.LogFactory.console("kologger.log-format.date-time-format=yyyy-MM-dd HH:mm:ss" + Log.newLine);
+            Log.LogFactory.console("kologger.file-recode.directory=log/" + Log.newLine);
+            Log.LogFactory.console("kologger.file-recode.placeholder=YOUR_PROJECT_NAME{date}.log" + Log.newLine);
+            Log.LogFactory.console("kologger.file-recode.date-format=yyyy-MM-dd" + Log.newLine + Log.newLine);
             Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
-            Log.LogFactory.console(" # Priority.2 - application.yml" + Log.newLine);
+            Log.LogFactory.console(Log.newLine + " # Priority.2 - application.yml" + Log.newLine);
+            Log.LogFactory.console("kologger:" + Log.newLine);
+            Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + Log.newLine);
+            Log.LogFactory.console("  jdbc: false # true, false" + Log.newLine);
+            Log.LogFactory.console("  log-format:" + Log.newLine);
+            Log.LogFactory.console("    placeholder: \"{datetime} [{thread}:{level}] - {msg}{new-line}\"" + Log.newLine);
+            Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + Log.newLine);
+            Log.LogFactory.console("  file-recode:" + Log.newLine);
+            Log.LogFactory.console("    directory: log/ # default: log/" + Log.newLine);
+            Log.LogFactory.console("    placeholder: YOUR_PROJECT_NAME{date}.log" + Log.newLine);
+            Log.LogFactory.console("    date-format: yyyy-MM-dd" + Log.newLine + Log.newLine);
             Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
-            Log.LogFactory.console(" # Priority.3 - source code" + Log.newLine);
+            Log.LogFactory.console(Log.newLine + " # Priority.3 - source code" + Log.newLine);
             Log.LogFactory.console("KoLoggerFactoryBean.builder()" + Log.newLine);
             Log.LogFactory.console("                    .level(Level.INFO)" + Log.newLine);
             Log.LogFactory.console("                    .jdbc(true)" + Log.newLine);
             Log.LogFactory.console("                    .logFormatter(LogFormatter.getInstance().placeholder(\"{datetime} [{thread}:{level}] - {msg}{new-line}\").datetime(\"yyyy-MM-dd HH:mm:ss\").)" + Log.newLine);
             Log.LogFactory.console("                    .fileRecorder(FileRecorder.getInstance().placeholder(\"YOUR_PROJECT_NAME{date}.log\").logFileDirectory(\"logs/\").dateFormat(\"yyyy-MM-dd\"))" + Log.newLine);
-            Log.LogFactory.console("                    .build();" + Log.newLine);
+            Log.LogFactory.console("                    .build();" + Log.newLine + Log.newLine);
             Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine);
         }
     }

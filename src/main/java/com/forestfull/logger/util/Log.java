@@ -1,11 +1,9 @@
 package com.forestfull.logger.util;
 
 import com.forestfull.logger.Level;
-import com.forestfull.logger.config.ConfigLoader;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Log {
@@ -95,9 +93,6 @@ public class Log {
         if (messages == null || messages.length == 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
-//		try {
-//			KoLoggerFactoryBean.logConsoleExecutor.submit(new Runnable() {
-//				public void run() {
         LogFormatter formatter = KoLoggerFactoryBean.logFormatter;
         final String now = formatter.getDateTimeFormat() != null ? formatter
                 .getDateTimeFormat()
@@ -119,13 +114,6 @@ public class Log {
 
         LogFactory.console(logMessage);
         LogFactory.file(logMessage);
-//				}
-//			}).get();
-//		} catch (InterruptedException e) {
-//			throw new RuntimeException(e);
-//		} catch (ExecutionException e) {
-//			throw new RuntimeException(e);
-//		}
     }
 
     static class LogFactory {
