@@ -31,22 +31,15 @@ public class Log {
     }
 
     public static Log info(Object... msg) {
-        Level configLevel = getConfigLevel();
-        return configLevel.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
+        return KoLoggerFactoryBean.level.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
     }
 
     public static Log warn(Object... msg) {
-        Level configLevel = getConfigLevel();
-        return configLevel.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
+        return KoLoggerFactoryBean.level.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
     }
 
     public static Log error(Object... msg) {
-        Level configLevel = getConfigLevel();
-        return configLevel.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
-    }
-
-    private static Level getConfigLevel() {
-        return KoLoggerFactoryBean.level == null ? Level.ALL : KoLoggerFactoryBean.level;
+        return KoLoggerFactoryBean.level.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
     }
 
     public Log andInfo(Object... msg) {
@@ -129,7 +122,7 @@ public class Log {
             }
         }
 
-        private static synchronized void file(String msg) {
+        protected static synchronized void file(String msg) {
             if (KoLoggerFactoryBean.fileRecorder == null) return;
 
             final FileRecorder fileRecorder = KoLoggerFactoryBean.fileRecorder;

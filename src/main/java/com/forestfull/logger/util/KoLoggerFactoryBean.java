@@ -32,12 +32,14 @@ public class KoLoggerFactoryBean {
 	static {
 		configureProperties();
 		if (KoLoggerFactoryBean.logFormatter == null)
-			KoLoggerFactoryBean.builder().start();
+			KoLoggerFactoryBean.builder().level(Level.ALL).start();
 		if (KoLoggerFactoryBean.level == Level.ALL)
 			loggingInitializeManual();
 	}
 
 	private static void loggingInitializeManual() {
+		Log.LogFactory.console(Log.newLine + "=================================================================================================================================================================" + Log.newLine);
+		Log.LogFactory.console("KoLogger Setting Example");
 		Log.LogFactory.console(Log.newLine + "=================================================================================================================================================================" + Log.newLine);
 		Log.LogFactory.console(Log.newLine + " # Priority.1 - application.properties" + Log.newLine);
 		Log.LogFactory.console("kologger.level=INFO" + Log.newLine);
@@ -87,7 +89,7 @@ public class KoLoggerFactoryBean {
 				.dateFormat(fileDateFormat).build() : null;
 
 		KoLoggerFactoryBean.builder()
-						   .level(Level.valueOf(level))
+						   .level(level == null ? Level.ALL :Level.valueOf(level))
 						   .jdbc(Boolean.getBoolean(jdbc))
 						   .logFormatter(LogFormatter.getInstance()
 													 .placeholder(logFormatPlaceholder)
@@ -134,9 +136,6 @@ public class KoLoggerFactoryBean {
 		}
 
 		public void start() {
-			this.level = level == null ? Level.ALL : level;
-			this.jdbc = jdbc != null;
-
 			if (logFormatter == null)
 				this.logFormatter = LogFormatter.getInstance().build();
 

@@ -50,7 +50,8 @@ public class LoggingAspect {
 
 			argumentString.append(")");
 
-			Log.getInstance().write(annotationLevel, argumentString);
+			Log.LogFactory.console(annotationLevel.name() + argumentString);
+			Log.LogFactory.file(annotationLevel.name() + argumentString);
 		}
 
 		@AfterReturning(value = "@annotation(com.forestfull.logger.annotation.ObservableReturnValue) && execution(* *(..)) && !within(com.forestfull.logger.util.LoggingAspect$Observable)", returning = "returnValue")
@@ -74,7 +75,8 @@ public class LoggingAspect {
 						  .append(" -> {")
 						  .append(returnValue).append("}");
 
-			Log.getInstance().write(annotationLevel, argumentString);
+			Log.LogFactory.console(annotationLevel.name() + argumentString);
+			Log.LogFactory.file(annotationLevel.name() + argumentString);
 		}
 	}
 
@@ -104,7 +106,8 @@ public class LoggingAspect {
 						  .append(methodName)
 						  .append(Log.newLine).append(sql);
 
-			Log.getInstance().write(KoLoggerFactoryBean.level, argumentString);
+			Log.LogFactory.console(KoLoggerFactoryBean.level.name() + argumentString);
+			Log.LogFactory.file(KoLoggerFactoryBean.level.name() + argumentString);
 		}
 	}
 }
