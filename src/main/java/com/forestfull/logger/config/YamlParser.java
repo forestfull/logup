@@ -11,7 +11,7 @@ public class YamlParser {
 		Properties properties = new Properties();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-		String line; String currentKey = "";
+		String line; StringBuilder currentKey = new StringBuilder();
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
@@ -24,12 +24,14 @@ public class YamlParser {
 				String key = keyValue[0].trim();
 				String value = keyValue.length > 1 ? keyValue[1].trim() : "";
 				if (!value.isEmpty()) {
-					properties.setProperty(currentKey.isEmpty() ? key : currentKey + "." + key, value);
+					properties.setProperty((currentKey.length() == 0) ? key : currentKey + "." + key, value);
+				} else if (currentKey.length() > 0) {
+					currentKey.append(".").append(key);
 				} else {
-					currentKey = key;
+					currentKey = new StringBuilder(key);
 				}
 			} else {
-				currentKey = "";
+				currentKey = new StringBuilder();
 			}
 		}
 		reader.close(); return properties;
