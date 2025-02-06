@@ -35,9 +35,10 @@ public class LogFormatter {
 		}
 
 		public LogFormatterBuilder datetime(String datetime) {
-			SimpleDateFormat format = new SimpleDateFormat(datetime);
+			SimpleDateFormat format = null;
 
 			try {
+				format = new SimpleDateFormat(datetime);
 				format.format(new Date());
 			} catch (NullPointerException e) {
 				format = null;

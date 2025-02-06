@@ -35,9 +35,10 @@ public class FileRecorder {
 		}
 
 		public FileRecorderBuilder dateFormat(String date) {
-			SimpleDateFormat format = new SimpleDateFormat(date);
+			SimpleDateFormat format = null;
 
 			try {
+				format = new SimpleDateFormat(date);
 				format.format(new Date());
 			} catch (NullPointerException e) {
 				format = null;
