@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FileRecorder {
-	private String placeholder;
-	private SimpleDateFormat dateFormat;
-	private String logFileDirectory;
+	private static String placeholder;
+	private static SimpleDateFormat dateFormat;
+	private static String logFileDirectory;
 
 	public static class FilePattern {
 		public static final String[] filePath = System.getProperty("user.dir").split("\\\\"); //TODO 윈도우 구분 필요 나주엥
@@ -15,36 +15,49 @@ public class FileRecorder {
 		public static final String DEFAULT = PROJECT_NAME + DATE + ".log";
 	}
 
-	private FileRecorder() {
+	private FileRecorder(String placeholder, SimpleDateFormat dateFormat, String logFileDirectory) {
+		FileRecorder.placeholder = placeholder;
+		FileRecorder.dateFormat = dateFormat;
+		FileRecorder.logFileDirectory = logFileDirectory;
 	}
 
-	public static FileRecorder getInstance() {
-		return new FileRecorder();
+	public static FileRecorderBuilder getInstance() {
+		return new FileRecorderBuilder();
 	}
 
-	public FileRecorder placeholder(String placeHolder) {
-		this.placeholder = placeHolder; return this;
-	}
+	public static class FileRecorderBuilder {
+		private String placeholder;
+		private SimpleDateFormat dateFormat;
+		private String logFileDirectory;
 
-	public FileRecorder dateFormat(String date) {
-		SimpleDateFormat format = new SimpleDateFormat(date);
-
-		try {
-			format.format(new Date());
-		} catch (NullPointerException e) {
-			format = null;
-		} catch (IllegalArgumentException e) {
-			format = null;
-		} finally {
-			this.dateFormat = format;
+		public FileRecorderBuilder placeholder(String placeHolder) {
+			this.placeholder = placeHolder; return this;
 		}
 
-		return this;
-	}
+		public FileRecorderBuilder dateFormat(String date) {
+			SimpleDateFormat format = new SimpleDateFormat(date);
 
-	public FileRecorder logFileDirectory(String logFileDirectory) {
-		this.logFileDirectory = logFileDirectory;
-		return this;
+			try {
+				format.format(new Date());
+			} catch (NullPointerException e) {
+				format = null;
+			} catch (IllegalArgumentException e) {
+				format = null;
+			} finally {
+				this.dateFormat = format;
+			}
+
+			return this;
+		}
+
+		public FileRecorderBuilder logFileDirectory(String logFileDirectory) {
+			this.logFileDirectory = logFileDirectory;
+			return this;
+		}
+
+		public FileRecorder build() {
+			return new FileRecorder(placeholder, dateFormat, logFileDirectory);
+		}
 	}
 
 	protected String getPlaceholder() {
@@ -57,5 +70,17 @@ public class FileRecorder {
 
 	protected String getLogFileDirectory() {
 		return logFileDirectory;
+	}
+
+	protected void setPlaceholder(String placeholder) {
+		FileRecorder.placeholder = placeholder;
+	}
+
+	protected void setDateFormat(String dateFormat) {
+		FileRecorder.dateFormat = new SimpleDateFormat(dateFormat);
+	}
+
+	protected void setLogFileDirectory(String logFileDirectory) {
+		FileRecorder.logFileDirectory = logFileDirectory;
 	}
 }
