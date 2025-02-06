@@ -1,6 +1,5 @@
 package com.forestfull.test;
 
-import com.forestfull.logger.util.KoLoggerFactoryBean;
 import com.forestfull.logger.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +7,6 @@ import org.slf4j.LoggerFactory;
 public class PerformanceTest {
 
     public static void main(String[] args) {
-
-
         final Logger log = LoggerFactory.getLogger(PerformanceTest.class);
         // 싱글 스레드 로그 성능 테스트
         long singleThreadStart = System.currentTimeMillis();
@@ -43,9 +40,6 @@ public class PerformanceTest {
         long multiThreadEnd = System.currentTimeMillis();
         System.out.println("Multi thread logging time: " + (multiThreadEnd - multiThreadStart) + " ms");
 
-
-
-        Log.getInstance();
         // 싱글 스레드 로그 성능 테스트
         long singleThreadStartWithKoLogger = System.currentTimeMillis();
         for (int i = 0; i < 1000; i++) {
