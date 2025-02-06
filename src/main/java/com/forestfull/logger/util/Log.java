@@ -9,95 +9,39 @@ import java.util.Date;
 public class Log {
 
     private final static String CHARSET_UTF_8 = "UTF-8";
-    private static Log instance = null;
-
     protected final static String newLine = System.getProperty("line.separator");
 
     private Log() {
     }
 
-    public static Log getInstance() {
-        if (Log.instance == null) {
-            Log.instance = new Log();
-        }
-
-        return Log.instance;
+    public static void info(Object... msg) {
+        write(Level.INFO, msg);
     }
 
-    public Log next() {
-        LogFactory.console(Log.newLine);
-        LogFactory.file(Log.newLine);
-        return this;
+    public static void warn(Object... msg) {
+        write(Level.WARN, msg);
     }
 
-    public static Log info(Object... msg) {
-        return KoLoggerFactoryBean.level.compareTo(Level.INFO) > 0 ? Log.instance : getInstanceAndWrite(Level.INFO, msg);
+    public static void error(Object... msg) {
+        write(Level.ERROR, msg);
     }
 
-    public static Log warn(Object... msg) {
-        return KoLoggerFactoryBean.level.compareTo(Level.WARN) > 0 ? Log.instance : getInstanceAndWrite(Level.WARN, msg);
-    }
-
-    public static Log error(Object... msg) {
-        return KoLoggerFactoryBean.level.compareTo(Level.ERROR) > 0 ? Log.instance : getInstanceAndWrite(Level.ERROR, msg);
-    }
-
-    public Log andInfo(Object... msg) {
-        Level configLevel = KoLoggerFactoryBean.level;
-        if (configLevel.compareTo(Level.INFO) > 0) {
-            return Log.instance;
-
-        } else {
-            write(Level.INFO, msg);
-            return this;
-
-        }
-    }
-
-    public Log andWarn(Object... msg) {
-        Level configLevel = KoLoggerFactoryBean.level;
-        if (configLevel.compareTo(Level.WARN) > 0) {
-            return Log.instance;
-
-        } else {
-            write(Level.WARN, msg);
-            return this;
-        }
-    }
-
-    public Log andError(Object... msg) {
-        Level configLevel = KoLoggerFactoryBean.level;
-        if (configLevel.compareTo(Level.ERROR) > 0) {
-            return Log.instance;
-
-        } else {
-            write(Level.ERROR, msg);
-            return this;
-
-        }
-    }
-
-    private static Log getInstanceAndWrite(Level level, Object... msg) {
-        Log.getInstance().write(level, msg);
-        return Log.instance;
-    }
-
-    protected void write(final Level level, final Object... messages) {
+    protected static void write(final Level level, final Object... messages) {
+        if (level.compareTo(KoLoggerFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
-        LogFormatter formatter = KoLoggerFactoryBean.logFormatter;
-        final String now = formatter.getDateTimeFormat() != null ? formatter
+        final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat() != null ? KoLoggerFactoryBean.logFormatter
                 .getDateTimeFormat()
                 .format(new Date()) : "";
-        final StringBuilder msgBuilder = new StringBuilder();
 
-        for (int i = 0; i < messages.length; i++) {
-            Object message = messages[i];
-            msgBuilder.append(message);
-        }
+        final StringBuilder msgBuilder = new StringBuilder(1024);
 
-        final String logMessage = formatter.getPlaceholder()
+		for (Object message : messages) {
+			msgBuilder.append(message);
+		}
+
+        final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
                 .replace(LogFormatter.MessagePattern.DATETIME, now)
                 .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
                 .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level
@@ -106,7 +50,8 @@ public class Log {
                 .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
 
         LogFactory.console(logMessage);
-        LogFactory.file(logMessage);
+        if (KoLoggerFactoryBean.fileRecorder != null)
+            LogFactory.file(logMessage);
     }
 
     static class LogFactory {
@@ -123,8 +68,6 @@ public class Log {
         }
 
         protected static synchronized void file(String msg) {
-            if (KoLoggerFactoryBean.fileRecorder == null) return;
-
             final FileRecorder fileRecorder = KoLoggerFactoryBean.fileRecorder;
 
             String logFileDirectory = fileRecorder.getLogFileDirectory();
