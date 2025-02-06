@@ -1,11 +1,11 @@
 kologger:
-  level: INFO # ALL, INFO, WARN, ERROR, OFF
-  jdbc: false # true, false
+  level: INFO
+  jdbc: false
   log-format:
     placeholder: "{datetime} [{thread}:{level}] - {msg}{new-line}"
     date-time-format: yyyy-MM-dd HH:mm:ss
   file-recode:
-    directory: log/ # default: log/
+    directory: log/
     placeholder: YOUR_PROJECT_NAME{date}.log
     date-format: yyyy-MM-dd
 

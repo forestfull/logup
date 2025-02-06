@@ -8,43 +8,6 @@ import org.slf4j.LoggerFactory;
 public class PerformanceTest {
 
     public static void main(String[] args) {
-
-
-        final Logger log = LoggerFactory.getLogger(PerformanceTest.class);
-        // 싱글 스레드 로그 성능 테스트
-        long singleThreadStart = System.currentTimeMillis();
-        for (int i = 0; i < 1000; i++) {
-            log.info("Logging in single thread: " + i);
-        }
-        long singleThreadEnd = System.currentTimeMillis();
-        System.out.println("Single thread logging time: " + (singleThreadEnd - singleThreadStart) + " ms");
-
-        // 멀티 스레드 로그 성능 테스트
-        long multiThreadStart = System.currentTimeMillis();
-        Thread[] threads = new Thread[4];
-        for (int t = 0; t < 4; t++) {
-            threads[t] = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < 1000; i++) {
-                        log.info("Logging in multi thread: " + i);
-                    }
-                }
-            });
-            threads[t].start();
-        }
-        for (int t = 0; t < 4; t++) {
-            try {
-                threads[t].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        long multiThreadEnd = System.currentTimeMillis();
-        System.out.println("Multi thread logging time: " + (multiThreadEnd - multiThreadStart) + " ms");
-
-
-
         Log.getInstance();
         // 싱글 스레드 로그 성능 테스트
         long singleThreadStartWithKoLogger = System.currentTimeMillis();

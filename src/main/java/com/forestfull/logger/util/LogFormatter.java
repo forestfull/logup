@@ -5,8 +5,9 @@ import java.util.Date;
 
 public class LogFormatter {
 
-	private String placeholder;
-	private SimpleDateFormat dateTimeFormat;
+	private static LogFormatter logFormatter;
+	private static String placeholder;
+	private static SimpleDateFormat dateTimeFormat;
 
 	public static class MessagePattern {
 		public static final String DEFAULT = MessagePattern.DATETIME + " [" + MessagePattern.THREAD + ":" + MessagePattern.LEVEL + "] - " + MessagePattern.MESSAGE + MessagePattern.NEW_LINE;
@@ -20,14 +21,17 @@ public class LogFormatter {
 	private LogFormatter() {}
 
 	public static LogFormatter getInstance() {
-		return new LogFormatter();
+		if (LogFormatter.logFormatter == null)
+			LogFormatter.logFormatter =	new LogFormatter();
+
+		return LogFormatter.logFormatter;
 	}
 
-	public LogFormatter placeholder(String placeHolder) {
-		this.placeholder = placeHolder; return this;
+	public static LogFormatter placeholder(String placeHolder) {
+		LogFormatter.placeholder = placeHolder; return LogFormatter.logFormatter;
 	}
 
-	public LogFormatter datetime(String datetime) {
+	public static LogFormatter datetime(String datetime) {
 		SimpleDateFormat format = new SimpleDateFormat(datetime);
 
 		try {
@@ -37,17 +41,17 @@ public class LogFormatter {
 		} catch (IllegalArgumentException e) {
 			format = null;
 		} finally {
-			this.dateTimeFormat = format;
+			LogFormatter.dateTimeFormat = format;
 		}
 
-		return this;
+		return LogFormatter.logFormatter;
 	}
 
-	protected String getPlaceholder() {
+	protected static String getPlaceholder() {
 		return placeholder;
 	}
 
-	protected SimpleDateFormat getDateTimeFormat() {
+	protected static SimpleDateFormat getDateTimeFormat() {
 		return dateTimeFormat;
 	}
 }
