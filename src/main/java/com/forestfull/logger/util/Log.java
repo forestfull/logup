@@ -31,15 +31,10 @@ public class Log {
         if (messages == null || messages.length == 0) return;
 
         final String currentThreadName = Thread.currentThread().getName();
-        final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat() != null ? KoLoggerFactoryBean.logFormatter
-                .getDateTimeFormat()
-                .format(new Date()) : "";
-
+        final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
         final StringBuilder msgBuilder = new StringBuilder(1024);
 
-		for (Object message : messages) {
-			msgBuilder.append(message);
-		}
+		for (Object message : messages) msgBuilder.append(message);
 
         final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
                 .replace(LogFormatter.MessagePattern.DATETIME, now)

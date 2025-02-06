@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 public class LoggingAspect {
 
@@ -50,8 +51,17 @@ public class LoggingAspect {
 
 			argumentString.append(")");
 
-			Log.LogFactory.console(annotationLevel.name() + argumentString);
-			Log.LogFactory.file(annotationLevel.name() + argumentString);
+			final String currentThreadName = Thread.currentThread().getName();
+			final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
+			final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
+									  .replace(LogFormatter.MessagePattern.DATETIME, now)
+									  .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
+									  .replace(LogFormatter.MessagePattern.LEVEL, annotationLevel == Level.ALL ? "----" : annotationLevel.name().substring(0, 4))
+									  .replace(LogFormatter.MessagePattern.MESSAGE, argumentString)
+									  .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
+
+			Log.LogFactory.console(logMessage);
+			Log.LogFactory.file(logMessage);
 		}
 
 		@AfterReturning(value = "@annotation(com.forestfull.logger.annotation.ObservableReturnValue) && execution(* *(..)) && !within(com.forestfull.logger.util.LoggingAspect$Observable)", returning = "returnValue")
@@ -75,8 +85,17 @@ public class LoggingAspect {
 						  .append(" -> {")
 						  .append(returnValue).append("}");
 
-			Log.LogFactory.console(annotationLevel.name() + argumentString);
-			Log.LogFactory.file(annotationLevel.name() + argumentString);
+			final String currentThreadName = Thread.currentThread().getName();
+			final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
+			final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
+									  .replace(LogFormatter.MessagePattern.DATETIME, now)
+									  .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
+									  .replace(LogFormatter.MessagePattern.LEVEL, annotationLevel == Level.ALL ? "----" : annotationLevel.name().substring(0, 4))
+									  .replace(LogFormatter.MessagePattern.MESSAGE, argumentString)
+									  .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
+
+			Log.LogFactory.console(logMessage);
+			Log.LogFactory.file(logMessage);
 		}
 	}
 
@@ -106,8 +125,17 @@ public class LoggingAspect {
 						  .append(methodName)
 						  .append(Log.newLine).append(sql);
 
-			Log.LogFactory.console(KoLoggerFactoryBean.level.name() + argumentString);
-			Log.LogFactory.file(KoLoggerFactoryBean.level.name() + argumentString);
+			final String currentThreadName = Thread.currentThread().getName();
+			final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
+			final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
+									  .replace(LogFormatter.MessagePattern.DATETIME, now)
+									  .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
+									  .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine)
+									  .replace(LogFormatter.MessagePattern.MESSAGE, argumentString)
+									  .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
+
+			Log.LogFactory.console(logMessage);
+			Log.LogFactory.file(logMessage);
 		}
 	}
 }
