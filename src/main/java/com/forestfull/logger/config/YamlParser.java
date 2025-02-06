@@ -23,6 +23,11 @@ public class YamlParser {
 				String[] keyValue = line.split(":", 2);
 				String key = keyValue[0].trim();
 				String value = keyValue.length > 1 ? keyValue[1].trim() : "";
+
+				if (value.indexOf("\"") == 0 && value.lastIndexOf("\"") == value.length() - 1) {
+					value = value.substring(1, value.length() - 1);
+				}
+
 				if (!value.isEmpty()) {
 					properties.setProperty((currentKey.length() == 0) ? key : currentKey + "." + key, value);
 				} else if (currentKey.length() > 0) {
