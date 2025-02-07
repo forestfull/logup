@@ -74,7 +74,6 @@ public class KoLoggerFactoryBean {
 	private static void configureProperties() {
 		final Properties properties = ConfigLoader.loadConfig();
 		final String level = properties.getProperty("kologger.level");
-		final String jdbc = properties.getProperty("kologger.jdbc");
 		final String logFormatPlaceholder = properties.getProperty("kologger.log-format.placeholder");
 		final String logFormatDateTimeFormat = properties.getProperty("kologger.log-format.date-time-format");
 		final String fileDirectory = properties.getProperty("kologger.file-recode.directory");
@@ -88,7 +87,7 @@ public class KoLoggerFactoryBean {
 				.dateFormat(fileDateFormat).build() : null;
 
 		KoLoggerFactoryBean.builder()
-						   .level(level == null ? Level.ALL :Level.valueOf(level))
+						   .level(level == null ? Level.ALL :Level.valueOf(level.toUpperCase()))
 						   .logFormatter(LogFormatter.getInstance()
 													 .placeholder(logFormatPlaceholder)
 													 .datetime(logFormatDateTimeFormat)
@@ -115,14 +114,36 @@ public class KoLoggerFactoryBean {
 		KoLoggerFactoryBeanBuilder() {
 		}
 
+		/**
+		 * <p> ex) LogFormatter.getInstance().datetime(string of {@link java.text.SimpleDateFormat}).placeholder({@link LogFormatter.MessagePattern}).build()
+		 * <p>
+		 * @param logFormatter {@link LogFormatter}
+		 */
 		public KoLoggerFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
 			this.logFormatter = logFormatter; return this;
 		}
 
+		/**
+		 * <p> ex) FileRecorder.getInstance().logFileDirectory("logs/").dateFormat(string of {@link java.text.SimpleDateFormat}).placeholder({@link FileRecorder.FilePattern}).build();
+		 * <p>
+		 * @param fileRecorder {@link FileRecorder}
+		 */
 		public KoLoggerFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
+
 			this.fileRecorder = fileRecorder; return this;
 		}
 
+		/**
+		 *
+		 * <ul>
+		 * <li><b>OFF</b>
+		 * <li><b>ERROR</b> (high)
+		 * <li><b>WARN</b>
+		 * <li><b>INFO</b> (row)
+		 * <li><b>ALL</b>
+		 * </ul>
+		 * @param level {@link Level}
+		 */
 		public KoLoggerFactoryBeanBuilder level(final Level level) {
 			this.level = level; return this;
 		}

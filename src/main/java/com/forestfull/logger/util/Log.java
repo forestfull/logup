@@ -14,14 +14,23 @@ public class Log {
     private Log() {
     }
 
+    /**
+     * @param msg anything
+     */
     public static void info(Object... msg) {
         write(Level.INFO, msg);
     }
 
+    /**
+     * @param msg anything
+     */
     public static void warn(Object... msg) {
         write(Level.WARN, msg);
     }
 
+    /**
+     * @param msg anything
+     */
     public static void error(Object... msg) {
         write(Level.ERROR, msg);
     }
