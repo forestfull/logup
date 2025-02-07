@@ -2,54 +2,85 @@ package com.forestfull.logger.util;
 
 import com.forestfull.logger.annotation.ObservableArguments;
 import javassist.*;
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
 
 import java.lang.reflect.Method;
-import java.util.Set;
 
 public class LogAnnotationAssist {
+	public static void modifyMethods(Class<?> targetClass) {
+		try {
+			ClassPool pool = new ClassPool(true);
+			pool.insertClassPath(new LoaderClassPath(targetClass.getClassLoader())); // 클래스 로더 추가
 
-	public static void init() throws Exception {
-		final ClassPool pool = ClassPool.getDefault();
-		Reflections reflections = new Reflections("com.forestfull", new MethodAnnotationsScanner());
+			CtClass ctClass = pool.get(targetClass.getName());
 
-		Set<Method> methodsAnnotatedWith = reflections.getMethodsAnnotatedWith(ObservableArguments.class);
-
-		for (Method method : methodsAnnotatedWith) {
-			String className = method.getDeclaringClass().getName();
-			String methodName = method.getName();
-
-			System.out.println("메서드 변환 시도: " + className + "." + methodName);
-
-			// 1. 클래스 로드
-			CtClass ctClass = pool.get(className);
-
-			// 2. 이미 변환된 클래스인지 확인
 			if (ctClass.isFrozen()) {
-				ctClass.defrost();
+				System.out.println("[Javassist] Skipping modification: " + targetClass.getName() + " (Already modified)");
+				return;
 			}
 
-			CtMethod ctMethod = ctClass.getDeclaredMethod(methodName);
+			System.out.println("[Javassist] Attempting to transform class: " + ctClass.getName());
+			System.out.println("[Javassist] ClassLoader: " + targetClass.getClassLoader());
+			System.out.println("[Javassist] ProtectionDomain: " + targetClass.getProtectionDomain());
 
-			// 3. 메서드 앞에 로그 추가
-			StringBuilder logCode = new StringBuilder();
-			logCode.append("{ System.out.println(\"[LOG] 호출된 메서드: " + methodName + "\");");
-
-			CtClass[] paramTypes = ctMethod.getParameterTypes();
-			for (int i = 0; i < paramTypes.length; i++) {
-				logCode.append("System.out.println(\"[LOG] 파라미터 " + i + ": \" + $" + (i + 1) + ");");
+			for (CtMethod method : ctClass.getDeclaredMethods()) {
+				if (hasObservableArgumentsAnnotation(targetClass, method.getName())) {
+					System.out.println("[Javassist] Modifying method: " + method.getName());
+					addLoggingToMethod(method, method.getName());
+				}
 			}
-			logCode.append(" }");
 
-			// 4. 기존 메서드 앞에 코드 삽입
-			ctMethod.insertBefore(logCode.toString());
+			// 기존 클래스를 제거하고 다시 변환
+			ctClass.detach();
 
-			// 🔥 `toClass()` 호출 없음 -> 변환된 코드가 런타임에 반영되지만 기존 JVM 클래스를 변경하지 않음!
-			System.out.println("✅ 코드 삽입 완료: " + className + "." + methodName);
+			// 바이트코드 생성 후 새로운 클래스로 강제 로드
+			byte[] byteCode = ctClass.toBytecode();
+			Class<?> modifiedClass = new MyClassLoader(targetClass.getClassLoader()).defineClass(targetClass.getName(), byteCode);
+			System.out.println("[Javassist] Successfully modified class: " + modifiedClass.getName());
+
+		} catch (CannotCompileException e) {
+			System.err.println("[ERROR] Compilation error in modifyMethods: " + e.getReason());
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("[ERROR] Unexpected exception in modifyMethods:");
+			e.printStackTrace();
 		}
-
-		Log.LogFactory.console("@ObservableArguments 적용 완료");
 	}
 
+	private static boolean hasObservableArgumentsAnnotation(Class<?> clazz, String methodName) {
+		try {
+			for (Method method : clazz.getDeclaredMethods()) {
+				if (method.getName().equals(methodName) &&
+						method.isAnnotationPresent(ObservableArguments.class)) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("[ERROR] Exception while checking annotation:");
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	private static void addLoggingToMethod(CtMethod method, String methodName) throws CannotCompileException {
+		String loggingCode = ""
+				+ "System.out.println(\"[Javassist] Method executed: " + methodName + " instance: \" + System.identityHashCode(this));"
+				+ "System.out.print(\"[Javassist] Arguments: \");"
+				+ "for (int i = 0; i < $args.length; i++) {"
+				+ "    System.out.print($args[i] + \" \");"
+				+ "}"
+				+ "System.out.println();";
+
+		method.insertBefore("{" + loggingCode + "}");
+	}
+}
+
+// 커스텀 클래스 로더
+class MyClassLoader extends ClassLoader {
+	public MyClassLoader(ClassLoader parent) {
+		super(parent);
+	}
+
+	public Class<?> defineClass(String name, byte[] byteCode) {
+		return defineClass(name, byteCode, 0, byteCode.length);
+	}
 }
