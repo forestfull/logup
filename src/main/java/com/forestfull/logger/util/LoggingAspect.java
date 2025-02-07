@@ -14,7 +14,6 @@ import java.util.Date;
 
 public class LoggingAspect {
 
-	@Aspect
 	public static class Observable {
 		@Before("@annotation(com.forestfull.logger.annotation.ObservableArguments) && execution(* *(..)) && !within(com.forestfull.logger.util.LoggingAspect$Observable)")
 		public void methodArguments(JoinPoint joinPoint) {
@@ -99,7 +98,6 @@ public class LoggingAspect {
 		}
 	}
 
-	@Aspect
 	public static class Jdbc {
 
 		@Before("call(* java.sql.Statement.execute*(String)) && args(sql)")
