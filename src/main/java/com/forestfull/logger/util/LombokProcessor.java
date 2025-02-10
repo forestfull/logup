@@ -1,6 +1,6 @@
 package com.forestfull.logger.util;
 
-import com.forestfull.logger.annotation.ObservableArguments;
+import com.forestfull.lombok.ObservableArguments;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -10,9 +10,9 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.util.Set;
 
-@SupportedAnnotationTypes("com.forestfull.logger.annotation.ObservableArguments")
+@SupportedAnnotationTypes("com.forestfull.lombok.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6) // JDK 1.6 이상 지원
-public class KoLoggerAnnotationProcessor extends AbstractProcessor {
+public class LombokProcessor extends AbstractProcessor  {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Messager messager = processingEnv.getMessager();
