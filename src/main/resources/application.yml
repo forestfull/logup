@@ -26,8 +26,7 @@ tunneling:
     username: ENC(QPV2VP7wxYIVJL0lRQv80w==)
     password: ENC(al37M+z/7bPz0cJmqg15Lf5Vqxdzb69J)
 logging:
-  level:
-    root: off
+  root: off
 kologger:
   level: INFO # ALL, INFO, WARN, ERROR, OFF
   jdbc: true # true, false
