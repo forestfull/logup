@@ -1,12 +1,18 @@
 package com.forestfull.logger.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import lombok.Builder;
+import lombok.Getter;
 
+import java.text.SimpleDateFormat;
+
+@Getter
+@Builder
 public class LogFormatter {
 
-	private static String placeholder;
-	private static SimpleDateFormat dateTimeFormat;
+	@Builder.Default
+	private String placeholder = LogFormatter.MessagePattern.DEFAULT;
+	@Builder.Default
+	private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public static class MessagePattern {
 		public static final String DEFAULT = MessagePattern.DATETIME + " [" + MessagePattern.THREAD + ":" + MessagePattern.LEVEL + "] - " + MessagePattern.MESSAGE + MessagePattern.NEW_LINE;
@@ -17,59 +23,15 @@ public class LogFormatter {
 		public static final String NEW_LINE = "{new-line}";
 	}
 
-	private LogFormatter(String placeholder, SimpleDateFormat dateTimeFormat) {
-		LogFormatter.placeholder = placeholder;
-		LogFormatter.dateTimeFormat = dateTimeFormat;
-	}
-
-	public static LogFormatterBuilder getInstance() {
-		return new LogFormatterBuilder();
-	}
-
-	public static class LogFormatterBuilder {
-		private String placeholder;
-		private SimpleDateFormat dateTimeFormat;
-
-		public LogFormatterBuilder placeholder(String placeHolder) {
-			this.placeholder = placeHolder; return this;
-		}
-
-		public LogFormatterBuilder datetime(String datetime) {
-			SimpleDateFormat format = null;
-
-			try {
-				format = new SimpleDateFormat(datetime);
-				format.format(new Date());
-			} catch (NullPointerException e) {
-				format = null;
-			} catch (IllegalArgumentException e) {
-				format = null;
-			} finally {
-				this.dateTimeFormat = format;
-			}
-
-			return this;
-		}
-
-		public LogFormatter build() {
-			return new LogFormatter(this.placeholder, this.dateTimeFormat);
-		}
-
-	}
-
-	protected String getPlaceholder() {
-		return placeholder;
-	}
-
-	protected SimpleDateFormat getDateTimeFormat() {
-		return dateTimeFormat;
+	@Override
+	public String toString() {
+		return "LogFormatter{" +
+				"placeholder='" + placeholder + '\'' +
+				", dateTimeFormat=" + dateTimeFormat.toPattern() +
+				'}';
 	}
 
 	protected void setPlaceholder(String placeholder) {
-		LogFormatter.placeholder = placeholder;
-	}
-
-	protected void setDateTimeFormat(String dateTimeFormat) {
-		LogFormatter.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
+		this.placeholder = placeholder;
 	}
 }
