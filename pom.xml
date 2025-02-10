@@ -63,26 +63,6 @@
 
     <build>
         <plugins>
-            <!-- 애노테이션 프로세서를 별도로 실행 -->
-            <plugin>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>3.3.3</version>
-                <executions>
-                    <execution>
-                        <id>process-annotations</id>
-                        <phase>process-classes</phase> <!-- 컴파일 후 실행 -->
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <processors>
-                        <processor>com.forestfull.logger.util.LombokProcessor</processor>
-                    </processors>
-                </configuration>
-            </plugin>
             <!--
             <plugin>
                 <groupId>org.sonatype.central</groupId>

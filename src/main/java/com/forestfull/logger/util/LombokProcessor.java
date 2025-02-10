@@ -16,7 +16,7 @@ public class LombokProcessor extends AbstractProcessor  {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Messager messager = processingEnv.getMessager();
-
+        System.out.println('d');
         for (Element element : roundEnv.getElementsAnnotatedWith(ObservableArguments.class)) {
             if (element instanceof ExecutableElement) {
                 ExecutableElement methodElement = (ExecutableElement) element;
