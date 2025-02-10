@@ -10,7 +10,7 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.util.Set;
 
-@SupportedAnnotationTypes("com.forestfull.lombok.*")
+@SupportedAnnotationTypes("com.forestfull.lombok.ObservableArguments")
 @SupportedSourceVersion(SourceVersion.RELEASE_6) // JDK 1.6 이상 지원
 public class LombokProcessor extends AbstractProcessor  {
     @Override
