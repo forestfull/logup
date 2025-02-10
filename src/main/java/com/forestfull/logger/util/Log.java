@@ -48,8 +48,7 @@ public class Log {
         final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
                 .replace(LogFormatter.MessagePattern.DATETIME, now)
                 .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
-                .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level
-                        .name().substring(0, 4))
+                .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level.name())
                 .replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
                 .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
 

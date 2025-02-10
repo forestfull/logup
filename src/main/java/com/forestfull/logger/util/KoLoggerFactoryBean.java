@@ -64,8 +64,8 @@ public class KoLoggerFactoryBean {
         Log.LogFactory.console("KoLoggerFactoryBean.builder()" + Log.newLine);
         Log.LogFactory.console("                    .level(Level.INFO)" + Log.newLine);
         Log.LogFactory.console("                    .jdbc(true)" + Log.newLine);
-        Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().placeholder(\"{datetime} [{thread}:{level}] - {msg}{new-line}\").datetime(\"yyyy-MM-dd HH:mm:ss\").build())" + Log.newLine);
-        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().placeholder(\"YOUR_PROJECT_NAME{date}.log\").logFileDirectory(\"logs/\").dateFormat(\"yyyy-MM-dd\").build())" + Log.newLine);
+        Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().build())" + Log.newLine);
+        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().logFileDirectory(\"logs/\").build())" + Log.newLine);
         Log.LogFactory.console("                    .build();" + Log.newLine + Log.newLine);
         Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine + Log.newLine);
     }
@@ -116,12 +116,8 @@ public class KoLoggerFactoryBean {
             }
         }
 
-
         LogFormatter logFormat = LogFormatter.builder().dateTimeFormat(logDateTimeFormatter).build();
-
-        if (logFormat.getPlaceholder() != null) {
-            logFormat.setPlaceholder(LogFormatter.MessagePattern.DEFAULT);
-        }
+        logFormat.setPlaceholder(logFormat.getPlaceholder() != null ? logFormatPlaceholder : LogFormatter.MessagePattern.DEFAULT);
 
         KoLoggerFactoryBean.builder()
                 .level(level)
