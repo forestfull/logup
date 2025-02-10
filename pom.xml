@@ -8,7 +8,6 @@
     <version>1.0.5</version>
 
     <properties>
-        <aspectj.version>1.8.5</aspectj.version>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,7 +45,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <version>1.16.22</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -63,8 +62,17 @@
     </distributionManagement>
 
     <build>
-            <!--
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>META-INF</targetPath>
+                <includes>
+                    <include>services/**</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
+            <!--
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
@@ -135,7 +143,7 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
         -->
+        </plugins>
     </build>
 </project>

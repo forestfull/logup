@@ -1,12 +1,19 @@
 package com.forestfull;
 
 import com.forestfull.logger.Level;
+import com.forestfull.logger.annotation.ObservableArguments;
 import com.forestfull.logger.util.FileRecorder;
 import com.forestfull.logger.util.KoLoggerFactoryBean;
 import com.forestfull.logger.util.Log;
 import com.forestfull.logger.util.LogFormatter;
 
 public class Test {
+
+    @ObservableArguments
+    void test(Object... args){
+        Log.warn(args);
+    }
+
     public static void main(String[] args) {
 
         KoLoggerFactoryBean.builder()
@@ -15,7 +22,7 @@ public class Test {
                 .fileRecorder(FileRecorder.builder().logFileDirectory("logs/").build())
                 .start();
 
-        Log.warn("Hello World");
+        new Test().test();
 
         Log.error("Hello World");
 
