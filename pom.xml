@@ -42,16 +42,6 @@
     </scm>
 
     <dependencies>
-        <dependency>    <groupId>com.forestfull.devops</groupId>
-            <artifactId>kologger</artifactId>
-            <version>1.0.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.22</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>

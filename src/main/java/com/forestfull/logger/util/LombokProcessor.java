@@ -37,6 +37,7 @@ public class LombokProcessor extends AbstractProcessor  {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "hi");
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(ObservableArguments.class);
         for (Element element : elements) {
             if (element.getKind() != ElementKind.INTERFACE) {

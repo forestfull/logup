@@ -1,7 +1,6 @@
 package com.forestfull.logger.config;
 
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
