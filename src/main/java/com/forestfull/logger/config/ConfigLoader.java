@@ -2,6 +2,7 @@ package com.forestfull.logger.config;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +27,8 @@ public class ConfigLoader {
                 inputStream = classLoader.getResourceAsStream(yamlFile);
                 if (inputStream != null) {
                     System.out.println("Loading configuration from " + yamlFile);
-                    Map<String, Object> yamlMap = new Yaml().loadAs(inputStream, Map.class);
+                    Yaml yaml = new Yaml(new SafeConstructor());
+                    Map<String, Object> yamlMap = yaml.loadAs(inputStream, Map.class);
                     flattenMap("", yamlMap, properties);
                 }
             }
