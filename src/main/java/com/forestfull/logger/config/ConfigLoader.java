@@ -26,8 +26,7 @@ public class ConfigLoader {
                 inputStream = classLoader.getResourceAsStream(yamlFile);
                 if (inputStream != null) {
                     System.out.println("Loading configuration from " + yamlFile);
-                    Yaml yaml = new Yaml(new SafeConstructor());
-                    Map<String, Object> yamlMap = yaml.loadAs(inputStream, Map.class);
+                    Map<String, Object> yamlMap = new Yaml().loadAs(inputStream, Map.class);
                     flattenMap("", yamlMap, properties);
                 }
             }
