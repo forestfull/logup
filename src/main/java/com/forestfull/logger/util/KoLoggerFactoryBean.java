@@ -31,6 +31,7 @@ public class KoLoggerFactoryBean {
 
     static {
         configureProperties();
+
         if (KoLoggerFactoryBean.level == null)
             loggingInitializeManual();
 
@@ -145,7 +146,7 @@ public class KoLoggerFactoryBean {
                 .start();
     }
 
-    KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level, final Boolean jdbc) {
+    KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level) {
         KoLoggerFactoryBean.logFormatter = logFormatter;
         KoLoggerFactoryBean.fileRecorder = fileRecorder;
         KoLoggerFactoryBean.level = level;
