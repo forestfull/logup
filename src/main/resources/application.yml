@@ -5,6 +5,3 @@ kologger:
   log-format:
     placeholder: "{datetime} [{thread}:{level}] - {msg}{new-line}"
     date-time-format: yyyy-MM-dd HH:mm:ss
-  file-recode:
-    directory: log/
-    date-format: yyyy-MM-dd
