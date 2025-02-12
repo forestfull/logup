@@ -169,6 +169,7 @@ public class KoLoggerFactoryBean {
          * <p>
          *
          * @param logFormatter {@link LogFormatter}
+         * @return {@link KoLoggerFactoryBean}
          */
         public KoLoggerFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
             this.logFormatter = logFormatter;
@@ -180,6 +181,7 @@ public class KoLoggerFactoryBean {
          * <p>
          *
          * @param fileRecorder {@link FileRecorder}
+         * @return {@link KoLoggerFactoryBean}
          */
         public KoLoggerFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
             this.fileRecorder = fileRecorder;
@@ -196,6 +198,7 @@ public class KoLoggerFactoryBean {
          * </ul>
          *
          * @param level {@link Level}
+         * @return {@link KoLoggerFactoryBean}
          */
         public KoLoggerFactoryBeanBuilder level(final Object level) {
             try {

@@ -4,17 +4,16 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+    mavenCentral();
 }
 
 dependencies {
-    annotationProcessor("com.google.auto.service:auto-service:1.1.1")
-    implementation("com.google.auto.service:auto-service:1.1.1")
-    implementation("com.squareup:javapoet:1.13.0")
     implementation("org.yaml:snakeyaml:1.18")
+    compileOnly("com.google.guava:guava:19.0")
+    compileOnly("com.google.auto.service:auto-service:1.0-rc7") {
+        exclude(group = "org.checkerframework", module = "checker-qual")
+    }
+    compileOnly("com.squareup:javapoet:1.13.0")
 }
 
 group = "com.forestfull.devops"
@@ -22,10 +21,9 @@ version = "1.0.5"
 description = "KoLogger"
 java.sourceCompatibility = JavaVersion.VERSION_1_6
 
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
+java{
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.withType<JavaCompile>() {
