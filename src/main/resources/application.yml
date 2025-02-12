@@ -7,5 +7,4 @@ kologger:
     date-time-format: yyyy-MM-dd HH:mm:ss
   file-recode:
     directory: log/
-    placeholder: YOUR_PROJECT_NAME{date}.log
     date-format: yyyy-MM-dd

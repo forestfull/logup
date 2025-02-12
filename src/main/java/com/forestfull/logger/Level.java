@@ -10,5 +10,5 @@ package com.forestfull.logger;
  * </ul>
  */
 public enum Level {
-    ALL, INFO, WARN, ERROR, OFF;
+    ALL, INFO, WARN, ERROR, OFF
 }
