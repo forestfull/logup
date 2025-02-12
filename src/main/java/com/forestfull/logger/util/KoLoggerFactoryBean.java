@@ -33,6 +33,8 @@ public class KoLoggerFactoryBean {
         configureProperties();
         if (KoLoggerFactoryBean.level == null)
             loggingInitializeManual();
+
+        defaultInitialize();
     }
 
     private static void loggingInitializeManual() {
@@ -63,11 +65,32 @@ public class KoLoggerFactoryBean {
         Log.LogFactory.console(Log.newLine + " # Priority.3 - source code" + Log.newLine);
         Log.LogFactory.console("KoLoggerFactoryBean.builder()" + Log.newLine);
         Log.LogFactory.console("                    .level(Level.INFO)" + Log.newLine);
-        Log.LogFactory.console("                    .jdbc(true)" + Log.newLine);
         Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().build())" + Log.newLine);
         Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().logFileDirectory(\"logs/\").build())" + Log.newLine);
         Log.LogFactory.console("                    .build();" + Log.newLine + Log.newLine);
         Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine + Log.newLine);
+    }
+
+    private static void defaultInitialize() {
+        if (KoLoggerFactoryBean.level == null)
+            KoLoggerFactoryBean.level = Level.ALL;
+
+        if (KoLoggerFactoryBean.logFormatter == null)
+            KoLoggerFactoryBean.logFormatter = LogFormatter.builder().build();
+
+        if (KoLoggerFactoryBean.logFormatter.getPlaceholder() == null)
+            KoLoggerFactoryBean.logFormatter.setPlaceholder(LogFormatter.getDefaultPlaceHolder());
+
+        if (KoLoggerFactoryBean.logFormatter.getDateTimeFormat() == null)
+            KoLoggerFactoryBean.logFormatter.setDateTimeFormat(LogFormatter.getDefaultDateTimeFormat());
+
+        if (KoLoggerFactoryBean.fileRecorder == null) return;
+
+        if (KoLoggerFactoryBean.fileRecorder.getPlaceholder() == null)
+            KoLoggerFactoryBean.fileRecorder.setPlaceholder(FileRecorder.getDefaultPlaceHolder());
+
+        if (KoLoggerFactoryBean.fileRecorder.getDateFormat() == null)
+            KoLoggerFactoryBean.fileRecorder.setDateFormat(FileRecorder.getDefaultDateFormat());
     }
 
     private static void configureProperties() {
@@ -76,6 +99,8 @@ public class KoLoggerFactoryBean {
         if (properties.isEmpty()) return;
 
         final String level = properties.getProperty("kologger.level");
+        if (level == null) return;
+
         final String logFormatPlaceholder = properties.getProperty("kologger.log-format.placeholder");
         final String logFormatDateTimeFormat = properties.getProperty("kologger.log-format.date-time-format");
         final String fileDirectory = properties.getProperty("kologger.file-recode.directory");

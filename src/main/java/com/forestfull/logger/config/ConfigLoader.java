@@ -1,53 +1,54 @@
 package com.forestfull.logger.config;
 
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Properties;
 
 public class ConfigLoader {
-    private static final Properties properties = new Properties();
 
     public static Properties loadConfig() {
-        String propertiesFile = "application.properties";
-        String yamlFile = "application.yml";
+        final Properties properties = new Properties();
+        final String propertiesFile = "application.properties";
+        final String yamlFile = "application.yml";
+        final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(propertiesFile);
 
-        if (inputStream != null) {
-            System.out.println("Loading configuration from " + propertiesFile);
-            loadProperties(inputStream);
-        } else {
-            inputStream = classLoader.getResourceAsStream(yamlFile);
+        try {
             if (inputStream != null) {
-                System.out.println("Loading configuration from " + yamlFile);
-                loadYaml(inputStream);
+                System.out.println("Loading configuration from " + propertiesFile);
+                properties.load(inputStream);
             } else {
-                System.out.println("No configuration file found in classpath.");
+                inputStream = classLoader.getResourceAsStream(yamlFile);
+                if (inputStream != null) {
+                    System.out.println("Loading configuration from " + yamlFile);
+                    Map<String, Object> yamlMap = new Yaml().loadAs(inputStream, Map.class);
+                    flattenMap("", yamlMap, properties);
+                }
             }
+
+            if (inputStream != null) inputStream.close();
+        } catch (IOException e) {
+            System.out.println("No configuration file found in classpath: " + e.getMessage());
         }
+
         return properties;
     }
 
-    private static void loadProperties(InputStream inputStream) {
-        try {
-            properties.load(inputStream);
-            inputStream.close();
-        } catch (IOException e) {
-            System.err.println("Failed to load properties file: " + e.getMessage());
-        }
-    }
+    private static void flattenMap(String parentKey, Map<String, Object> map, Properties properties) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = parentKey.isEmpty() ? entry.getKey() : parentKey + "." + entry.getKey();
+            Object value = entry.getValue();
 
-    private static void loadYaml(InputStream inputStream) {
-        try {
-            properties.putAll(YamlParser.parseYaml(inputStream));
-            inputStream.close();
-        } catch (IOException e) {
-            System.err.println("Failed to load YAML file: " + e.getMessage());
+            if (value instanceof Map) {
+                flattenMap(key, (Map<String, Object>) value, properties);
+            } else {
+                properties.setProperty(key, value.toString());
+            }
         }
-    }
-
-    public static String getProperty(String key) {
-        return properties.getProperty(key);
     }
 }

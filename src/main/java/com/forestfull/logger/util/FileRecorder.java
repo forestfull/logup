@@ -11,9 +11,11 @@ import java.util.Date;
 @Builder
 public class FileRecorder {
 	@Builder.Default
-	private String placeholder = FilePattern.PROJECT_NAME + "{date}.log";
+	private String placeholder = getDefaultPlaceHolder();
+
 	@Builder.Default
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	private SimpleDateFormat dateFormat = getDefaultDateFormat();
+
 	@Builder.Default
 	private String logFileDirectory = "logs/";
 
@@ -34,5 +36,13 @@ public class FileRecorder {
 
 	protected void setLogFileDirectory(String logFileDirectory) {
 		this.logFileDirectory = logFileDirectory;
+	}
+
+	protected static String getDefaultPlaceHolder() {
+		return FilePattern.PROJECT_NAME + "{date}.log";
+	}
+
+	protected static SimpleDateFormat getDefaultDateFormat() {
+		return new SimpleDateFormat("yyyy-MM-dd");
 	}
 }
