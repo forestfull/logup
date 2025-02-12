@@ -1,13 +1,11 @@
-package com.forestfull.lombok;
+package com.forestfull.logger;
 
-
-import com.forestfull.logger.Level;
 
 import java.lang.annotation.*;
 
 @Documented
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ObservableArguments {
+public @interface Observable {
     Level level() default Level.ALL;
 }

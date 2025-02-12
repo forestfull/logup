@@ -1,13 +1,11 @@
 package com.forestfull;
 
 import com.forestfull.logger.util.Log;
-import com.forestfull.lombok.ObservableArguments;
-import com.forestfull.lombok.ObservableReturnValue;
+import com.forestfull.logger.Observable;
 
 public class Test {
 
-    @ObservableArguments
-    @ObservableReturnValue
+    @Observable
     public void test(String arg){
         Log.warn(arg);
     }

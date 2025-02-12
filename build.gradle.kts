@@ -10,6 +10,7 @@ repositories {
 dependencies {
     implementation("org.yaml:snakeyaml:1.18")
     compileOnly("com.google.guava:guava:19.0")
+    compileOnly(files("src/main/java"))
     compileOnly("com.google.auto.service:auto-service:1.0-rc7") {
         exclude(group = "org.checkerframework", module = "checker-qual")
     }

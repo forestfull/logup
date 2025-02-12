@@ -36,6 +36,7 @@ public class KoLoggerFactoryBean {
             loggingInitializeManual();
 
         defaultInitialize();
+        ClassAutoInitializer.initialize();
     }
 
     private static void loggingInitializeManual() {
