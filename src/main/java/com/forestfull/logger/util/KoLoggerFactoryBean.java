@@ -107,8 +107,8 @@ public class KoLoggerFactoryBean {
         final String filePlaceholder = properties.getProperty("kologger.file-recode.placeholder");
         final String fileDateFormat = properties.getProperty("kologger.file-recode.date-format");
 
-        SimpleDateFormat logDateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        SimpleDateFormat fileNameDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat logDateTimeFormatter = null;
+        SimpleDateFormat fileNameDateFormatter = null;
 
         if (logFormatDateTimeFormat != null && !logFormatDateTimeFormat.isEmpty()) {
             try {
@@ -133,20 +133,14 @@ public class KoLoggerFactoryBean {
         if (fileDirectory != null && !fileDirectory.isEmpty()) {
             fileRecord = FileRecorder.builder()
                     .logFileDirectory(fileDirectory)
+                    .placeholder(filePlaceholder)
                     .dateFormat(fileNameDateFormatter)
                     .build();
-
-            if (filePlaceholder != null && !filePlaceholder.isEmpty()) {
-                fileRecord.setPlaceholder(filePlaceholder);
-            }
         }
-
-        LogFormatter logFormat = LogFormatter.builder().dateTimeFormat(logDateTimeFormatter).build();
-        logFormat.setPlaceholder(logFormat.getPlaceholder() != null ? logFormatPlaceholder : LogFormatter.MessagePattern.DEFAULT);
 
         KoLoggerFactoryBean.builder()
                 .level(level)
-                .logFormatter(logFormat)
+                .logFormatter(LogFormatter.builder().dateTimeFormat(logDateTimeFormatter).placeholder(logFormatPlaceholder).build())
                 .fileRecorder(fileRecord)
                 .start();
     }
