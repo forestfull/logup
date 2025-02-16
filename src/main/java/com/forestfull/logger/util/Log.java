@@ -9,7 +9,7 @@ import java.util.Date;
 public class Log {
 
     private final static String CHARSET_UTF_8 = "UTF-8";
-    protected final static String newLine = System.getProperty("line.separator");
+    final static String newLine = System.getProperty("line.separator");
 
     private Log() {
     }

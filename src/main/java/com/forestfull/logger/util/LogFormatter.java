@@ -11,19 +11,19 @@ public class LogFormatter {
     private String placeholder;
     private SimpleDateFormat dateTimeFormat;
 
-    protected void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
+    void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    protected void setPlaceholder(String placeholder) {
+    void setPlaceholder(String placeholder) {
         this.placeholder = placeholder;
     }
 
-    protected static String getDefaultPlaceHolder() {
+    static String getDefaultPlaceHolder() {
         return MessagePattern.DEFAULT;
     }
 
-    protected static SimpleDateFormat getDefaultDateTimeFormat() {
+    static SimpleDateFormat getDefaultDateTimeFormat() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 

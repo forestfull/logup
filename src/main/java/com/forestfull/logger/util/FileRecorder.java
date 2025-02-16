@@ -7,23 +7,23 @@ public class FileRecorder {
 	private SimpleDateFormat dateFormat;
 	private String logFileDirectory;
 
-	protected void setPlaceholder(String placeholder) {
+	void setPlaceholder(String placeholder) {
 		this.placeholder = placeholder;
 	}
 
-	protected void setDateFormat(SimpleDateFormat dateFormat) {
+	void setDateFormat(SimpleDateFormat dateFormat) {
 		this.dateFormat = dateFormat;
 	}
 
-	protected void setLogFileDirectory(String logFileDirectory) {
+	void setLogFileDirectory(String logFileDirectory) {
 		this.logFileDirectory = logFileDirectory;
 	}
 
-	protected static String getDefaultPlaceHolder() {
+	static String getDefaultPlaceHolder() {
 		return FileRecorder.FilePattern.PROJECT_NAME + "{date}.log";
 	}
 
-	protected static SimpleDateFormat getDefaultDateFormat() {
+	static SimpleDateFormat getDefaultDateFormat() {
 		return new SimpleDateFormat("yyyy-MM-dd");
 	}
 

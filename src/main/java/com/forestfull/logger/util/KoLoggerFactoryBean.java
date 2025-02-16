@@ -24,9 +24,9 @@ import java.util.Properties;
  */
 
 public class KoLoggerFactoryBean {
-    protected static LogFormatter logFormatter;
-    protected static FileRecorder fileRecorder;
-    protected static Level level;
+    static LogFormatter logFormatter;
+    static FileRecorder fileRecorder;
+    static Level level;
 
     static {
         configureProperties();
