@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.LOCAL_VARIABLE)
 @Retention(RetentionPolicy.RUNTIME)
-@interface Observable {
+public @interface Observable {
     Level level() default Level.ALL;
 }

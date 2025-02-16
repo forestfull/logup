@@ -1,7 +1,0 @@
-logging:
-  root: off
-kologger:
-  level: INFO # ALL, INFO, WARN, ERROR, OFF
-  log-format:
-    placeholder: "{datetime} [{thread}:{level}] - {msg}{new-line}"
-    date-time-format: yyyy-MM-dd HH:mm:ss
