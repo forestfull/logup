@@ -45,21 +45,23 @@ public class Log {
 
         final String className = stackTrace.getClassName();
         final String methodName = stackTrace.getMethodName();
-        StringBuilder currentThreadName = new StringBuilder(className).append('.');
+        StringBuilder currentThreadName = new StringBuilder(Thread.currentThread().getName()).append(' ');
 
-        if (className.split("\\.").length > 1){
-            currentThreadName.delete(0, currentThreadName.length());
+        if (className.split("\\.").length > 1) {
             String[] split = className.split("\\.");
             for (int i = 0; i < split.length - 1; i++) {
                 String pack = split[i];
                 currentThreadName.append(pack.charAt(0)).append('.');
             }
             currentThreadName.append(split[split.length - 1]).append('.');
+        } else {
+            currentThreadName.append(className).append('.');
         }
-        currentThreadName.append(methodName)
-                .append('[').append(Thread.currentThread().getName()).append(':').append(stackTrace.getLineNumber()).append(']');
 
-		for (Object message : messages) msgBuilder.append(message);
+        currentThreadName.append(methodName)
+                .append('(').append(stackTrace.getFileName()).append(':').append(stackTrace.getLineNumber()).append(')');
+
+        for (Object message : messages) msgBuilder.append(message);
 
         final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
                 .replace(LogFormatter.MessagePattern.DATETIME, now)

@@ -44,7 +44,7 @@ public class KoLoggerFactoryBean {
         Log.LogFactory.console(Log.newLine + " # Priority.1 - application.properties" + Log.newLine);
         Log.LogFactory.console("kologger.level=INFO" + Log.newLine);
         Log.LogFactory.console("kologger.jdbc=true" + Log.newLine);
-        Log.LogFactory.console("kologger.log-format.placeholder={datetime} [{thread}:{level}] - {msg}{new-line}" + Log.newLine);
+        Log.LogFactory.console("kologger.log-format.placeholder={datetime} {thread} {level} - {msg}{new-line}" + Log.newLine);
         Log.LogFactory.console("kologger.log-format.date-time-format=yyyy-MM-dd HH:mm:ss" + Log.newLine);
         Log.LogFactory.console("kologger.file-recode.directory=log/" + Log.newLine);
         Log.LogFactory.console("kologger.file-recode.placeholder=YOUR_PROJECT_NAME{date}.log" + Log.newLine);
@@ -55,7 +55,7 @@ public class KoLoggerFactoryBean {
         Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + Log.newLine);
         Log.LogFactory.console("  jdbc: true # true, false" + Log.newLine);
         Log.LogFactory.console("  log-format:" + Log.newLine);
-        Log.LogFactory.console("    placeholder: \"{datetime} [{thread}:{level}] - {msg}{new-line}\"" + Log.newLine);
+        Log.LogFactory.console("    placeholder: \"{datetime} {thread} {level} - {msg}{new-line}\"" + Log.newLine);
         Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + Log.newLine);
         Log.LogFactory.console("  file-recode:" + Log.newLine);
         Log.LogFactory.console("    directory: log/" + Log.newLine);
