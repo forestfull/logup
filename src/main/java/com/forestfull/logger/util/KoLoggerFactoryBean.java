@@ -1,7 +1,6 @@
 package com.forestfull.logger.util;
 
 import com.forestfull.logger.Level;
-import com.forestfull.logger.config.ConfigLoader;
 
 import java.text.SimpleDateFormat;
 import java.util.Properties;
@@ -36,7 +35,6 @@ public class KoLoggerFactoryBean {
             loggingInitializeManual();
 
         defaultInitialize();
-        ClassAutoInitializer.initialize();
     }
 
     private static void loggingInitializeManual() {

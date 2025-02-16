@@ -39,9 +39,25 @@ public class Log {
         if (level.compareTo(KoLoggerFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
 
-        final String currentThreadName = Thread.currentThread().getName();
+        StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[3];
         final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
         final StringBuilder msgBuilder = new StringBuilder(1024);
+
+        final String className = stackTrace.getClassName();
+        final String methodName = stackTrace.getMethodName();
+        StringBuilder currentThreadName = new StringBuilder(className).append('.');
+
+        if (className.split("\\.").length > 1){
+            currentThreadName.delete(0, currentThreadName.length());
+            String[] split = className.split("\\.");
+            for (int i = 0; i < split.length - 1; i++) {
+                String pack = split[i];
+                currentThreadName.append(pack.charAt(0)).append('.');
+            }
+            currentThreadName.append(split[split.length - 1]).append('.');
+        }
+        currentThreadName.append(methodName)
+                .append('[').append(Thread.currentThread().getName()).append(':').append(stackTrace.getLineNumber()).append(']');
 
 		for (Object message : messages) msgBuilder.append(message);
 
@@ -59,7 +75,7 @@ public class Log {
 
     static class LogFactory {
         protected static synchronized void console(final String msg) {
-            final Writer fdOut = new FileWriter(FileDescriptor.out);
+            final Writer fdOut = new PrintWriter(new FileWriter(FileDescriptor.out));
 
             try {
                 fdOut.write(msg);

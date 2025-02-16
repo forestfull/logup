@@ -10,6 +10,7 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <yml.version>2.3</yml.version>
         <lombok.version>1.18.36</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -46,7 +47,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.3</version>
+            <version>${yml.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
