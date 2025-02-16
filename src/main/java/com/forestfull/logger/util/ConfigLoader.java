@@ -1,4 +1,4 @@
-package com.forestfull.logger.config;
+package com.forestfull.logger.util;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class ConfigLoader {
 
-    public static Properties loadConfig() {
+    static Properties loadConfig() {
         final Properties properties = new Properties();
         final String propertiesFile = "application.properties";
         final String yamlFile = "application.yml";
