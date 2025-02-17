@@ -1,5 +1,6 @@
 package com.forestfull.logger.spring;
 
+import com.forestfull.logger.util.ObservableAspect;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

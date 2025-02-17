@@ -18,28 +18,32 @@ public class Log {
      * @param msg anything
      */
     public static void info(Object... msg) {
-        write(Level.INFO, msg);
+        write(Level.INFO, 4, msg);
     }
 
     /**
      * @param msg anything
      */
     public static void warn(Object... msg) {
-        write(Level.WARN, msg);
+        write(Level.WARN, 4, msg);
     }
 
     /**
      * @param msg anything
      */
     public static void error(Object... msg) {
-        write(Level.ERROR, msg);
+        write(Level.ERROR, 4, msg);
     }
 
-    protected static void write(final Level level, final Object... messages) {
+    static void write(final Level level, final int depth, final Object... messages) {
+        write(level, depth, KoLoggerFactoryBean.logFormatter.getPlaceholder(), messages);
+    }
+
+    static void write(final Level level, final int depth, final String placeholder, final Object... messages) {
         if (level.compareTo(KoLoggerFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
 
-        StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[3];
+        StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[depth];
         final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
         final StringBuilder msgBuilder = new StringBuilder(1024);
 
@@ -63,10 +67,10 @@ public class Log {
 
         for (Object message : messages) msgBuilder.append(message);
 
-        final String logMessage = KoLoggerFactoryBean.logFormatter.getPlaceholder()
+        final String logMessage = placeholder
                 .replace(LogFormatter.MessagePattern.DATETIME, now)
-                .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
                 .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level.name())
+                .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
                 .replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
                 .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
 

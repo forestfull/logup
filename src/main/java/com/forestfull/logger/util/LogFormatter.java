@@ -33,6 +33,6 @@ public class LogFormatter {
         public static final String LEVEL = "{level}";
         public static final String MESSAGE = "{msg}";
         public static final String NEW_LINE = "{new-line}";
-        public static final String DEFAULT = DATETIME + " " + THREAD + " " + LEVEL + " - " + MESSAGE + NEW_LINE;
+        public static final String DEFAULT = DATETIME + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE + NEW_LINE;
     }
 }
