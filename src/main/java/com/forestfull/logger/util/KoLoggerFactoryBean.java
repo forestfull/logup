@@ -20,7 +20,7 @@ import java.util.Properties;
  *
  * @author Vigfoot
  * @version 1.0
- * @since JDK 1.6
+ * @since JDK 1.8
  */
 
 public class KoLoggerFactoryBean {
@@ -35,6 +35,7 @@ public class KoLoggerFactoryBean {
             loggingInitializeManual();
 
         defaultInitialize();
+
     }
 
     private static void loggingInitializeManual() {
