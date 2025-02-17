@@ -1,6 +1,7 @@
 package com.forestfull.logger.util;
 
 import com.forestfull.logger.Level;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Properties;
@@ -36,6 +37,20 @@ public class KoLoggerFactoryBean {
 
         defaultInitialize();
 
+        if (isSpringPresent()){
+            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(com.forestfull.logger.spring.ObservableConfig.class);
+            context.scan(System.getProperty("base.package"));
+            context.refresh();
+        }
+    }
+
+    private static boolean isSpringPresent() {
+        try {
+            Class.forName("org.springframework.context.annotation.AnnotationConfigApplicationContext");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     private static void loggingInitializeManual() {
