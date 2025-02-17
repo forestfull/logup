@@ -18,32 +18,32 @@ public class Log {
      * @param msg anything
      */
     public static void info(Object... msg) {
-        write(Level.INFO, 4, msg);
+        write(Level.INFO, msg);
     }
 
     /**
      * @param msg anything
      */
     public static void warn(Object... msg) {
-        write(Level.WARN, 4, msg);
+        write(Level.WARN, msg);
     }
 
     /**
      * @param msg anything
      */
     public static void error(Object... msg) {
-        write(Level.ERROR, 4, msg);
+        write(Level.ERROR, msg);
     }
 
-    static void write(final Level level, final int depth, final Object... messages) {
-        write(level, depth, KoLoggerFactoryBean.logFormatter.getPlaceholder(), messages);
+    static void write(final Level level, final Object... messages) {
+        write(level, KoLoggerFactoryBean.logFormatter.getPlaceholder(), messages);
     }
 
-    static void write(final Level level, final int depth, final String placeholder, final Object... messages) {
+    static void write(final Level level, final String placeholder, final Object... messages) {
         if (level.compareTo(KoLoggerFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
 
-        StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[depth];
+        StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[4];
         final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
         final StringBuilder msgBuilder = new StringBuilder(1024);
 
