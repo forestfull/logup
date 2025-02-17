@@ -5,13 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.forestfull.devops</groupId>
     <artifactId>kologger</artifactId>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <yml.version>2.3</yml.version>
         <lombok.version>1.18.36</lombok.version>
+        <poet.version>1.13.0</poet.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -53,6 +54,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+            <version>${poet.version}</version>
         </dependency>
     </dependencies>
 
@@ -69,21 +76,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <!--
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
@@ -118,12 +110,12 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
-                            &lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;
+                            <!--suppress UnresolvedMavenProperty -->
                             <keyname>${gpg.keyname}</keyname>
-                            &lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;
+                            <!--suppress UnresolvedMavenProperty -->
                             <passphraseServerId>${gpg.keyname}</passphraseServerId>
                             <gpgArguments>
-                                <arg>&#45;&#45;pinentry-mode</arg>
+                                <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
                             </gpgArguments>
                         </configuration>
@@ -154,7 +146,6 @@
                     </execution>
                 </executions>
             </plugin>
-        -->
         </plugins>
     </build>
 </project>
