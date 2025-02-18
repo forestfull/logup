@@ -8,8 +8,6 @@ import java.util.Properties;
 
 /**
  * KoLooger's general Configuration (KoLooger 전역 환경 설정)
- * <p><b>This class's instance must be initialized only once</b>
- * <br>(이 클래스의 인스턴스는 한 번만 초기화하여야 합니다.)</p>
  *
  * <ul>
  * <li><b>OFF</b>
@@ -44,23 +42,21 @@ public class KoLoggerFactoryBean {
         Log.LogFactory.console(Log.newLine + "=================================================================================================================================================================" + Log.newLine);
         Log.LogFactory.console(Log.newLine + " # Priority.1 - application.properties" + Log.newLine);
         Log.LogFactory.console("kologger.level=INFO" + Log.newLine);
-        Log.LogFactory.console("kologger.jdbc=true" + Log.newLine);
-        Log.LogFactory.console("kologger.log-format.placeholder={datetime} {thread} {level} - {msg}{new-line}" + Log.newLine);
+        Log.LogFactory.console("kologger.log-format.placeholder={datetime} {level} {thread} - {msg}{new-line}" + Log.newLine);
         Log.LogFactory.console("kologger.log-format.date-time-format=yyyy-MM-dd HH:mm:ss" + Log.newLine);
         Log.LogFactory.console("kologger.file-recode.directory=log/" + Log.newLine);
-        Log.LogFactory.console("kologger.file-recode.placeholder=YOUR_PROJECT_NAME{date}.log" + Log.newLine);
+        Log.LogFactory.console("kologger.file-recode.placeholder=" + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + Log.newLine);
         Log.LogFactory.console("kologger.file-recode.date-format=yyyy-MM-dd" + Log.newLine + Log.newLine);
         Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
         Log.LogFactory.console(Log.newLine + " # Priority.2 - application.yml" + Log.newLine);
         Log.LogFactory.console("kologger:" + Log.newLine);
         Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + Log.newLine);
-        Log.LogFactory.console("  jdbc: true # true, false" + Log.newLine);
         Log.LogFactory.console("  log-format:" + Log.newLine);
-        Log.LogFactory.console("    placeholder: \"{datetime} {thread} {level} - {msg}{new-line}\"" + Log.newLine);
+        Log.LogFactory.console("    placeholder: \"{datetime} {level} {thread} - {msg}{new-line}\"" + Log.newLine);
         Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + Log.newLine);
         Log.LogFactory.console("  file-recode:" + Log.newLine);
-        Log.LogFactory.console("    directory: log/" + Log.newLine);
-        Log.LogFactory.console("    placeholder: YOUR_PROJECT_NAME{date}.log" + Log.newLine);
+        Log.LogFactory.console("    directory: log/ # is default" + Log.newLine);
+        Log.LogFactory.console("    placeholder: " + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + Log.newLine);
         Log.LogFactory.console("    date-format: yyyy-MM-dd" + Log.newLine + Log.newLine);
         Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
         Log.LogFactory.console(Log.newLine + " # Priority.3 - source code" + Log.newLine);
