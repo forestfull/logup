@@ -7,39 +7,19 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
 @Aspect
-@Component
 public class ObservableAspect {
 
     @Around("@annotation(com.forestfull.logger.spring.Observable)")
     public Object aroundMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        String targetFileName = null;
-        int targetLine = -1;
         final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         if (method == null) return null;
 
         final Observable observable = method.getAnnotation(Observable.class);
         if (observable == null) return null;
-
-
-//        targetFileName = joinPoint.getSourceLocation().getFileName();
-//        targetLine = joinPoint.getSourceLocation().getLine(); TODO: 프레임워크에 지원안한다고 리턴 값에 익셉션 박아놓은게 웃기지않나
-/*
-
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for (StackTraceElement element : stackTrace) {
-            System.out.println(element.getClassName() + "." + element.getMethodName());
-            if (element.getClassName().equals(AopProxyUtils.ultimateTargetClass(joinPoint.getThis()).getName()) && element.getMethodName().equals(joinPoint.getSignature().getName())) {
-                targetFileName = element.getFileName();
-                targetLine = element.getLineNumber();
-                break;
-            }
-        }
-*/
 
         final Level level = observable.level();
 
@@ -47,10 +27,6 @@ public class ObservableAspect {
 
         if (observable.arguments()) {
             argumentsBuilder = new StringBuilder();
-
-            if (targetFileName != null && targetLine >= -1)
-                argumentsBuilder.append('(').append(targetFileName).append(':').append(targetLine).append(')');
-
             argumentsBuilder.append("@Observable detected calling: ").append(method.getName());
 
             if (method.getParameterTypes().length != 0) {
@@ -70,10 +46,6 @@ public class ObservableAspect {
             logOfLevel(joinPoint.getTarget(), joinPoint, level, argumentsBuilder);
         } else if (!observable.returnValue()) {
             argumentsBuilder = new StringBuilder();
-
-            if (targetFileName != null && targetLine >= -1)
-                argumentsBuilder.append('(').append(targetFileName).append(':').append(targetLine).append(')');
-
             argumentsBuilder.append("@Observable detected calling: ").append(method.getName());
 
             logOfLevel(joinPoint.getTarget(), joinPoint, level, argumentsBuilder);
@@ -84,10 +56,6 @@ public class ObservableAspect {
 
         if (observable.returnValue()) {
             argumentsBuilder = new StringBuilder();
-
-            if (targetFileName != null && targetLine >= -1)
-                argumentsBuilder.append('(').append(targetFileName).append(':').append(targetLine).append(')');
-
             argumentsBuilder.append("@Observable detected return: ").append(method.getName());
 
             if (method.getReturnType() != Void.TYPE)
