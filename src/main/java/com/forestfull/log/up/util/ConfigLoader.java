@@ -44,7 +44,7 @@ public class ConfigLoader {
             }
 
             if (inputStream != null) inputStream.close();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.out.println("No configuration file found in classpath: " + e.getMessage());
         }
 
