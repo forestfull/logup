@@ -1,12 +1,12 @@
-package com.forestfull.logger.util;
+package com.forestfull.log.up.util;
 
-import com.forestfull.logger.Level;
+import com.forestfull.log.up.Level;
 
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 /**
- * KoLooger's general Configuration (KoLooger 전역 환경 설정)
+ * LogUp's general Configuration (LogUp 전역 환경 설정)
  *
  * <ul>
  * <li><b>OFF</b>
@@ -16,9 +16,8 @@ import java.util.Properties;
  * <li><b>ALL</b>
  * </ul>
  *
- * @author Vigfoot
- * @version 1.0
- * @since JDK 1.8
+ * @author <a href="https://vigfoot.com">Vigfoot</a>
+ * @see Log
  */
 
 public class LogUpFactoryBean {
@@ -36,35 +35,35 @@ public class LogUpFactoryBean {
     }
 
     private static void loggingInitializeManual() {
-        Log.LogFactory.console(Log.newLine + "=================================================================================================================================================================" + Log.newLine);
-        Log.LogFactory.console("KoLogger Setting Example");
-        Log.LogFactory.console(Log.newLine + "=================================================================================================================================================================" + Log.newLine);
-        Log.LogFactory.console(Log.newLine + " # Priority.1 - application.properties" + Log.newLine);
-        Log.LogFactory.console("kologger.level=INFO" + Log.newLine);
-        Log.LogFactory.console("kologger.log-format.placeholder={datetime} {level} {thread} - {msg}{new-line}" + Log.newLine);
-        Log.LogFactory.console("kologger.log-format.date-time-format=yyyy-MM-dd HH:mm:ss" + Log.newLine);
-        Log.LogFactory.console("kologger.file-recode.directory=log/" + Log.newLine);
-        Log.LogFactory.console("kologger.file-recode.placeholder=" + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + Log.newLine);
-        Log.LogFactory.console("kologger.file-recode.date-format=yyyy-MM-dd" + Log.newLine + Log.newLine);
-        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
-        Log.LogFactory.console(Log.newLine + " # Priority.2 - application.yml" + Log.newLine);
-        Log.LogFactory.console("kologger:" + Log.newLine);
-        Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + Log.newLine);
-        Log.LogFactory.console("  log-format:" + Log.newLine);
-        Log.LogFactory.console("    placeholder: \"{datetime} {level} {thread} - {msg}{new-line}\"" + Log.newLine);
-        Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + Log.newLine);
-        Log.LogFactory.console("  file-recode:" + Log.newLine);
-        Log.LogFactory.console("    directory: log/ # is default" + Log.newLine);
-        Log.LogFactory.console("    placeholder: " + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + Log.newLine);
-        Log.LogFactory.console("    date-format: yyyy-MM-dd" + Log.newLine + Log.newLine);
-        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + Log.newLine);
-        Log.LogFactory.console(Log.newLine + " # Priority.3 - source code" + Log.newLine);
-        Log.LogFactory.console("KoLoggerFactoryBean.builder()" + Log.newLine);
-        Log.LogFactory.console("                    .level(Level.INFO)" + Log.newLine);
-        Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().build())" + Log.newLine);
-        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().logFileDirectory(\"logs/\").build())" + Log.newLine);
-        Log.LogFactory.console("                    .build();" + Log.newLine + Log.newLine);
-        Log.LogFactory.console("=================================================================================================================================================================" + Log.newLine + Log.newLine);
+        Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
+        Log.LogFactory.console("LogUp Setting Example");
+        Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
+        Log.LogFactory.console(System.lineSeparator() + " # Priority.1 - application.properties" + System.lineSeparator());
+        Log.LogFactory.console("logup.level=INFO" + System.lineSeparator());
+        Log.LogFactory.console("logup.log-format.placeholder={datetime} {level} {thread} - {msg}{new-line}" + System.lineSeparator());
+        Log.LogFactory.console("logup.log-format.date-time-format=yyyy-MM-dd HH:mm:ss" + System.lineSeparator());
+        Log.LogFactory.console("logup.file-recode.directory=log/" + System.lineSeparator());
+        Log.LogFactory.console("logup.file-recode.placeholder=" + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
+        Log.LogFactory.console("logup.file-recode.date-format=yyyy-MM-dd" + System.lineSeparator() + System.lineSeparator());
+        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
+        Log.LogFactory.console(System.lineSeparator() + " # Priority.2 - application.yml" + System.lineSeparator());
+        Log.LogFactory.console("logup:" + System.lineSeparator());
+        Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + System.lineSeparator());
+        Log.LogFactory.console("  log-format:" + System.lineSeparator());
+        Log.LogFactory.console("    placeholder: \"{datetime} {level} {thread} - {msg}{new-line}\"" + System.lineSeparator());
+        Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + System.lineSeparator());
+        Log.LogFactory.console("  file-recode:" + System.lineSeparator());
+        Log.LogFactory.console("    directory: log/ # is default" + System.lineSeparator());
+        Log.LogFactory.console("    placeholder: " + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
+        Log.LogFactory.console("    date-format: yyyy-MM-dd" + System.lineSeparator() + System.lineSeparator());
+        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
+        Log.LogFactory.console(System.lineSeparator() + " # Priority.3 - source code" + System.lineSeparator());
+        Log.LogFactory.console("LogUpFactoryBean.builder()" + System.lineSeparator());
+        Log.LogFactory.console("                    .level(Level.INFO)" + System.lineSeparator());
+        Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().build())" + System.lineSeparator());
+        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().logFileDirectory(\"logs/\").build())" + System.lineSeparator());
+        Log.LogFactory.console("                    .build();" + System.lineSeparator() + System.lineSeparator());
+        Log.LogFactory.console("=================================================================================================================================================================" + System.lineSeparator() + System.lineSeparator());
     }
 
     private static void defaultInitialize() {
@@ -94,14 +93,14 @@ public class LogUpFactoryBean {
 
         if (properties.isEmpty()) return;
 
-        final String level = properties.getProperty("kologger.level");
+        final String level = properties.getProperty("logup.level");
         if (level == null) return;
 
-        final String logFormatPlaceholder = properties.getProperty("kologger.log-format.placeholder");
-        final String logFormatDateTimeFormat = properties.getProperty("kologger.log-format.date-time-format");
-        final String fileDirectory = properties.getProperty("kologger.file-recode.directory");
-        final String filePlaceholder = properties.getProperty("kologger.file-recode.placeholder");
-        final String fileDateFormat = properties.getProperty("kologger.file-recode.date-format");
+        final String logFormatPlaceholder = properties.getProperty("logup.log-format.placeholder");
+        final String logFormatDateTimeFormat = properties.getProperty("logup.log-format.date-time-format");
+        final String fileDirectory = properties.getProperty("logup.file-recode.directory");
+        final String filePlaceholder = properties.getProperty("logup.file-recode.placeholder");
+        final String fileDateFormat = properties.getProperty("logup.file-recode.date-format");
 
         SimpleDateFormat logDateTimeFormatter = null;
         SimpleDateFormat fileNameDateFormatter = null;
@@ -111,7 +110,7 @@ public class LogUpFactoryBean {
                 logDateTimeFormatter = new SimpleDateFormat(logFormatDateTimeFormat);
 
             } catch (IllegalArgumentException e) {
-                System.err.println("#your 'kologger.log-format.date-time-format' replace value with 'yyyy-MM-dd hh:mm:ss' because IllegalArgument " + e.getMessage());
+                System.err.println("#your 'logup.log-format.date-time-format' replace value with 'yyyy-MM-dd hh:mm:ss' because IllegalArgument " + e.getMessage());
             }
         }
 
@@ -120,7 +119,7 @@ public class LogUpFactoryBean {
                 fileNameDateFormatter = new SimpleDateFormat(fileDateFormat);
 
             } catch (IllegalArgumentException e) {
-                System.err.println("#your 'kologger.file-recode.date-format' replace value with 'yyyy-MM-dd' because IllegalArgument " + e.getMessage());
+                System.err.println("#your 'logup.file-recode.date-format' replace value with 'yyyy-MM-dd' because IllegalArgument " + e.getMessage());
             }
         }
 
@@ -147,16 +146,16 @@ public class LogUpFactoryBean {
         LogUpFactoryBean.level = level;
     }
 
-    public static KoLoggerFactoryBeanBuilder builder() {
-        return new KoLoggerFactoryBeanBuilder();
+    public static LogUpFactoryBeanBuilder builder() {
+        return new LogUpFactoryBeanBuilder();
     }
 
-    public static class KoLoggerFactoryBeanBuilder {
+    public static class LogUpFactoryBeanBuilder {
         private LogFormatter logFormatter;
         private FileRecorder fileRecorder;
         private Level level;
 
-        KoLoggerFactoryBeanBuilder() {
+        LogUpFactoryBeanBuilder() {
         }
 
         /**
@@ -165,8 +164,9 @@ public class LogUpFactoryBean {
          *
          * @param logFormatter {@link LogFormatter}
          * @return {@link LogUpFactoryBean}
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
-        public KoLoggerFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
+        public LogUpFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
             this.logFormatter = logFormatter;
             return this;
         }
@@ -177,8 +177,9 @@ public class LogUpFactoryBean {
          *
          * @param fileRecorder {@link FileRecorder}
          * @return {@link LogUpFactoryBean}
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
-        public KoLoggerFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
+        public LogUpFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
             this.fileRecorder = fileRecorder;
             return this;
         }
@@ -194,8 +195,9 @@ public class LogUpFactoryBean {
          *
          * @param level {@link Level}
          * @return {@link LogUpFactoryBean}
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
-        public KoLoggerFactoryBeanBuilder level(final Object level) {
+        public LogUpFactoryBeanBuilder level(final Object level) {
             try {
                 this.level = Level.valueOf(String.valueOf(level).toUpperCase());
             } catch (IllegalArgumentException e) {

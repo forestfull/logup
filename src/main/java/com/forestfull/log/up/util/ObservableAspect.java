@@ -1,7 +1,7 @@
-package com.forestfull.logger.util;
+package com.forestfull.log.up.util;
 
-import com.forestfull.logger.Level;
-import com.forestfull.logger.spring.Observable;
+import com.forestfull.log.up.Level;
+import com.forestfull.log.up.spring.Observable;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,10 +9,23 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
 
+/**
+ * Aspect for handling methods annotated with {@link Observable}.
+ *
+ * @author <a href="https://vigfoot.com">Vigfoot</a>
+ */
 @Aspect
 public class ObservableAspect {
 
-    @Around("@annotation(com.forestfull.logger.spring.Observable)")
+    /**
+     * Intercepts method calls annotated with {@link Observable} and logs method calls and return values based on the level and placeholder.
+     *
+     * @param joinPoint the join point representing the method call
+     * @return the result of the method call
+     * @throws Throwable if the method call fails
+     * @author <a href="https://vigfoot.com">Vigfoot</a>
+     */
+    @Around("@annotation(com.forestfull.log.up.spring.Observable)")
     public Object aroundMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         final Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         if (method == null) return null;
@@ -22,6 +35,14 @@ public class ObservableAspect {
 
         final Level level = observable.level();
         String placeholder = observable.placeholder();
+
+        if (placeholder == null || placeholder.trim().isEmpty()) {
+            placeholder = LogFormatter.MessagePattern.DATETIME
+                    + ' ' + LogFormatter.MessagePattern.LEVEL
+                    + " - " + LogFormatter.MessagePattern.MESSAGE + System.lineSeparator();
+        }
+
+        placeholder = placeholder.replaceAll(LogFormatter.MessagePattern.THREAD, "");
 
         StringBuilder argumentsBuilder;
 
@@ -51,7 +72,7 @@ public class ObservableAspect {
             logOfLevel(placeholder, level, argumentsBuilder);
         }
 
-        //TIP 메서드 실행
+        // Execute the method
         Object returnValue = joinPoint.proceed();
 
         if (observable.returnValue()) {
@@ -67,14 +88,15 @@ public class ObservableAspect {
         return returnValue;
     }
 
-    private static void logOfLevel(String declaredPlaceholder, final Level level, final Object... args) {
-        String placeholder = declaredPlaceholder;
-        if (placeholder == null || placeholder.trim().isEmpty()) {
-            placeholder = LogFormatter.MessagePattern.DATETIME
-                    + ' ' + LogFormatter.MessagePattern.LEVEL
-                    + " - " + LogFormatter.MessagePattern.MESSAGE + Log.newLine;
-        }
-
+    /**
+     * Logs the message at the specified level using the provided placeholder and arguments.
+     *
+     * @param placeholder the placeholder format for the log message
+     * @param level       the log level
+     * @param args        the arguments for the log message
+     * @author <a href="https://vigfoot.com">Vigfoot</a>
+     */
+    private static void logOfLevel(String placeholder, final Level level, final Object... args) {
         switch (level) {
             case ALL:
             case INFO:

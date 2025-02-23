@@ -1,4 +1,4 @@
-package com.forestfull.logger.spring;
+package com.forestfull.log.up.spring;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
