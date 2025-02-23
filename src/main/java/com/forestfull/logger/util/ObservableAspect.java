@@ -2,7 +2,6 @@ package com.forestfull.logger.util;
 
 import com.forestfull.logger.Level;
 import com.forestfull.logger.spring.Observable;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,6 +21,7 @@ public class ObservableAspect {
         if (observable == null) return null;
 
         final Level level = observable.level();
+        String placeholder = observable.placeholder();
 
         StringBuilder argumentsBuilder;
 
@@ -43,12 +43,12 @@ public class ObservableAspect {
                 argumentsBuilder.append("()");
             }
 
-            logOfLevel(joinPoint.getTarget(), joinPoint, level, argumentsBuilder);
+            logOfLevel(placeholder, level, argumentsBuilder);
         } else if (!observable.returnValue()) {
             argumentsBuilder = new StringBuilder();
             argumentsBuilder.append("@Observable detected calling: ").append(method.getName());
 
-            logOfLevel(joinPoint.getTarget(), joinPoint, level, argumentsBuilder);
+            logOfLevel(placeholder, level, argumentsBuilder);
         }
 
         //TIP 메서드 실행
@@ -61,16 +61,20 @@ public class ObservableAspect {
             if (method.getReturnType() != Void.TYPE)
                 argumentsBuilder.append(" <- (").append("(").append(returnValue.getClass().getName()).append(")\"").append(returnValue).append("\")");
 
-            logOfLevel(joinPoint.getTarget(), joinPoint, level, argumentsBuilder);
+            logOfLevel(placeholder, level, argumentsBuilder);
         }
 
         return returnValue;
     }
 
-    private static void logOfLevel(Object clazz, JoinPoint joinPoint, Level level, Object... args) {
-        final String placeholder = LogFormatter.MessagePattern.DATETIME
-                + ' ' + LogFormatter.MessagePattern.LEVEL
-                + " - " + LogFormatter.MessagePattern.MESSAGE + Log.newLine;
+    private static void logOfLevel(String declaredPlaceholder, final Level level, final Object... args) {
+        String placeholder = declaredPlaceholder;
+        if (placeholder == null || placeholder.trim().isEmpty()) {
+            placeholder = LogFormatter.MessagePattern.DATETIME
+                    + ' ' + LogFormatter.MessagePattern.LEVEL
+                    + " - " + LogFormatter.MessagePattern.MESSAGE + Log.newLine;
+        }
+
         switch (level) {
             case ALL:
             case INFO:

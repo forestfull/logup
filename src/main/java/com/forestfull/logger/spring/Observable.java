@@ -1,6 +1,7 @@
 package com.forestfull.logger.spring;
 
 import com.forestfull.logger.Level;
+import com.forestfull.logger.util.LogFormatter;
 
 import java.lang.annotation.*;
 
@@ -12,6 +13,9 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Observable {
+
+
+    String placeholder() default LogFormatter.MessagePattern.DEFAULT;
 
     /**
      * It is the threshold log level for output configuration.

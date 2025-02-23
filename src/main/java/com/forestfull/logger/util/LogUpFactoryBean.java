@@ -1,7 +1,6 @@
 package com.forestfull.logger.util;
 
 import com.forestfull.logger.Level;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Properties;
@@ -22,7 +21,7 @@ import java.util.Properties;
  * @since JDK 1.8
  */
 
-public class KoLoggerFactoryBean {
+public class LogUpFactoryBean {
     static LogFormatter logFormatter;
     static FileRecorder fileRecorder;
     static Level level;
@@ -30,7 +29,7 @@ public class KoLoggerFactoryBean {
     static {
         configureProperties();
 
-        if (KoLoggerFactoryBean.level == null)
+        if (LogUpFactoryBean.level == null)
             loggingInitializeManual();
 
         defaultInitialize();
@@ -69,25 +68,25 @@ public class KoLoggerFactoryBean {
     }
 
     private static void defaultInitialize() {
-        if (KoLoggerFactoryBean.level == null)
-            KoLoggerFactoryBean.level = Level.ALL;
+        if (LogUpFactoryBean.level == null)
+            LogUpFactoryBean.level = Level.ALL;
 
-        if (KoLoggerFactoryBean.logFormatter == null)
-            KoLoggerFactoryBean.logFormatter = LogFormatter.builder().build();
+        if (LogUpFactoryBean.logFormatter == null)
+            LogUpFactoryBean.logFormatter = LogFormatter.builder().build();
 
-        if (KoLoggerFactoryBean.logFormatter.getPlaceholder() == null)
-            KoLoggerFactoryBean.logFormatter.setPlaceholder(LogFormatter.getDefaultPlaceHolder());
+        if (LogUpFactoryBean.logFormatter.getPlaceholder() == null)
+            LogUpFactoryBean.logFormatter.setPlaceholder(LogFormatter.getDefaultPlaceHolder());
 
-        if (KoLoggerFactoryBean.logFormatter.getDateTimeFormat() == null)
-            KoLoggerFactoryBean.logFormatter.setDateTimeFormat(LogFormatter.getDefaultDateTimeFormat());
+        if (LogUpFactoryBean.logFormatter.getDateTimeFormat() == null)
+            LogUpFactoryBean.logFormatter.setDateTimeFormat(LogFormatter.getDefaultDateTimeFormat());
 
-        if (KoLoggerFactoryBean.fileRecorder == null) return;
+        if (LogUpFactoryBean.fileRecorder == null) return;
 
-        if (KoLoggerFactoryBean.fileRecorder.getPlaceholder() == null)
-            KoLoggerFactoryBean.fileRecorder.setPlaceholder(FileRecorder.getDefaultPlaceHolder());
+        if (LogUpFactoryBean.fileRecorder.getPlaceholder() == null)
+            LogUpFactoryBean.fileRecorder.setPlaceholder(FileRecorder.getDefaultPlaceHolder());
 
-        if (KoLoggerFactoryBean.fileRecorder.getDateFormat() == null)
-            KoLoggerFactoryBean.fileRecorder.setDateFormat(FileRecorder.getDefaultDateFormat());
+        if (LogUpFactoryBean.fileRecorder.getDateFormat() == null)
+            LogUpFactoryBean.fileRecorder.setDateFormat(FileRecorder.getDefaultDateFormat());
     }
 
     private static void configureProperties() {
@@ -135,17 +134,17 @@ public class KoLoggerFactoryBean {
                     .build();
         }
 
-        KoLoggerFactoryBean.builder()
+        LogUpFactoryBean.builder()
                 .level(level)
                 .logFormatter(LogFormatter.builder().dateTimeFormat(logDateTimeFormatter).placeholder(logFormatPlaceholder).build())
                 .fileRecorder(fileRecord)
                 .start();
     }
 
-    KoLoggerFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level) {
-        KoLoggerFactoryBean.logFormatter = logFormatter;
-        KoLoggerFactoryBean.fileRecorder = fileRecorder;
-        KoLoggerFactoryBean.level = level;
+    LogUpFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level) {
+        LogUpFactoryBean.logFormatter = logFormatter;
+        LogUpFactoryBean.fileRecorder = fileRecorder;
+        LogUpFactoryBean.level = level;
     }
 
     public static KoLoggerFactoryBeanBuilder builder() {
@@ -165,7 +164,7 @@ public class KoLoggerFactoryBean {
          * <p>
          *
          * @param logFormatter {@link LogFormatter}
-         * @return {@link KoLoggerFactoryBean}
+         * @return {@link LogUpFactoryBean}
          */
         public KoLoggerFactoryBeanBuilder logFormatter(final LogFormatter logFormatter) {
             this.logFormatter = logFormatter;
@@ -177,7 +176,7 @@ public class KoLoggerFactoryBean {
          * <p>
          *
          * @param fileRecorder {@link FileRecorder}
-         * @return {@link KoLoggerFactoryBean}
+         * @return {@link LogUpFactoryBean}
          */
         public KoLoggerFactoryBeanBuilder fileRecorder(final FileRecorder fileRecorder) {
             this.fileRecorder = fileRecorder;
@@ -194,7 +193,7 @@ public class KoLoggerFactoryBean {
          * </ul>
          *
          * @param level {@link Level}
-         * @return {@link KoLoggerFactoryBean}
+         * @return {@link LogUpFactoryBean}
          */
         public KoLoggerFactoryBeanBuilder level(final Object level) {
             try {
@@ -206,7 +205,7 @@ public class KoLoggerFactoryBean {
         }
 
         public void start() {
-            if (KoLoggerFactoryBean.level != null) return; //TIP 이미 빌드 되있으면 다시 안함
+            if (LogUpFactoryBean.level != null) return; //TIP 이미 빌드 되있으면 다시 안함
 
             if (this.logFormatter == null) {
                 this.logFormatter = LogFormatter.builder()
@@ -227,9 +226,9 @@ public class KoLoggerFactoryBean {
                 }
             }
 
-            KoLoggerFactoryBean.level = this.level;
-            KoLoggerFactoryBean.logFormatter = this.logFormatter;
-            KoLoggerFactoryBean.fileRecorder = this.fileRecorder;
+            LogUpFactoryBean.level = this.level;
+            LogUpFactoryBean.logFormatter = this.logFormatter;
+            LogUpFactoryBean.fileRecorder = this.fileRecorder;
         }
     }
 }

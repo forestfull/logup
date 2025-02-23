@@ -36,15 +36,15 @@ public class Log {
     }
 
     static void write(final Level level, final Object... messages) {
-        write(level, KoLoggerFactoryBean.logFormatter.getPlaceholder(), messages);
+        write(level, LogUpFactoryBean.logFormatter.getPlaceholder(), messages);
     }
 
     static void write(final Level level, final String placeholder, final Object... messages) {
-        if (level.compareTo(KoLoggerFactoryBean.level) < 0) return;
+        if (level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
 
         StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[4];
-        final String now = KoLoggerFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
+        final String now = LogUpFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
         final StringBuilder msgBuilder = new StringBuilder(1024);
 
         final String className = stackTrace.getClassName();
@@ -75,7 +75,7 @@ public class Log {
                 .replace(LogFormatter.MessagePattern.NEW_LINE, Log.newLine);
 
         LogFactory.console(logMessage);
-        if (KoLoggerFactoryBean.fileRecorder != null)
+        if (LogUpFactoryBean.fileRecorder != null)
             LogFactory.file(logMessage);
     }
 
@@ -93,7 +93,7 @@ public class Log {
         }
 
         protected static synchronized void file(String msg) {
-            final FileRecorder fileRecorder = KoLoggerFactoryBean.fileRecorder;
+            final FileRecorder fileRecorder = LogUpFactoryBean.fileRecorder;
 
             String logFileDirectory = fileRecorder.getLogFileDirectory();
 

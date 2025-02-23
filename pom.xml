@@ -3,23 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.forestfull.devops</groupId>
-    <artifactId>kologger</artifactId>
-    <version>1.1.2</version>
+    <groupId>com.forestfull</groupId>
+    <artifactId>logup</artifactId>
+    <version>1.0.0</version>
 
     <properties>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <spring.version>3.2.18.RELEASE</spring.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <spring.version>5.3.39</spring.version>
         <aspectj.version>1.8.13</aspectj.version>
         <yml.version>2.3</yml.version>
         <lombok.version>1.18.36</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <name>KoLogger</name>
+    <name>LogUp</name>
     <description>All classes you want to use are available</description>
-    <url>https://github.com/forestfull/koLogger</url>
+    <url>https://github.com/forestfull/logup</url>
 
     <licenses>
         <license>
@@ -40,9 +40,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com:forestfull/koLogger.git</connection>
-        <developerConnection>scm:git:ssh://github.com:forestfull/koLogger.git</developerConnection>
-        <url>https://github.com/forestfull/koLogger/tree/master</url>
+        <connection>scm:git:git://github.com:forestfull/logup.git</connection>
+        <developerConnection>scm:git:ssh://github.com:forestfull/logup.git</developerConnection>
+        <url>https://github.com/forestfull/logup/tree/master</url>
     </scm>
 
     <dependencies>
