@@ -42,7 +42,7 @@ public class ObservableAspect {
                     + " - " + LogFormatter.MessagePattern.MESSAGE + System.lineSeparator();
         }
 
-        placeholder = placeholder.replaceAll(LogFormatter.MessagePattern.THREAD, "");
+        placeholder = placeholder.replaceAll("\\" + LogFormatter.MessagePattern.THREAD + "\\\\", "");
 
         StringBuilder argumentsBuilder;
 
