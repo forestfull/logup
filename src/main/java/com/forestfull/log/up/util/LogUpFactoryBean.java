@@ -1,6 +1,7 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
+import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
 import java.util.Properties;
@@ -19,54 +20,21 @@ import java.util.Properties;
  * @author <a href="https://vigfoot.com">Vigfoot</a>
  * @see Log
  */
-
 public class LogUpFactoryBean {
+    static Level level;
     static LogFormatter logFormatter;
     static FileRecorder fileRecorder;
-    static Level level;
 
     static {
         configureProperties();
 
         if (LogUpFactoryBean.level == null)
-            loggingInitializeManual();
+            LogUpConfigLoader.loggingInitializeManual();
 
         defaultInitialize();
     }
 
-    private static void loggingInitializeManual() {
-        Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
-        Log.LogFactory.console("LogUp Setting Example");
-        Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.1 - application.properties" + System.lineSeparator());
-        Log.LogFactory.console("logup.level=INFO" + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.placeholder={datetime} {level} {thread} - {msg}{new-line}" + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.date-time-format=yyyy-MM-dd HH:mm:ss" + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.directory=log/" + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.placeholder=" + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.date-format=yyyy-MM-dd" + System.lineSeparator() + System.lineSeparator());
-        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.2 - application.yml" + System.lineSeparator());
-        Log.LogFactory.console("logup:" + System.lineSeparator());
-        Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + System.lineSeparator());
-        Log.LogFactory.console("  log-format:" + System.lineSeparator());
-        Log.LogFactory.console("    placeholder: \"{datetime} {level} {thread} - {msg}{new-line}\"" + System.lineSeparator());
-        Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + System.lineSeparator());
-        Log.LogFactory.console("  file-recode:" + System.lineSeparator());
-        Log.LogFactory.console("    directory: log/ # is default" + System.lineSeparator());
-        Log.LogFactory.console("    placeholder: " + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
-        Log.LogFactory.console("    date-format: yyyy-MM-dd" + System.lineSeparator() + System.lineSeparator());
-        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.3 - source code" + System.lineSeparator());
-        Log.LogFactory.console("LogUpFactoryBean.builder()" + System.lineSeparator());
-        Log.LogFactory.console("                    .level(Level.INFO)" + System.lineSeparator());
-        Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().build())" + System.lineSeparator());
-        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().logFileDirectory(\"logs/\").build())" + System.lineSeparator());
-        Log.LogFactory.console("                    .build();" + System.lineSeparator() + System.lineSeparator());
-        Log.LogFactory.console("=================================================================================================================================================================" + System.lineSeparator() + System.lineSeparator());
-    }
-
-    private static void defaultInitialize() {
+    protected static void defaultInitialize() {
         if (LogUpFactoryBean.level == null)
             LogUpFactoryBean.level = Level.ALL;
 
@@ -88,9 +56,11 @@ public class LogUpFactoryBean {
             LogUpFactoryBean.fileRecorder.setDateFormat(FileRecorder.getDefaultDateFormat());
     }
 
-    private static void configureProperties() {
-        final Properties properties = ConfigLoader.loadConfig();
+    protected static void configureProperties() {
+        configureProperties(LogUpConfigLoader.loadConfig());
+    }
 
+    protected static void configureProperties(Properties properties) {
         if (properties.isEmpty()) return;
 
         final String level = properties.getProperty("logup.level");
