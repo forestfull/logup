@@ -179,5 +179,10 @@ public class Log {
                 e.printStackTrace(System.err);
             }
         }
+
+        protected static synchronized void initConsole() {
+            Level level = LogUpFactoryBean.level; // touch
+            console("LogUp by forest full's vigfoot" + System.lineSeparator());
+        }
     }
 }
