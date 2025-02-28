@@ -111,7 +111,7 @@ public class Log {
      *
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
-    static class LogFactory {
+    public static class LogFactory {
         /**
          * Outputs the log message to the console.
          *
