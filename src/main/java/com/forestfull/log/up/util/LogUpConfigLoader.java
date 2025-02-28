@@ -57,7 +57,7 @@ public class LogUpConfigLoader {
             }
         }
 
-        throw new RuntimeException("No configuration file found. Expected one of: config/application.properties, config/application.yml, application.properties, application.yml");
+        return new Properties();
     }
 
     /**
