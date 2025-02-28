@@ -34,7 +34,7 @@ public class LogUpFactoryBean {
         defaultInitialize();
     }
 
-    protected static void defaultInitialize() {
+    private static void defaultInitialize() {
         if (LogUpFactoryBean.level == null)
             LogUpFactoryBean.level = Level.ALL;
 
@@ -56,11 +56,8 @@ public class LogUpFactoryBean {
             LogUpFactoryBean.fileRecorder.setDateFormat(FileRecorder.getDefaultDateFormat());
     }
 
-    protected static void configureProperties() {
-        configureProperties(LogUpConfigLoader.loadConfig());
-    }
-
-    protected static void configureProperties(Properties properties) {
+    private static void configureProperties() {
+        Properties properties = LogUpConfigLoader.loadConfig();
         if (properties.isEmpty()) return;
 
         final String level = properties.getProperty("logup.level");
