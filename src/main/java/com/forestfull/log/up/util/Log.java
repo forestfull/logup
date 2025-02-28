@@ -69,6 +69,7 @@ public class Log {
     static void write(final Level level, final String placeholder, final Object... messages) {
         if (level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
+        if (LogUpFactoryBean.logFormatter == null) return;
 
         StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[4];
         final String now = LogUpFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
@@ -138,7 +139,7 @@ public class Log {
         protected static synchronized void file(String msg) {
             final FileRecorder fileRecorder = LogUpFactoryBean.fileRecorder;
 
-            String logFileDirectory = fileRecorder.getLogFileDirectory();
+            String logFileDirectory = fileRecorder.getDirectory();
 
             if (logFileDirectory == null || logFileDirectory.isEmpty()) return;
 
