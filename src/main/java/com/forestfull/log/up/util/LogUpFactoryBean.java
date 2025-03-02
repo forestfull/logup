@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
  */
 public class LogUpFactoryBean {
     static Level level;
+    static Formatter[] formatter;
     static LogFormatter logFormatter;
     static FileRecorder fileRecorder;
 
@@ -32,6 +33,9 @@ public class LogUpFactoryBean {
             LogUpConfigLoader.loggingInitializeManual();
 
         defaultInitialize();
+
+        final String[] splitWithDelimiter = Formatter.splitWithDelimiter(logFormatter.getPlaceholder());
+        LogUpFactoryBean.formatter = Formatter.replaceMatchPlaceholder(splitWithDelimiter);
     }
 
     private static void defaultInitialize() {
@@ -155,7 +159,7 @@ public class LogUpFactoryBean {
 
             LogUpFactoryBean.level = this.level;
             LogUpFactoryBean.logFormatter = this.logFormatter;
-            LogUpFactoryBean.fileRecorder = this.fileRecorder;
+            LogUpFactoryBean.fileRecorder = this.fileRecorder;;
         }
     }
 }

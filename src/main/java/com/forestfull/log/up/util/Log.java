@@ -70,6 +70,7 @@ public class Log {
         if (level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
         if (LogUpFactoryBean.logFormatter == null) return;
+/*
 
         StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[4];
         final String now = LogUpFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
@@ -101,10 +102,17 @@ public class Log {
                 .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
                 .replace(LogFormatter.MessagePattern.MESSAGE, level.getColor() + msgBuilder + Level.OFF.getColor())
                 .replace(LogFormatter.MessagePattern.NEW_LINE, System.lineSeparator());
+*/
 
-        LogFactory.console(logMessage);
+        final StringBuilder logMessage = new StringBuilder();
+
+        for (Formatter formatter : LogUpFactoryBean.formatter) {
+            logMessage.append(formatter.call(messages));
+        }
+
+        LogFactory.console(logMessage.toString());
         if (LogUpFactoryBean.fileRecorder != null)
-            LogFactory.file(logMessage);
+            LogFactory.file(logMessage.toString());
     }
 
     /**
