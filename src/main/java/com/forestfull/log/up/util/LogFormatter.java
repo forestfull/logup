@@ -2,6 +2,7 @@ package com.forestfull.log.up.util;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.text.SimpleDateFormat;
 
@@ -10,35 +11,24 @@ import java.text.SimpleDateFormat;
  *
  * @author <a href="https://vigfoot.com">Vigfoot</a>
  */
+@Setter
 @Getter
 @Builder
 public class LogFormatter {
     /**
      * The format string for the log messages.
      */
-    private String placeholder;
+    @Builder.Default
+    private String placeholder = MessagePattern.DEFAULT;
 
     /**
      * The date and time format for the log messages.
      */
-    private SimpleDateFormat dateTimeFormat;
+    @Builder.Default
+    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat(getDefaultDateTimeFormat());
 
-    /**
-     * Sets the date and time format for the log messages.
-     *
-     * @param dateTimeFormat the date and time format
-     */
-    void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
-        this.dateTimeFormat = dateTimeFormat;
-    }
-
-    /**
-     * Sets the format string for the log messages.
-     *
-     * @param placeholder the format string
-     */
-    void setPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
+    public void setDateTimeFormat(String dateTimeFormat) {
+        this.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
     }
 
     /**
@@ -55,8 +45,8 @@ public class LogFormatter {
      *
      * @return the default date and time format
      */
-    static SimpleDateFormat getDefaultDateTimeFormat() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    static String getDefaultDateTimeFormat() {
+        return "yyyy-MM-dd HH:mm:ss";
     }
 
     /**

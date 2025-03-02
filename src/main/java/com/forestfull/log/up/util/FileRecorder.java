@@ -2,6 +2,7 @@ package com.forestfull.log.up.util;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.text.SimpleDateFormat;
 
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
  *
  * @author <a href="https://vigfoot.com">Vigfoot</a>
  */
+@Setter
 @Getter
 @Builder
 public class FileRecorder {
@@ -23,39 +25,21 @@ public class FileRecorder {
      * The date format for the log file.
      */
     @Builder.Default
-    private SimpleDateFormat dateFormat = getDefaultDateFormat();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(getDefaultDateFormat());
 
     /**
      * The directory where the log file will be stored.
      */
     @Builder.Default
-    private String logFileDirectory = "logs/";
-
-    /**
-     * Sets the format for the log file name.
-     *
-     * @param placeholder the format for the log file name
-     */
-    void setPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
-    }
+    private String directory = "logs/";
 
     /**
      * Sets the date format for the log file.
      *
      * @param dateFormat the date format for the log file
      */
-    void setDateFormat(SimpleDateFormat dateFormat) {
-        this.dateFormat = dateFormat;
-    }
-
-    /**
-     * Sets the directory where the log file will be stored.
-     *
-     * @param logFileDirectory the directory where the log file will be stored
-     */
-    void setLogFileDirectory(String logFileDirectory) {
-        this.logFileDirectory = logFileDirectory;
+    void setDateFormat(String dateFormat) {
+        this.dateFormat = new SimpleDateFormat(dateFormat);
     }
 
     /**
@@ -72,8 +56,8 @@ public class FileRecorder {
      *
      * @return the default date format
      */
-    static SimpleDateFormat getDefaultDateFormat() {
-        return new SimpleDateFormat("yyyy-MM-dd");
+    static String getDefaultDateFormat() {
+        return "yyyy-MM-dd";
     }
 
     /**
