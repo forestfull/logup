@@ -2,6 +2,7 @@ package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
 import com.forestfull.log.up.spring.LogUpProperties;
+import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 
@@ -61,24 +62,19 @@ public class LogUpFactoryBean {
 
         Level level = logUpProperties.getLevel();
         if (level == null) return;
-
-        if (logUpProperties.getLogFormat() != null) {
-
-        }
+        if (logUpProperties.getLogFormat() == null) return;
 
         final String logFormatPlaceholder = logUpProperties.getLogFormat().getPlaceholder();
         final SimpleDateFormat logFormatDateTimeFormat = logUpProperties.getLogFormat().getDateTimeFormat();
-        final String fileDirectory = logUpProperties.getFileRecord().getDirectory();
-        final String filePlaceholder = logUpProperties.getFileRecord().getPlaceholder();
-        final SimpleDateFormat fileDateFormat = logUpProperties.getFileRecord().getDateFormat();
 
-        FileRecorder fileRecord = null;
-        if (fileDirectory != null && !fileDirectory.isEmpty()) {
+        FileRecorder fileRecord = logUpProperties.getFileRecord();
+        if (fileRecord != null && fileRecord.getDateFormat() != null) {
             fileRecord = FileRecorder.builder()
-                    .directory(fileDirectory)
-                    .placeholder(filePlaceholder)
-                    .dateFormat(fileDateFormat)
+                    .dateFormat(fileRecord.getDateFormat())
                     .build();
+
+            if (StringUtils.hasText(fileRecord.getDirectory())) fileRecord.setDirectory(fileRecord.getDirectory());
+            if (StringUtils.hasText(fileRecord.getPlaceholder())) fileRecord.setDirectory(fileRecord.getPlaceholder());
         }
 
         LogUpFactoryBean.builder()
@@ -156,25 +152,6 @@ public class LogUpFactoryBean {
 
         public void start() {
             if (LogUpFactoryBean.level != null) return; //TIP 이미 빌드 되있으면 다시 안함
-
-            if (this.logFormatter == null) {
-                this.logFormatter = LogFormatter.builder()
-                        .placeholder(LogFormatter.MessagePattern.DEFAULT)
-                        .dateTimeFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
-                        .build();
-
-
-                if (this.fileRecorder != null) {
-                    if (fileRecorder.getPlaceholder() == null)
-                        fileRecorder.setPlaceholder(FileRecorder.FilePattern.DEFAULT);
-
-                    if (fileRecorder.getDirectory() == null)
-                        fileRecorder.setDirectory("logs/");
-
-                    if (fileRecorder.getDateFormat() == null)
-                        fileRecorder.setDateFormat("yyyy-MM-dd");
-                }
-            }
 
             LogUpFactoryBean.level = this.level;
             LogUpFactoryBean.logFormatter = this.logFormatter;

@@ -38,7 +38,7 @@ public class FileRecorder {
      *
      * @param dateFormat the date format for the log file
      */
-    void setDateFormat(String dateFormat) {
+    public void setDateFormat(String dateFormat) {
         this.dateFormat = new SimpleDateFormat(dateFormat);
     }
 
