@@ -97,9 +97,9 @@ public class Log {
 
         final String logMessage = placeholder
                 .replace(LogFormatter.MessagePattern.DATETIME, now)
-                .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level.name())
+                .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level.getColorName())
                 .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
-                .replace(LogFormatter.MessagePattern.MESSAGE, msgBuilder.toString())
+                .replace(LogFormatter.MessagePattern.MESSAGE, level.getColor() + msgBuilder + Level.OFF.getColor())
                 .replace(LogFormatter.MessagePattern.NEW_LINE, System.lineSeparator());
 
         LogFactory.console(logMessage);
