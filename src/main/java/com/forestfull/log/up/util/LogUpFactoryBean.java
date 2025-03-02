@@ -1,10 +1,9 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
-import lombok.NoArgsConstructor;
+import com.forestfull.log.up.spring.LogUpProperties;
 
 import java.text.SimpleDateFormat;
-import java.util.Properties;
 
 /**
  * LogUp's general Configuration (LogUp 전역 환경 설정)
@@ -57,52 +56,34 @@ public class LogUpFactoryBean {
     }
 
     private static void configureProperties() {
-        Properties properties = LogUpConfigLoader.loadConfig();
-        if (properties.isEmpty()) return;
+        LogUpProperties logUpProperties = LogUpConfigLoader.loadConfig();
+        if (logUpProperties == null) return;
 
-        final String level = properties.getProperty("logup.level");
+        Level level = logUpProperties.getLevel();
         if (level == null) return;
 
-        final String logFormatPlaceholder = properties.getProperty("logup.log-format.placeholder");
-        final String logFormatDateTimeFormat = properties.getProperty("logup.log-format.date-time-format");
-        final String fileDirectory = properties.getProperty("logup.file-recode.directory");
-        final String filePlaceholder = properties.getProperty("logup.file-recode.placeholder");
-        final String fileDateFormat = properties.getProperty("logup.file-recode.date-format");
+        if (logUpProperties.getLogFormat() != null) {
 
-        SimpleDateFormat logDateTimeFormatter = null;
-        SimpleDateFormat fileNameDateFormatter = null;
-
-        if (logFormatDateTimeFormat != null && !logFormatDateTimeFormat.isEmpty()) {
-            try {
-                logDateTimeFormatter = new SimpleDateFormat(logFormatDateTimeFormat);
-
-            } catch (IllegalArgumentException e) {
-                System.err.println("#your 'logup.log-format.date-time-format' replace value with 'yyyy-MM-dd hh:mm:ss' because IllegalArgument " + e.getMessage());
-            }
         }
 
-        if (fileDateFormat != null && !fileDateFormat.isEmpty()) {
-            try {
-                fileNameDateFormatter = new SimpleDateFormat(fileDateFormat);
-
-            } catch (IllegalArgumentException e) {
-                System.err.println("#your 'logup.file-recode.date-format' replace value with 'yyyy-MM-dd' because IllegalArgument " + e.getMessage());
-            }
-        }
-
+        final String logFormatPlaceholder = logUpProperties.getLogFormat().getPlaceholder();
+        final SimpleDateFormat logFormatDateTimeFormat = logUpProperties.getLogFormat().getDateTimeFormat();
+        final String fileDirectory = logUpProperties.getFileRecord().getDirectory();
+        final String filePlaceholder = logUpProperties.getFileRecord().getPlaceholder();
+        final SimpleDateFormat fileDateFormat = logUpProperties.getFileRecord().getDateFormat();
 
         FileRecorder fileRecord = null;
         if (fileDirectory != null && !fileDirectory.isEmpty()) {
             fileRecord = FileRecorder.builder()
-                    .logFileDirectory(fileDirectory)
+                    .directory(fileDirectory)
                     .placeholder(filePlaceholder)
-                    .dateFormat(fileNameDateFormatter)
+                    .dateFormat(fileDateFormat)
                     .build();
         }
 
         LogUpFactoryBean.builder()
                 .level(level)
-                .logFormatter(LogFormatter.builder().dateTimeFormat(logDateTimeFormatter).placeholder(logFormatPlaceholder).build())
+                .logFormatter(LogFormatter.builder().dateTimeFormat(logFormatDateTimeFormat).placeholder(logFormatPlaceholder).build())
                 .fileRecorder(fileRecord)
                 .start();
     }
@@ -187,11 +168,11 @@ public class LogUpFactoryBean {
                     if (fileRecorder.getPlaceholder() == null)
                         fileRecorder.setPlaceholder(FileRecorder.FilePattern.DEFAULT);
 
-                    if (fileRecorder.getLogFileDirectory() == null)
-                        fileRecorder.setLogFileDirectory("logs/");
+                    if (fileRecorder.getDirectory() == null)
+                        fileRecorder.setDirectory("logs/");
 
                     if (fileRecorder.getDateFormat() == null)
-                        fileRecorder.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+                        fileRecorder.setDateFormat("yyyy-MM-dd");
                 }
             }
 
