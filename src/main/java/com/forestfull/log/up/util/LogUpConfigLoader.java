@@ -1,78 +1,79 @@
 package com.forestfull.log.up.util;
 
-import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.Yaml;
+import com.forestfull.log.up.spring.LogUpProperties;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.env.YamlPropertySourceLoader;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.env.StandardEnvironment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePropertySource;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Properties;
+import java.util.List;
 
-/**
- * The ConfigLoader class is responsible for loading configuration properties
- * from either an `logup.properties` or `logup.yml` file.
- *
- * @author <a href="https://vigfoot.com">Vigfoot</a>
- */
-@Component
 public class LogUpConfigLoader {
 
-    /**
-     * Loads the configuration properties from the classpath.
-     * It first tries to load from `logup.properties`, if not found, it attempts to load from `logup.yml`.
-     *
-     * @return The loaded properties.
-     * @author <a href="https://vigfoot.com">Vigfoot</a>
-     */
-    static Properties loadConfig() {
-        final Properties properties = new Properties();
-        final String propertiesFile = "application.properties";
-        final String yamlFile = "application.yml";
-        final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+    private static final String[] LOCATIONS = {
+            "config/application.properties",
+            "config/application.yaml",
+            "config/application.yml",
+            "application.properties",
+            "application.yaml",
+            "application.yml"
+    };
 
-        InputStream inputStream = classLoader.getResourceAsStream(propertiesFile);
+    public static LogUpProperties loadConfig() {
+        // Spring 환경 설정 초기화
+        StandardEnvironment environment = new StandardEnvironment();
+        MutablePropertySources propertySources = environment.getPropertySources();
 
-        try {
-            if (inputStream != null) {
-                System.out.println("Loading configuration from " + propertiesFile);
-                properties.load(inputStream);
-            } else {
-                inputStream = classLoader.getResourceAsStream(yamlFile);
-                if (inputStream != null) {
-                    System.out.println("Loading configuration from " + yamlFile);
-                    Map<String, Object> yamlMap = new Yaml().loadAs(inputStream, Map.class);
-                    flattenMap("", yamlMap, properties);
+        String activeProfile = environment.getActiveProfiles()[0];
+        activeProfile = activeProfile != null ? activeProfile.trim() : null;
+
+        // 설정 파일 로드
+        injectPropertySources(activeProfile, propertySources);
+
+        // Binder를 사용하여 활성화된 프로파일만 바인딩
+        Binder binder = Binder.get(environment);
+        // 프로파일별로 LogUpProperties 바인딩
+        BindResult<LogUpProperties> logup = binder.bind("logup", Bindable.of(LogUpProperties.class));
+        LogUpProperties logUpProperties = logup.orElse(null);
+
+        // logUpProperties 출력 (확인을 위해 추가)
+        return logUpProperties;
+    }
+
+    private static void injectPropertySources(String activeProfile, MutablePropertySources propertySources) {
+        for (String location : LOCATIONS) {
+            Resource resource = new ClassPathResource(location);
+            if (resource.exists()) {
+                try {
+                    if (location.endsWith(".yaml") || location.endsWith(".yml")) {
+                        YamlPropertySourceLoader loader = new YamlPropertySourceLoader();
+                        List<PropertySource<?>> yamlSources = loader.load(location, resource);
+                        yamlSources.forEach(source -> {
+                            final String activeProfileUnderVersion = String.valueOf(source.getProperty("spring.profiles"));
+                            final String activeProfileCurrentVersion = String.valueOf(source.getProperty("spring.config.activate.on-profile"));
+                            if (activeProfileUnderVersion == null && activeProfileCurrentVersion == null) {
+                                propertySources.addFirst(source);
+                            } else if (activeProfile != null && (activeProfile.equalsIgnoreCase(activeProfileUnderVersion) || activeProfile.equalsIgnoreCase(activeProfileCurrentVersion))) {
+                                propertySources.addFirst(source);
+                            }
+                        });
+                    } else {
+                        propertySources.addLast(new ResourcePropertySource(location, resource));
+                    }
+                } catch (IOException e) {
+                    throw new IllegalStateException("설정 파일 로드 실패: " + location, e);
                 }
             }
-
-            if (inputStream != null) inputStream.close();
-        } catch (IOException | NullPointerException e) {
-            System.out.println("No configuration file found in classpath: " + e.getMessage());
-        }
-
-        return properties;
-    }
-
-    /**
-     * Recursively flattens a nested map structure into properties format.
-     *
-     * @param parentKey  The base key for the current level of the map.
-     * @param map        The map to flatten.
-     * @param properties The properties object to store the flattened key-value pairs.
-     * @author <a href="https://vigfoot.com">Vigfoot</a>
-     */
-    private static void flattenMap(String parentKey, Map<String, Object> map, Properties properties) {
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = parentKey.isEmpty() ? entry.getKey() : parentKey + "." + entry.getKey();
-            Object value = entry.getValue();
-
-            if (value instanceof Map) {
-                flattenMap(key, (Map<String, Object>) value, properties);
-            } else {
-                properties.setProperty(key, value.toString());
-            }
         }
     }
+
 
     public static void loggingInitializeManual() {
         Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
