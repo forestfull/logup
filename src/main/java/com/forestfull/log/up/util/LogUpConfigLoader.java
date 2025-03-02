@@ -11,12 +11,11 @@ import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePropertySource;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LogUpConfigLoader {
@@ -41,44 +40,48 @@ public class LogUpConfigLoader {
         // 설정 파일 로드
         injectPropertySources(activeProfile, propertySources);
 
-        // Binder를 사용하여 활성화된 프로파일만 바인딩
-        Binder binder = Binder.get(environment);
-        // 프로파일별로 LogUpProperties 바인딩
-        BindResult<LogUpProperties> logup = binder.bind("logup", Bindable.of(LogUpProperties.class));
-
-        // logUpProperties 출력 (확인을 위해 추가)
-        return logup.orElse(null);
+        return Binder.get(environment).bind("logup", Bindable.of(LogUpProperties.class)).orElse(null);
     }
 
     private static void injectPropertySources(String activeProfile, MutablePropertySources propertySources) {
-        Arrays.stream(LOCATIONS).flatMap(loc -> {
-                    if (activeProfile != null)
-                        return Stream.of(loc, loc.replace("application.", "application-" + activeProfile.toLowerCase() + "."));
+        final String[] locations = Arrays.stream(LOCATIONS).flatMap(loc -> {
+            if (StringUtils.hasText(activeProfile))
+                return Stream.of(loc.replace("application.", "application-" + activeProfile.toLowerCase() + "."), loc);
 
-                    return Stream.of(loc);
-                })
-                .forEach(loc -> {
-                    PropertySource<?> sources = getPropertySources(activeProfile, loc);
-                    propertySources.addLast(sources);
-                });
+            return Stream.of(loc);
+        }).toArray(String[]::new);
+
+        for (String location : locations) {
+            PropertySource<?> source = getPropertySources(activeProfile, location);
+            if (source != null) {
+                propertySources.addLast(source);
+                final String activeProfileUnderVersion = String.valueOf(source.getProperty("spring.profiles"));
+                final String activeProfileCurrentVersion = String.valueOf(source.getProperty("spring.config.activate.on-profile"));
+                if (activeProfile != null && (activeProfile.equalsIgnoreCase(activeProfileUnderVersion) || activeProfile.equalsIgnoreCase(activeProfileCurrentVersion)))
+                    break;
+            }
+        }
     }
 
     private static PropertySource<?> getPropertySources(String activeProfile, String location) {
-        Resource resource = new ClassPathResource(location);
+        final Resource resource = new ClassPathResource(location);
         PropertySource<?> propertySource = null;
         if (resource.exists()) {
             try {
                 if (location.endsWith(".yaml") || location.endsWith(".yml")) {
-                    YamlPropertySourceLoader loader = new YamlPropertySourceLoader();
-                    List<PropertySource<?>> yamlSources = loader.load(location, resource);
+                    final YamlPropertySourceLoader loader = new YamlPropertySourceLoader();
+                    final List<PropertySource<?>> yamlSources = loader.load(location, resource);
                     for (PropertySource<?> source : yamlSources) {
+                        if (!source.containsProperty("logup.level")) continue;
+
                         final String activeProfileUnderVersion = String.valueOf(source.getProperty("spring.profiles"));
                         final String activeProfileCurrentVersion = String.valueOf(source.getProperty("spring.config.activate.on-profile"));
                         if (activeProfileUnderVersion == null && activeProfileCurrentVersion == null) {
                             propertySource = source;
 
                         } else if (activeProfile != null && (activeProfile.equalsIgnoreCase(activeProfileUnderVersion) || activeProfile.equalsIgnoreCase(activeProfileCurrentVersion))) {
-                            return source;
+                            propertySource = source;
+                            return propertySource;
 
                         }
                     }
