@@ -1,0 +1,29 @@
+logup:
+  level: WARN # ALL, INFO, WARN, ERROR, OFF
+  log-format:
+    placeholder: "{datetime} {level} {thread} - {msg}{new-line}"
+    date-time-format: yyyy-MM-dd
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+logup:
+  level: INFO # ALL, INFO, WARN, ERROR, OFF
+  log-format:
+    placeholder: "{datetime} {level} {thread} - {msg}{new-line}"
+    date-time-format: yyyy-MM-dd
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+logup:
+  level: ERROR # ALL, INFO, WARN, ERROR, OFF
+  log-format:
+    placeholder: "{datetime} {level} {thread} - {msg}{new-line}"
+    date-time-format: yyyy-MM-dd HH:mm:ss

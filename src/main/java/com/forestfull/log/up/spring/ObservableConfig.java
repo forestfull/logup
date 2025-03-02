@@ -35,7 +35,7 @@ public class ObservableConfig {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     @Bean
-    public BeanFactoryPostProcessor beanFactoryPostProcessor() {
+    public static BeanFactoryPostProcessor beanFactoryPostProcessor() {
         return beanFactory -> {
             String basePackage = System.getProperty("base.package");
             if (basePackage != null && !basePackage.isEmpty()) {
