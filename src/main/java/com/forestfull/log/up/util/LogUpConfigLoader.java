@@ -1,7 +1,6 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.spring.LogUpProperties;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.env.YamlPropertySourceLoader;
