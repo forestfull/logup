@@ -107,7 +107,7 @@ public class Log {
         final StringBuilder logMessage = new StringBuilder();
 
         for (Formatter formatter : LogUpFactoryBean.formatter) {
-            logMessage.append(formatter.call(messages));
+            logMessage.append(formatter.call(level, messages));
         }
 
         LogFactory.console(logMessage.toString());

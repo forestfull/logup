@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public abstract class Formatter {
 
-    abstract String call(Object... arg);
+    abstract String call(com.forestfull.log.up.Level level, Object... arg);
 
     static String[] splitWithDelimiter(String placeholder) {
         Pattern pattern = Pattern.compile("\\{\\w+}|\\{new-line}");
@@ -39,24 +39,24 @@ public abstract class Formatter {
             switch (placeholder[i]) {
                 case LogFormatter.MessagePattern.DATETIME:
                     formatters[i] = new DateFormatter();
-
                     break;
+
                 case LogFormatter.MessagePattern.LEVEL:
                     formatters[i] = new Level();
-
                     break;
+
                 case LogFormatter.MessagePattern.THREAD:
                     formatters[i] = new Thread();
-
                     break;
+
                 case LogFormatter.MessagePattern.NEW_LINE:
                     formatters[i] = new LineSeparator();
-
                     break;
+
                 case LogFormatter.MessagePattern.MESSAGE:
                     formatters[i] = new Message();
-
                     break;
+
                 default:
                     formatters[i] = new Mime(placeholder[i]);
                     break;
@@ -69,7 +69,7 @@ public abstract class Formatter {
     static class DateFormatter extends Formatter {
 
         @Override
-        public String call(Object... arg) {
+        public String call(com.forestfull.log.up.Level level, Object... arg) {
             return LogUpFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
         }
     }
@@ -77,15 +77,15 @@ public abstract class Formatter {
     static class Level extends Formatter {
 
         @Override
-        public String call(Object... arg) {
-            return LogUpFactoryBean.level.getColorName();
+        public String call(com.forestfull.log.up.Level level, Object... arg) {
+            return level.getColorName();
         }
     }
 
     static class Thread extends Formatter {
 
         @Override
-        public String call(Object... arg) {
+        public String call(com.forestfull.log.up.Level level, Object... arg) {
             StackTraceElement stackTrace = java.lang.Thread.currentThread().getStackTrace()[5];
 
             StringBuilder currentThreadName = new StringBuilder(java.lang.Thread.currentThread().getName()).append(' ');
@@ -114,7 +114,7 @@ public abstract class Formatter {
     static class LineSeparator extends Formatter {
 
         @Override
-        String call(Object... arg) {
+        String call(com.forestfull.log.up.Level level, Object... arg) {
             return System.lineSeparator();
         }
     }
@@ -122,25 +122,25 @@ public abstract class Formatter {
     static class Message extends Formatter {
 
         @Override
-        String call(Object... orgs) {
+        String call(com.forestfull.log.up.Level level, Object... orgs) {
             StringBuilder message = new StringBuilder();
-            for (Object org : orgs) {
+            for (Object org : orgs)
                 message.append(org);
-            }
-            return LogUpFactoryBean.level.getColor() + message + com.forestfull.log.up.Level.OFF.getColor();
+
+            return level.getColor() + message + com.forestfull.log.up.Level.OFF.getColor();
         }
     }
 
     static class Mime extends Formatter {
 
-        private String mime;
+        private final String mime;
 
         public Mime(String mime) {
             this.mime = mime;
         }
 
         @Override
-        String call(Object... arg) {
+        String call(com.forestfull.log.up.Level level, Object... arg) {
             return this.mime;
         }
     }
