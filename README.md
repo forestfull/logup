@@ -8,6 +8,12 @@
 
 (또한, 스프링 프로젝트에서 `@Observable` 애노테이션을 통해 메서드 추적을 지원합니다.)
 
+## Supported environments
+
+- JDK 1.8 ~ Current
+- The @Observable method tracking feature is only available in Spring.   
+  (스프링에서만 @Observable 메서드 추적 기능을 사용할 수 있습니다.)
+
 ## Features
 
 - **Simple Logging**: Use `Log.info(arg)` without the need for instantiation.  
