@@ -183,7 +183,9 @@ public class Log {
 
         protected static synchronized void initConsole() {
             Level level = LogUpFactoryBean.level; // touch
+            console("=================================================================================================================================================================" + System.lineSeparator());
             console("Log Up by forest full's vigfoot" + System.lineSeparator());
+            console("=================================================================================================================================================================" + System.lineSeparator());
         }
     }
 }
