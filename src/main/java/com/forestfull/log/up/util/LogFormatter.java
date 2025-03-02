@@ -1,8 +1,8 @@
 package com.forestfull.log.up.util;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 
@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LogFormatter {
     /**
      * The format string for the log messages.

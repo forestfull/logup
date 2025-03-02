@@ -1,8 +1,6 @@
 package com.forestfull.log.up.util;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.text.SimpleDateFormat;
 
@@ -14,6 +12,8 @@ import java.text.SimpleDateFormat;
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileRecorder {
     /**
      * The default format for the log file name.
