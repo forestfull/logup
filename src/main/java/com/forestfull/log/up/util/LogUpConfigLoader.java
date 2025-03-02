@@ -13,7 +13,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePropertySource;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LogUpConfigLoader {
 
@@ -41,37 +45,51 @@ public class LogUpConfigLoader {
         Binder binder = Binder.get(environment);
         // 프로파일별로 LogUpProperties 바인딩
         BindResult<LogUpProperties> logup = binder.bind("logup", Bindable.of(LogUpProperties.class));
-        LogUpProperties logUpProperties = logup.orElse(null);
 
         // logUpProperties 출력 (확인을 위해 추가)
-        return logUpProperties;
+        return logup.orElse(null);
     }
 
     private static void injectPropertySources(String activeProfile, MutablePropertySources propertySources) {
-        for (String location : LOCATIONS) {
-            Resource resource = new ClassPathResource(location);
-            if (resource.exists()) {
-                try {
-                    if (location.endsWith(".yaml") || location.endsWith(".yml")) {
-                        YamlPropertySourceLoader loader = new YamlPropertySourceLoader();
-                        List<PropertySource<?>> yamlSources = loader.load(location, resource);
-                        yamlSources.forEach(source -> {
-                            final String activeProfileUnderVersion = String.valueOf(source.getProperty("spring.profiles"));
-                            final String activeProfileCurrentVersion = String.valueOf(source.getProperty("spring.config.activate.on-profile"));
-                            if (activeProfileUnderVersion == null && activeProfileCurrentVersion == null) {
-                                propertySources.addFirst(source);
-                            } else if (activeProfile != null && (activeProfile.equalsIgnoreCase(activeProfileUnderVersion) || activeProfile.equalsIgnoreCase(activeProfileCurrentVersion))) {
-                                propertySources.addFirst(source);
-                            }
-                        });
-                    } else {
-                        propertySources.addLast(new ResourcePropertySource(location, resource));
+        Arrays.stream(LOCATIONS).flatMap(loc -> {
+                    if (activeProfile != null)
+                        return Stream.of(loc, loc.replace("application.", "application-" + activeProfile.toLowerCase() + "."));
+
+                    return Stream.of(loc);
+                })
+                .forEach(loc -> {
+                    PropertySource<?> sources = getPropertySources(activeProfile, loc);
+                    propertySources.addLast(sources);
+                });
+    }
+
+    private static PropertySource<?> getPropertySources(String activeProfile, String location) {
+        Resource resource = new ClassPathResource(location);
+        PropertySource<?> propertySource = null;
+        if (resource.exists()) {
+            try {
+                if (location.endsWith(".yaml") || location.endsWith(".yml")) {
+                    YamlPropertySourceLoader loader = new YamlPropertySourceLoader();
+                    List<PropertySource<?>> yamlSources = loader.load(location, resource);
+                    for (PropertySource<?> source : yamlSources) {
+                        final String activeProfileUnderVersion = String.valueOf(source.getProperty("spring.profiles"));
+                        final String activeProfileCurrentVersion = String.valueOf(source.getProperty("spring.config.activate.on-profile"));
+                        if (activeProfileUnderVersion == null && activeProfileCurrentVersion == null) {
+                            propertySource = source;
+
+                        } else if (activeProfile != null && (activeProfile.equalsIgnoreCase(activeProfileUnderVersion) || activeProfile.equalsIgnoreCase(activeProfileCurrentVersion))) {
+                            return source;
+
+                        }
                     }
-                } catch (IOException e) {
-                    throw new IllegalStateException("설정 파일 로드 실패: " + location, e);
+
+                } else {
+                    propertySource = new ResourcePropertySource(location, resource);
                 }
+            } catch (IOException ignored) {
             }
         }
+        return propertySource;
     }
 
 
