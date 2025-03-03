@@ -1,7 +1,6 @@
 package com.forestfull.log.up.spring;
 
 import com.forestfull.log.up.util.Log;
-import com.forestfull.log.up.util.LogUpFactoryBean;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
