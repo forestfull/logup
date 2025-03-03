@@ -1,7 +1,7 @@
 package com.forestfull.log.up.spring;
 
 import com.forestfull.log.up.Level;
-import com.forestfull.log.up.util.LogFormatter;
+import com.forestfull.log.up.formatter.LogFormatter;
 
 import java.lang.annotation.*;
 
