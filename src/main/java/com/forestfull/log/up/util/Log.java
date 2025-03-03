@@ -2,6 +2,9 @@ package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
 import com.forestfull.log.up.formatter.FileRecorder;
+import com.forestfull.log.up.formatter.LogFormatter;
+import com.forestfull.log.up.spring.LogLocationInfo;
+import com.forestfull.log.up.spring.LogUpStackTrace;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +28,12 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     public static void debug(Object... msg) {
-        write(Level.DEBUG, msg);
+        try {
+            throw new LogUpStackTrace();
+        } catch (LogUpStackTrace e) {
+            LogLocationInfo logLocationInfo = new LogLocationInfo(e);
+            write(Level.DEBUG, logLocationInfo, msg);
+        }
     }
 
     /**
@@ -35,7 +43,12 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     public static void info(Object... msg) {
-        write(Level.INFO, msg);
+        try {
+            throw new LogUpStackTrace();
+        } catch (LogUpStackTrace e) {
+            LogLocationInfo logLocationInfo = new LogLocationInfo(e);
+            write(Level.INFO, logLocationInfo, msg);
+        }
     }
 
     /**
@@ -45,7 +58,12 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     public static void warn(Object... msg) {
-        write(Level.WARN, msg);
+        try {
+            throw new LogUpStackTrace();
+        } catch (LogUpStackTrace e) {
+            LogLocationInfo logLocationInfo = new LogLocationInfo(e);
+            write(Level.WARN, logLocationInfo, msg);
+        }
     }
 
     /**
@@ -55,18 +73,12 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     public static void error(Object... msg) {
-        write(Level.ERROR, msg);
-    }
-
-    /**
-     * Writes a log message with a specific level and placeholder pattern.
-     *
-     * @param level    The log level (INFO, WARN, ERROR).
-     * @param messages The messages to log.
-     * @author <a href="https://vigfoot.com">Vigfoot</a>
-     */
-    static void write(final Level level, final Object... messages) {
-        write(level, LogUpFactoryBean.logFormatter.getPlaceholder(), messages);
+        try {
+            throw new LogUpStackTrace();
+        } catch (LogUpStackTrace e) {
+            LogLocationInfo logLocationInfo = new LogLocationInfo(e);
+            write(Level.ERROR, logLocationInfo, msg);
+        }
     }
 
     /**
@@ -77,15 +89,34 @@ public class Log {
      * @param messages    The messages to log.
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
-    static void write(final Level level, final String placeholder, final Object... messages) {
+    static void write(final Level level, final LogLocationInfo logLocationInfo, final Object... messages) {
         if (level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
         if (LogUpFactoryBean.logFormatter == null) return;
 
         final StringBuilder logMessage = new StringBuilder();
 
-        for (MessageFormatter messageFormatter : LogUpFactoryBean.messageFormatter)
-            logMessage.append(messageFormatter.call(level, messages));
+        for (MessageFormatter messageFormatter : LogUpFactoryBean.messageFormatter) {
+            logMessage.append(messageFormatter.call(level, logLocationInfo, messages));
+        }
+
+        LogFactory.console(logMessage.toString());
+        if (LogUpFactoryBean.fileRecorder != null)
+            LogFactory.file(logMessage.toString());
+    }
+
+    static void write(final Level level, final String placeHolder, final Object... messages) {
+        if (level.compareTo(LogUpFactoryBean.level) < 0) return;
+        if (messages == null || messages.length == 0) return;
+        if (LogUpFactoryBean.logFormatter == null) return;
+
+        final StringBuilder logMessage = new StringBuilder();
+        logMessage.append(placeHolder
+                .replaceAll(LogFormatter.MessagePattern.DATETIME, LogUpFactoryBean.logFormatter.getDateTimeFormat().format(System.currentTimeMillis()))
+                .replaceAll(LogFormatter.MessagePattern.LEVEL, level.getColor() + level.name() + Level.COLOR.RESET));
+
+        for (Object message : messages)
+            logMessage.append(message);
 
         LogFactory.console(logMessage.toString());
         if (LogUpFactoryBean.fileRecorder != null)
