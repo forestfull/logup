@@ -1,6 +1,7 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
+import com.forestfull.log.up.formatter.LogFormatter;
 import com.forestfull.log.up.spring.Observable;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -99,6 +100,8 @@ public class ObservableAspect {
     private static void logOfLevel(String placeholder, final Level level, final Object... args) {
         switch (level) {
             case ALL:
+            case DEBUG:
+                Log.write(Level.DEBUG, placeholder, args);
             case INFO:
                 Log.write(Level.INFO, placeholder, args);
                 break;
