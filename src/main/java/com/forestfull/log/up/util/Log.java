@@ -1,6 +1,7 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
+import com.forestfull.log.up.formatter.FileRecorder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,16 @@ import java.util.Date;
 public class Log {
 
     private Log() {
+    }
+
+    /**
+     * Logs an debug message.
+     *
+     * @param msg The message to log.
+     * @author <a href="https://vigfoot.com">Vigfoot</a>
+     */
+    public static void debug(Object... msg) {
+        write(Level.DEBUG, msg);
     }
 
     /**
@@ -70,45 +81,11 @@ public class Log {
         if (level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
         if (LogUpFactoryBean.logFormatter == null) return;
-/*
-
-        StackTraceElement stackTrace = Thread.currentThread().getStackTrace()[4];
-        final String now = LogUpFactoryBean.logFormatter.getDateTimeFormat().format(new Date());
-        final StringBuilder msgBuilder = new StringBuilder(1024);
-
-        final String className = stackTrace.getClassName();
-        final String methodName = stackTrace.getMethodName();
-        StringBuilder currentThreadName = new StringBuilder(Thread.currentThread().getName()).append(' ');
-
-        if (className.split("\\.").length > 1) {
-            String[] split = className.split("\\.");
-            for (int i = 0; i < split.length - 1; i++) {
-                String pack = split[i];
-                currentThreadName.append(pack.charAt(0)).append('.');
-            }
-            currentThreadName.append(split[split.length - 1]).append('.');
-        } else {
-            currentThreadName.append(className).append('.');
-        }
-
-        currentThreadName.append(methodName)
-                .append('(').append(stackTrace.getFileName()).append(':').append(stackTrace.getLineNumber()).append(')');
-
-        for (Object message : messages) msgBuilder.append(message);
-
-        final String logMessage = placeholder
-                .replace(LogFormatter.MessagePattern.DATETIME, now)
-                .replace(LogFormatter.MessagePattern.LEVEL, level == Level.ALL ? "----" : level.getColorName())
-                .replace(LogFormatter.MessagePattern.THREAD, currentThreadName)
-                .replace(LogFormatter.MessagePattern.MESSAGE, level.getColor() + msgBuilder + Level.OFF.getColor())
-                .replace(LogFormatter.MessagePattern.NEW_LINE, System.lineSeparator());
-*/
 
         final StringBuilder logMessage = new StringBuilder();
 
-        for (Formatter formatter : LogUpFactoryBean.formatter) {
-            logMessage.append(formatter.call(level, messages));
-        }
+        for (MessageFormatter messageFormatter : LogUpFactoryBean.messageFormatter)
+            logMessage.append(messageFormatter.call(level, messages));
 
         LogFactory.console(logMessage.toString());
         if (LogUpFactoryBean.fileRecorder != null)
