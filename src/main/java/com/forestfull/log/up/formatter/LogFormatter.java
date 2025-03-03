@@ -1,8 +1,6 @@
-package com.forestfull.log.up.util;
+package com.forestfull.log.up.formatter;
 
 import lombok.*;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 
@@ -38,7 +36,7 @@ public class LogFormatter {
      *
      * @return the default placeholder format string
      */
-    static String getDefaultPlaceHolder() {
+    public static String getDefaultPlaceHolder() {
         return MessagePattern.DEFAULT;
     }
 
@@ -47,8 +45,8 @@ public class LogFormatter {
      *
      * @return the default date and time format
      */
-    static String getDefaultDateTimeFormat() {
-        return "yyyy-MM-dd HH:mm:ss";
+    public static String getDefaultDateTimeFormat() {
+        return "yyyy-MM-dd HH:mm:ss.sss";
     }
 
     /**

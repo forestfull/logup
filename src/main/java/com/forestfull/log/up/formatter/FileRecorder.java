@@ -1,4 +1,4 @@
-package com.forestfull.log.up.util;
+package com.forestfull.log.up.formatter;
 
 import lombok.*;
 
@@ -47,7 +47,7 @@ public class FileRecorder {
      *
      * @return the default placeholder string
      */
-    static String getDefaultPlaceHolder() {
+    public static String getDefaultPlaceHolder() {
         return FileRecorder.FilePattern.PROJECT_NAME + "{date}.log";
     }
 
@@ -56,7 +56,7 @@ public class FileRecorder {
      *
      * @return the default date format
      */
-    static String getDefaultDateFormat() {
+    public static String getDefaultDateFormat() {
         return "yyyy-MM-dd";
     }
 
