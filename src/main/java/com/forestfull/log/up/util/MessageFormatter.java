@@ -1,12 +1,15 @@
 package com.forestfull.log.up.util;
 
+import com.forestfull.log.up.Level;
+import com.forestfull.log.up.formatter.LogFormatter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class Formatter {
+public abstract class MessageFormatter {
 
     abstract String call(com.forestfull.log.up.Level level, Object... arg);
 
@@ -32,41 +35,41 @@ public abstract class Formatter {
 
     }
 
-    static Formatter[] replaceMatchPlaceholder(String[] placeholder) {
-        Formatter[] formatters = new Formatter[placeholder.length];
+    static MessageFormatter[] replaceMatchPlaceholder(String[] placeholder) {
+        MessageFormatter[] messageFormatters = new MessageFormatter[placeholder.length];
 
         for (int i = 0; i < placeholder.length; i++) {
             switch (placeholder[i]) {
                 case LogFormatter.MessagePattern.DATETIME:
-                    formatters[i] = new DateFormatter();
+                    messageFormatters[i] = new DateMessageFormatter();
                     break;
 
                 case LogFormatter.MessagePattern.LEVEL:
-                    formatters[i] = new Level();
+                    messageFormatters[i] = new Level();
                     break;
 
                 case LogFormatter.MessagePattern.THREAD:
-                    formatters[i] = new Thread();
+                    messageFormatters[i] = new Thread();
                     break;
 
                 case LogFormatter.MessagePattern.NEW_LINE:
-                    formatters[i] = new LineSeparator();
+                    messageFormatters[i] = new LineSeparator();
                     break;
 
                 case LogFormatter.MessagePattern.MESSAGE:
-                    formatters[i] = new Message();
+                    messageFormatters[i] = new Message();
                     break;
 
                 default:
-                    formatters[i] = new Mime(placeholder[i]);
+                    messageFormatters[i] = new Mime(placeholder[i]);
                     break;
             }
         }
 
-        return formatters;
+        return messageFormatters;
     }
 
-    static class DateFormatter extends Formatter {
+    static class DateMessageFormatter extends MessageFormatter {
 
         @Override
         public String call(com.forestfull.log.up.Level level, Object... arg) {
@@ -74,21 +77,23 @@ public abstract class Formatter {
         }
     }
 
-    static class Level extends Formatter {
+    static class Level extends MessageFormatter {
 
         @Override
         public String call(com.forestfull.log.up.Level level, Object... arg) {
-            return level.getColorName();
+            return level.getColor() + String.format("%5s", level.name()) + com.forestfull.log.up.Level.COLOR.RESET;
         }
     }
 
-    static class Thread extends Formatter {
+    static class Thread extends MessageFormatter {
 
         @Override
         public String call(com.forestfull.log.up.Level level, Object... arg) {
-            StackTraceElement stackTrace = java.lang.Thread.currentThread().getStackTrace()[5];
+            final String PID = java.lang.management.ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
+            final StackTraceElement stackTrace = java.lang.Thread.currentThread().getStackTrace()[5];
 
-            StringBuilder currentThreadName = new StringBuilder(java.lang.Thread.currentThread().getName()).append(' ');
+            final StringBuilder currentThreadName = new StringBuilder(com.forestfull.log.up.Level.COLOR.PURPLE).append("[PID:").append(PID).append("] ").append(com.forestfull.log.up.Level.COLOR.RESET)
+                    .append(com.forestfull.log.up.Level.COLOR.CYAN).append(java.lang.Thread.currentThread().getName()).append(com.forestfull.log.up.Level.COLOR.RESET).append(' ');
             final String className = stackTrace.getClassName();
             final String methodName = stackTrace.getMethodName();
 
@@ -111,7 +116,7 @@ public abstract class Formatter {
         }
     }
 
-    static class LineSeparator extends Formatter {
+    static class LineSeparator extends MessageFormatter {
 
         @Override
         String call(com.forestfull.log.up.Level level, Object... arg) {
@@ -119,7 +124,7 @@ public abstract class Formatter {
         }
     }
 
-    static class Message extends Formatter {
+    static class Message extends MessageFormatter {
 
         @Override
         String call(com.forestfull.log.up.Level level, Object... orgs) {
@@ -131,7 +136,7 @@ public abstract class Formatter {
         }
     }
 
-    static class Mime extends Formatter {
+    static class Mime extends MessageFormatter {
 
         private final String mime;
 

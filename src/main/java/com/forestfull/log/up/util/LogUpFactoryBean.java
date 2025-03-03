@@ -1,6 +1,8 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
+import com.forestfull.log.up.formatter.FileRecorder;
+import com.forestfull.log.up.formatter.LogFormatter;
 import com.forestfull.log.up.spring.LogUpProperties;
 import org.springframework.util.StringUtils;
 
@@ -22,7 +24,7 @@ import java.text.SimpleDateFormat;
  */
 public class LogUpFactoryBean {
     static Level level;
-    static Formatter[] formatter;
+    static MessageFormatter[] messageFormatter;
     static LogFormatter logFormatter;
     static FileRecorder fileRecorder;
 
@@ -34,8 +36,8 @@ public class LogUpFactoryBean {
 
         defaultInitialize();
 
-        final String[] splitWithDelimiter = Formatter.splitWithDelimiter(logFormatter.getPlaceholder());
-        LogUpFactoryBean.formatter = Formatter.replaceMatchPlaceholder(splitWithDelimiter);
+        final String[] splitWithDelimiter = MessageFormatter.splitWithDelimiter(logFormatter.getPlaceholder());
+        LogUpFactoryBean.messageFormatter = MessageFormatter.replaceMatchPlaceholder(splitWithDelimiter);
     }
 
     private static void defaultInitialize() {
