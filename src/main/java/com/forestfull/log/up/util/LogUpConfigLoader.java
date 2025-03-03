@@ -1,5 +1,6 @@
 package com.forestfull.log.up.util;
 
+import com.forestfull.log.up.formatter.FileRecorder;
 import com.forestfull.log.up.spring.LogUpProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -127,8 +128,8 @@ public class LogUpConfigLoader {
         Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
         Log.LogFactory.console(System.lineSeparator() + " # Priority.1 - classpath: application.properties" + System.lineSeparator());
         Log.LogFactory.console("logup.level=INFO" + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.placeholder={datetime} {level} {thread} - {msg}{new-line}" + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.date-time-format=yyyy-MM-dd HH:mm:ss" + System.lineSeparator());
+        Log.LogFactory.console("logup.log-format.placeholder={datetime} {level} {thread} : {msg}{new-line}" + System.lineSeparator());
+        Log.LogFactory.console("logup.log-format.date-time-format=yyyy-MM-dd HH:mm:ss.sss" + System.lineSeparator());
         Log.LogFactory.console("logup.file-recode.directory=log/" + System.lineSeparator());
         Log.LogFactory.console("logup.file-recode.placeholder=" + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
         Log.LogFactory.console("logup.file-recode.date-format=yyyy-MM-dd" + System.lineSeparator() + System.lineSeparator());
@@ -137,8 +138,8 @@ public class LogUpConfigLoader {
         Log.LogFactory.console("logup:" + System.lineSeparator());
         Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + System.lineSeparator());
         Log.LogFactory.console("  log-format:" + System.lineSeparator());
-        Log.LogFactory.console("    placeholder: \"{datetime} {level} {thread} - {msg}{new-line}\"" + System.lineSeparator());
-        Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss" + System.lineSeparator());
+        Log.LogFactory.console("    placeholder: \"{datetime} {level} {thread} : {msg}{new-line}\"" + System.lineSeparator());
+        Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss.sss" + System.lineSeparator());
         Log.LogFactory.console("  file-recode:" + System.lineSeparator());
         Log.LogFactory.console("    directory: log/ # is default" + System.lineSeparator());
         Log.LogFactory.console("    placeholder: " + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
