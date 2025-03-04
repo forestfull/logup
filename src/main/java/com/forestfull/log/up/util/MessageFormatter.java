@@ -109,7 +109,7 @@ public abstract class MessageFormatter {
         @Override
         String call(com.forestfull.log.up.Level level, Object... args) {
             final StringBuilder builder = new StringBuilder();
-            final StackTraceElement stackTraceElement = java.lang.Thread.currentThread().getStackTrace()[5];
+            final StackTraceElement stackTraceElement = java.lang.Thread.currentThread().getStackTrace()[4];
 
             String[] split = stackTraceElement.getClassName().split("\\.");
             for (int i = 0; i < split.length - 1; i++)

@@ -1,6 +1,8 @@
 package com.forestfull.log.up.formatter;
 
 import lombok.*;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 
@@ -9,11 +11,11 @@ import java.text.SimpleDateFormat;
  *
  * @author <a href="https://vigfoot.com">Vigfoot</a>
  */
-@Setter
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ConfigurationProperties(prefix = "logup.log-format")
 public class LogFormatter {
     /**
      * The format string for the log messages.

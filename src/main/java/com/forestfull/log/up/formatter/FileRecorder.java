@@ -1,6 +1,7 @@
 package com.forestfull.log.up.formatter;
 
 import lombok.*;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.text.SimpleDateFormat;
 
@@ -9,11 +10,11 @@ import java.text.SimpleDateFormat;
  *
  * @author <a href="https://vigfoot.com">Vigfoot</a>
  */
-@Setter
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ConfigurationProperties(prefix = "logup.file-recode")
 public class FileRecorder {
     /**
      * The default format for the log file name.
