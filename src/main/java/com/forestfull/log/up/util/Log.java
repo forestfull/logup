@@ -35,6 +35,7 @@ public class Log {
      * @param clazz                       the class from the current source code
      * @param currentSourceCodeLineNumber the line number in the current source code
      * @return a LogFactory instance with stack trace information
+     * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     public static Log.LogFactory stacktrace(Class<?> clazz, int currentSourceCodeLineNumber) {
         final String key = clazz.hashCode() + "-" + currentSourceCodeLineNumber;
@@ -54,12 +55,7 @@ public class Log {
             sourceInfoMap.put(key, sourceInfo);
         }
 
-        logFactory.setBuffer(new StringBuilder(System.lineSeparator())
-                .append(Level.COLOR.WHITE).append(" >> ").append(sourceInfo.getClassName())
-                .append('.').append(sourceInfo.getMethodName())
-                .append('(').append(sourceInfo.getFileName())
-                .append(':').append(sourceInfo.getLineNumber())
-                .append(')').append(Level.COLOR.RESET).toString());
+        logFactory.setBuffer(System.lineSeparator() + sourceInfo.getSourceInfo());
 
         return logFactory;
     }
