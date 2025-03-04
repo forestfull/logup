@@ -101,15 +101,15 @@ public class ObservableAspect {
         switch (level) {
             case ALL:
             case DEBUG:
-                Log.write(Level.DEBUG, placeholder, args);
+                Log.writeForCustomPlaceholder(Level.DEBUG, placeholder, args);
             case INFO:
-                Log.write(Level.INFO, placeholder, args);
+                Log.writeForCustomPlaceholder(Level.INFO, placeholder, args);
                 break;
             case WARN:
-                Log.write(Level.WARN, placeholder, args);
+                Log.writeForCustomPlaceholder(Level.WARN, placeholder, args);
                 break;
             case ERROR:
-                Log.write(Level.ERROR, placeholder, args);
+                Log.writeForCustomPlaceholder(Level.ERROR, placeholder, args);
                 break;
         }
     }

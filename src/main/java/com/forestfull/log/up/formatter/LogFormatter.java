@@ -68,6 +68,11 @@ public class LogFormatter {
         public static final String THREAD = "{thread}";
 
         /**
+         * Placeholder for the stack trace.
+         */
+        public static final String STACKTRACE = "{stacktrace}";
+
+        /**
          * Placeholder for the log level.
          *
          * @see com.forestfull.log.up.Level
@@ -87,6 +92,6 @@ public class LogFormatter {
         /**
          * Default log format combining date-time, level, thread, message, and a new line.
          */
-        public static final String DEFAULT = DATETIME + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE + NEW_LINE;
+        public static final String DEFAULT = DATETIME + ' ' + LEVEL + ' ' + THREAD + ' ' + STACKTRACE + " - " + MESSAGE + NEW_LINE;
     }
 }

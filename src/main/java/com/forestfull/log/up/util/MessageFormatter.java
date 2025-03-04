@@ -1,18 +1,16 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.formatter.LogFormatter;
-import com.forestfull.log.up.spring.LogLocationInfo;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class MessageFormatter {
 
-    abstract String call(final com.forestfull.log.up.Level level, final LogLocationInfo logLocationInfo, final Object... args);
+    abstract String call(final com.forestfull.log.up.Level level, final Object... args);
 
     static String[] splitWithDelimiter(String placeholder) {
         Pattern pattern = Pattern.compile("\\{\\w+}|\\{new-line}");
@@ -73,7 +71,7 @@ public abstract class MessageFormatter {
     static class DateMessageFormatter extends MessageFormatter {
 
         @Override
-        public String call(final com.forestfull.log.up.Level level, final LogLocationInfo logLocationInfo, final Object... args) {
+        public String call(final com.forestfull.log.up.Level level, final Object... args) {
             return LogUpFactoryBean.logFormatter.getDateTimeFormat().format(System.currentTimeMillis());
         }
     }
@@ -81,7 +79,7 @@ public abstract class MessageFormatter {
     static class Level extends MessageFormatter {
 
         @Override
-        public String call(final com.forestfull.log.up.Level level, final LogLocationInfo logLocationInfo, final Object... args) {
+        public String call(final com.forestfull.log.up.Level level, final Object... args) {
             return level.getColor() + String.format("%5s", level.name()) + com.forestfull.log.up.Level.COLOR.RESET;
         }
     }
@@ -90,33 +88,43 @@ public abstract class MessageFormatter {
         private static final String PID = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
 
         @Override
-        public String call(final com.forestfull.log.up.Level level, final LogLocationInfo logLocationInfo, final Object... args) {
-            StringBuilder currentThreadName = new StringBuilder()
+        public String call(final com.forestfull.log.up.Level level, final Object... args) {
+            return new StringBuilder()
                     .append(com.forestfull.log.up.Level.COLOR.PURPLE)
                     .append("[PID:").append(PID).append("] ")
                     .append(com.forestfull.log.up.Level.COLOR.RESET)
                     .append(com.forestfull.log.up.Level.COLOR.CYAN)
                     .append(java.lang.Thread.currentThread().getName())
                     .append(com.forestfull.log.up.Level.COLOR.RESET)
-                    .append(' ');
-            String[] split = logLocationInfo.getClassName().split("\\.");
-            for (int i = 0; i < split.length - 1; i++) {
-                currentThreadName.append(split[i].charAt(0)).append('.');
-            }
-            currentThreadName.append(split[split.length - 1])
-                    .append('.').append(logLocationInfo.getMethodName())
-                    .append('(').append(logLocationInfo.getFileName())
-                    .append(':').append(logLocationInfo.getLineNumber())
+                    .toString();
+        }
+    }
+
+    static class StackTrace extends MessageFormatter {
+
+        @Override
+        String call(com.forestfull.log.up.Level level, Object... args) {
+            final StringBuilder builder = new StringBuilder();
+            final StackTraceElement stackTraceElement = java.lang.Thread.currentThread().getStackTrace()[5];
+
+            String[] split = stackTraceElement.getClassName().split("\\.");
+            for (int i = 0; i < split.length - 1; i++)
+                builder.append(split[i].charAt(0)).append('.');
+
+            builder.append(split[split.length - 1])
+                    .append('.').append(stackTraceElement.getMethodName())
+                    .append('(').append(stackTraceElement.getFileName())
+                    .append(':').append(stackTraceElement.getLineNumber())
                     .append(')');
 
-            return currentThreadName.toString();
+            return builder.toString();
         }
     }
 
     static class LineSeparator extends MessageFormatter {
 
         @Override
-        String call(final com.forestfull.log.up.Level level, final LogLocationInfo logLocationInfo, final Object... args) {
+        String call(final com.forestfull.log.up.Level level, final Object... args) {
             return System.lineSeparator();
         }
     }
@@ -124,7 +132,7 @@ public abstract class MessageFormatter {
     static class Message extends MessageFormatter {
 
         @Override
-        String call(final com.forestfull.log.up.Level level, final LogLocationInfo logLocationInfo, final Object... args) {
+        String call(final com.forestfull.log.up.Level level, final Object... args) {
             StringBuilder message = new StringBuilder();
             for (Object arg : args)
                 message.append(arg);
@@ -142,7 +150,7 @@ public abstract class MessageFormatter {
         }
 
         @Override
-        String call(final com.forestfull.log.up.Level level, final LogLocationInfo logLocationInfo, final Object... args) {
+        String call(final com.forestfull.log.up.Level level, final Object... args) {
             return this.mime;
         }
     }

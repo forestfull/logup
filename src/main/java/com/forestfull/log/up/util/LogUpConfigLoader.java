@@ -1,6 +1,7 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.formatter.FileRecorder;
+import com.forestfull.log.up.formatter.LogFormatter;
 import com.forestfull.log.up.spring.LogUpProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -53,8 +54,8 @@ public class LogUpConfigLoader {
     /**
      * Injects property sources into the MutablePropertySources based on the active profile.
      *
-     * @param activeProfile    the currently active profile, if any
-     * @param propertySources  the MutablePropertySources to inject the property sources into
+     * @param activeProfile   the currently active profile, if any
+     * @param propertySources the MutablePropertySources to inject the property sources into
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     private static void injectPropertySources(String activeProfile, MutablePropertySources propertySources) {
@@ -126,30 +127,30 @@ public class LogUpConfigLoader {
         Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
         Log.LogFactory.console("LogUp Setting Example");
         Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.1 - classpath: application.properties" + System.lineSeparator());
+        Log.LogFactory.console(System.lineSeparator() + " # Priority.1 - classpath: application.properties or (config/application.properties)" + System.lineSeparator());
         Log.LogFactory.console("logup.level=INFO" + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.placeholder={datetime} {level} {thread} : {msg}{new-line}" + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.date-time-format=yyyy-MM-dd HH:mm:ss.sss" + System.lineSeparator());
+        Log.LogFactory.console("logup.log-format.placeholder=" + LogFormatter.MessagePattern.DEFAULT + System.lineSeparator());
+        Log.LogFactory.console("logup.log-format.date-time-format=" + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator());
         Log.LogFactory.console("logup.file-recode.directory=log/" + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.placeholder=" + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.date-format=yyyy-MM-dd" + System.lineSeparator() + System.lineSeparator());
+        Log.LogFactory.console("logup.file-recode.placeholder=" + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator());
+        Log.LogFactory.console("logup.file-recode.date-format=" + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator());
         Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.2 - classpath: application.yml" + System.lineSeparator());
+        Log.LogFactory.console(System.lineSeparator() + " # Priority.2 - classpath: application.yml or (config/application.yml, config/application.yaml, application.yaml) " + System.lineSeparator());
         Log.LogFactory.console("logup:" + System.lineSeparator());
         Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + System.lineSeparator());
         Log.LogFactory.console("  log-format:" + System.lineSeparator());
-        Log.LogFactory.console("    placeholder: \"{datetime} {level} {thread} : {msg}{new-line}\"" + System.lineSeparator());
-        Log.LogFactory.console("    date-time-format: yyyy-MM-dd HH:mm:ss.sss" + System.lineSeparator());
+        Log.LogFactory.console("    placeholder: \"" + LogFormatter.MessagePattern.DEFAULT + "\"" + System.lineSeparator());
+        Log.LogFactory.console("    date-time-format: " + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator());
         Log.LogFactory.console("  file-recode:" + System.lineSeparator());
         Log.LogFactory.console("    directory: log/ # is default" + System.lineSeparator());
-        Log.LogFactory.console("    placeholder: " + FileRecorder.FilePattern.PROJECT_NAME + "-{date}.log" + System.lineSeparator());
-        Log.LogFactory.console("    date-format: yyyy-MM-dd" + System.lineSeparator() + System.lineSeparator());
+        Log.LogFactory.console("    placeholder: " + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator());
+        Log.LogFactory.console("    date-format: " + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator());
         Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
         Log.LogFactory.console(System.lineSeparator() + " # Priority.3 - source code" + System.lineSeparator());
         Log.LogFactory.console("LogUpFactoryBean.builder()" + System.lineSeparator());
         Log.LogFactory.console("                    .level(Level.INFO)" + System.lineSeparator());
         Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().build())" + System.lineSeparator());
-        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().logFileDirectory(\"logs/\").build())" + System.lineSeparator());
+        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().build())" + System.lineSeparator());
         Log.LogFactory.console("                    .build();" + System.lineSeparator() + System.lineSeparator());
     }
 }
