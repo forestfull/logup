@@ -76,7 +76,7 @@ public abstract class MessageFormatter {
 
         @Override
         public String call(final com.forestfull.log.up.Level level, final Object... args) {
-            return level.getColor() + String.format("%5s", level.name()) + com.forestfull.log.up.Level.COLOR.RESET;
+            return level.getColor() + (level == com.forestfull.log.up.Level.INFO | level == com.forestfull.log.up.Level.WARN ? ' ' : "") + level.name() + com.forestfull.log.up.Level.COLOR.RESET;
         }
     }
 
@@ -85,14 +85,12 @@ public abstract class MessageFormatter {
 
         @Override
         public String call(final com.forestfull.log.up.Level level, final Object... args) {
-            return new StringBuilder()
-                    .append(com.forestfull.log.up.Level.COLOR.PURPLE)
-                    .append("[PID:").append(PID).append("] ")
-                    .append(com.forestfull.log.up.Level.COLOR.RESET)
-                    .append(com.forestfull.log.up.Level.COLOR.CYAN)
-                    .append(java.lang.Thread.currentThread().getName())
-                    .append(com.forestfull.log.up.Level.COLOR.RESET)
-                    .toString();
+            return com.forestfull.log.up.Level.COLOR.PURPLE +
+                    "[PID:" + PID + "] " +
+                    com.forestfull.log.up.Level.COLOR.RESET +
+                    com.forestfull.log.up.Level.COLOR.CYAN +
+                    java.lang.Thread.currentThread().getName() +
+                    com.forestfull.log.up.Level.COLOR.RESET;
         }
     }
 
@@ -101,8 +99,7 @@ public abstract class MessageFormatter {
         @Override
         String call(final com.forestfull.log.up.Level level, final Object... args) {
             StringBuilder message = new StringBuilder();
-            for (Object arg : args)
-                message.append(arg);
+            for (Object arg : args) message.append(arg);
 
             return level.getColor() + message + com.forestfull.log.up.Level.OFF.getColor();
         }
