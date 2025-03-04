@@ -3,10 +3,12 @@ package com.forestfull.log.up.util;
 import com.forestfull.log.up.Level;
 import com.forestfull.log.up.formatter.FileRecorder;
 import com.forestfull.log.up.formatter.LogFormatter;
+import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.util.*;
 
 /**
  * A utility class for logging messages at different levels (INFO, WARN, ERROR).
@@ -16,7 +18,47 @@ import java.util.Date;
  */
 public class Log {
 
+    private static final Map<String, SourceInfo> sourceInfoMap = new HashMap<>();
+
     private Log() {
+    }
+
+    /**
+     * Creates a LogFactory instance with the stack trace information.
+     *
+     * @param clazz                   the class from the current source code
+     * @param currentSourceCodeLineNumber the line number in the current source code
+     * @return a LogFactory instance with stack trace information
+     * @throws IllegalArgumentException if the currentSourceCodeLineNumber is duplicated for the same clazz
+     *
+     * <p> Note: Ensure that the currentSourceCodeLineNumber is not duplicated for the same clazz. </p>
+     */
+    public static Log.LogFactory stacktrace(Class<?> clazz, int currentSourceCodeLineNumber) {
+        final String key = clazz.hashCode() + "-" + currentSourceCodeLineNumber;
+        SourceInfo sourceInfo = sourceInfoMap.get(key);
+
+        final LogFactory logFactory = new LogFactory();
+        if (Objects.isNull(sourceInfo)) {
+            final StackTraceElement stackTraceElement = java.lang.Thread.currentThread().getStackTrace()[2];
+
+            sourceInfo = SourceInfo.builder()
+                    .className(stackTraceElement.getClassName())
+                    .methodName(stackTraceElement.getMethodName())
+                    .fileName(stackTraceElement.getFileName())
+                    .lineNumber(stackTraceElement.getLineNumber())
+                    .build();
+
+            sourceInfoMap.put(key, sourceInfo);
+        }
+
+        logFactory.setBuffer(new StringBuilder(System.lineSeparator())
+                .append(Level.COLOR.WHITE).append(" >> ").append(sourceInfo.getClassName())
+                .append('.').append(sourceInfo.getMethodName())
+                .append('(').append(sourceInfo.getFileName())
+                .append(':').append(sourceInfo.getLineNumber())
+                .append(')').append(Level.COLOR.RESET).toString());
+
+        return logFactory;
     }
 
     /**
@@ -62,8 +104,8 @@ public class Log {
     /**
      * Writes a log message with a specific level, placeholder pattern, and messages.
      *
-     * @param level       The log level (INFO, WARN, ERROR).
-     * @param messages    The messages to log.
+     * @param level    The log level (INFO, WARN, ERROR).
+     * @param messages The messages to log.
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     static void write(final Level level, final Object... messages) {
@@ -76,6 +118,8 @@ public class Log {
         for (MessageFormatter messageFormatter : LogUpFactoryBean.messageFormatter) {
             logMessage.append(messageFormatter.call(level, messages));
         }
+
+        logMessage.append(System.lineSeparator());
 
         LogFactory.console(logMessage.toString());
         if (LogUpFactoryBean.fileRecorder != null)
@@ -105,7 +149,10 @@ public class Log {
      *
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
+    @Setter
     public static class LogFactory {
+        private String buffer;
+
         /**
          * Outputs the log message to the console.
          *
@@ -172,6 +219,60 @@ public class Log {
             } catch (IOException e) {
                 e.printStackTrace(System.err);
             }
+        }
+
+
+        /**
+         * Logs an debug message.
+         *
+         * @param msg The message to log.
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
+         */
+        public void debug(Object... msg) {
+            final List<Object> msgList = new ArrayList<>(Arrays.asList(msg));
+            if (StringUtils.hasText(buffer)) msgList.add(buffer);
+
+            write(Level.DEBUG, msgList.toArray());
+        }
+
+
+        /**
+         * Logs an informational message.
+         *
+         * @param msg The message to log.
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
+         */
+        public void info(Object... msg) {
+            final List<Object> msgList = new ArrayList<>(Arrays.asList(msg));
+            if (StringUtils.hasText(buffer)) msgList.add(buffer);
+
+            write(Level.INFO, msgList.toArray());
+        }
+
+        /**
+         * Logs a warning message.
+         *
+         * @param msg The message to log.
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
+         */
+        public void warn(Object... msg) {
+            final List<Object> msgList = new ArrayList<>(Arrays.asList(msg));
+            if (StringUtils.hasText(buffer)) msgList.add(buffer);
+
+            write(Level.WARN, msgList.toArray());
+        }
+
+        /**
+         * Logs an error message.
+         *
+         * @param msg The message to log.
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
+         */
+        public void error(Object... msg) {
+            final List<Object> msgList = new ArrayList<>(Arrays.asList(msg));
+            if (StringUtils.hasText(buffer)) msgList.add(buffer);
+
+            write(Level.ERROR, msgList.toArray());
         }
 
         protected static synchronized void initConsole() {
