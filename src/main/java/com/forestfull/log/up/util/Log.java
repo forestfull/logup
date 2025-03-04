@@ -25,13 +25,16 @@ public class Log {
 
     /**
      * Creates a LogFactory instance with the stack trace information.
+     * <p> Note: Ensure that the currentSourceCodeLineNumber is not duplicated for the same clazz. </p>
      *
-     * @param clazz                   the class from the current source code
+     * <p>Example.</p>
+     * <code>Log.stacktrace(this.getClass(), 88).info("your logging Message")</code>
+     * <BR>
+     * <code>Log.stacktrace(YourClass.class, 100).info("your logging Message")</code>
+     *
+     * @param clazz                       the class from the current source code
      * @param currentSourceCodeLineNumber the line number in the current source code
      * @return a LogFactory instance with stack trace information
-     * @throws IllegalArgumentException if the currentSourceCodeLineNumber is duplicated for the same clazz
-     *
-     * <p> Note: Ensure that the currentSourceCodeLineNumber is not duplicated for the same clazz. </p>
      */
     public static Log.LogFactory stacktrace(Class<?> clazz, int currentSourceCodeLineNumber) {
         final String key = clazz.hashCode() + "-" + currentSourceCodeLineNumber;
@@ -63,6 +66,8 @@ public class Log {
 
     /**
      * Logs an debug message.
+     * <p>Example.</p>
+     * <code>Log.debug("your logging Message")</code>
      *
      * @param msg The message to log.
      * @author <a href="https://vigfoot.com">Vigfoot</a>
@@ -73,6 +78,8 @@ public class Log {
 
     /**
      * Logs an informational message.
+     * <p>Example.</p>
+     * <code>Log.info("your logging Message")</code>
      *
      * @param msg The message to log.
      * @author <a href="https://vigfoot.com">Vigfoot</a>
@@ -83,6 +90,8 @@ public class Log {
 
     /**
      * Logs a warning message.
+     * <p>Example.</p>
+     * <code>Log.warn("your logging Message")</code>
      *
      * @param msg The message to log.
      * @author <a href="https://vigfoot.com">Vigfoot</a>
@@ -93,6 +102,8 @@ public class Log {
 
     /**
      * Logs an error message.
+     * <p>Example.</p>
+     * <code>Log.error("your logging Message")</code>
      *
      * @param msg The message to log.
      * @author <a href="https://vigfoot.com">Vigfoot</a>
@@ -221,7 +232,6 @@ public class Log {
             }
         }
 
-
         /**
          * Logs an debug message.
          *
@@ -234,7 +244,6 @@ public class Log {
 
             write(Level.DEBUG, msgList.toArray());
         }
-
 
         /**
          * Logs an informational message.
