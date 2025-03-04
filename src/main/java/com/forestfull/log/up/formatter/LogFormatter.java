@@ -87,13 +87,8 @@ public class LogFormatter {
         public static final String MESSAGE = "{msg}";
 
         /**
-         * Placeholder for a new line character.
-         */
-        public static final String NEW_LINE = "{new-line}";
-
-        /**
          * Default log format combining date-time, level, thread, message, and a new line.
          */
-        public static final String DEFAULT = DATETIME + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE + NEW_LINE;
+        public static final String DEFAULT = DATETIME + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE;
     }
 }

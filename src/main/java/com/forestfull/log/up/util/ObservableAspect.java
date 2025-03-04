@@ -40,10 +40,10 @@ public class ObservableAspect {
         if (placeholder == null || placeholder.trim().isEmpty()) {
             placeholder = LogFormatter.MessagePattern.DATETIME
                     + ' ' + LogFormatter.MessagePattern.LEVEL
-                    + " - " + LogFormatter.MessagePattern.MESSAGE + System.lineSeparator();
+                    + " - " + LogFormatter.MessagePattern.MESSAGE;
         }
 
-        placeholder = placeholder.replaceAll("\\" + LogFormatter.MessagePattern.THREAD + "\\\\", "");
+        placeholder += System.lineSeparator();
 
         StringBuilder argumentsBuilder;
 

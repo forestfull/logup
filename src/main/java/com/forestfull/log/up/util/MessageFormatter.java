@@ -51,10 +51,6 @@ public abstract class MessageFormatter {
                     messageFormatters[i] = new Thread();
                     break;
 
-                case LogFormatter.MessagePattern.NEW_LINE:
-                    messageFormatters[i] = new LineSeparator();
-                    break;
-
                 case LogFormatter.MessagePattern.MESSAGE:
                     messageFormatters[i] = new Message();
                     break;
@@ -97,35 +93,6 @@ public abstract class MessageFormatter {
                     .append(java.lang.Thread.currentThread().getName())
                     .append(com.forestfull.log.up.Level.COLOR.RESET)
                     .toString();
-        }
-    }
-
-    static class StackTrace extends MessageFormatter {
-
-        @Override
-        String call(com.forestfull.log.up.Level level, Object... args) {
-            final StringBuilder builder = new StringBuilder();
-            final StackTraceElement stackTraceElement = java.lang.Thread.currentThread().getStackTrace()[4];
-
-            String[] split = stackTraceElement.getClassName().split("\\.");
-            for (int i = 0; i < split.length - 1; i++)
-                builder.append(split[i].charAt(0)).append('.');
-
-            builder.append(split[split.length - 1])
-                    .append('.').append(stackTraceElement.getMethodName())
-                    .append('(').append(stackTraceElement.getFileName())
-                    .append(':').append(stackTraceElement.getLineNumber())
-                    .append(')');
-
-            return builder.toString();
-        }
-    }
-
-    static class LineSeparator extends MessageFormatter {
-
-        @Override
-        String call(final com.forestfull.log.up.Level level, final Object... args) {
-            return System.lineSeparator();
         }
     }
 

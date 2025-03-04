@@ -27,7 +27,7 @@ public @interface Observable {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      * @see LogFormatter.MessagePattern
      */
-    String placeholder() default LogFormatter.MessagePattern.DATETIME + ' ' + LogFormatter.MessagePattern.LEVEL + " - " + LogFormatter.MessagePattern.MESSAGE + LogFormatter.MessagePattern.NEW_LINE;
+    String placeholder() default LogFormatter.MessagePattern.DATETIME + ' ' + LogFormatter.MessagePattern.LEVEL + " - " + LogFormatter.MessagePattern.MESSAGE;
 
     /**
      * It is the threshold log level for output configuration.
