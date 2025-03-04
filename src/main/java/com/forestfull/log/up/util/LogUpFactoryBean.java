@@ -30,10 +30,6 @@ public class LogUpFactoryBean {
 
     static {
         configureProperties();
-
-        if (LogUpFactoryBean.level == null)
-            LogUpConfigLoader.loggingInitializeManual();
-
         defaultInitialize();
 
         final String[] splitWithDelimiter = MessageFormatter.splitWithDelimiter(logFormatter.getPlaceholder());
@@ -41,8 +37,10 @@ public class LogUpFactoryBean {
     }
 
     private static void defaultInitialize() {
-        if (LogUpFactoryBean.level == null)
+        if (LogUpFactoryBean.level == null) {
+            LogUpConfigLoader.loggingInitializeManual();
             LogUpFactoryBean.level = Level.ALL;
+        }
 
         if (LogUpFactoryBean.logFormatter == null)
             LogUpFactoryBean.logFormatter = LogFormatter.builder().build();
@@ -161,7 +159,8 @@ public class LogUpFactoryBean {
 
             LogUpFactoryBean.level = this.level;
             LogUpFactoryBean.logFormatter = this.logFormatter;
-            LogUpFactoryBean.fileRecorder = this.fileRecorder;;
+            LogUpFactoryBean.fileRecorder = this.fileRecorder;
+            ;
         }
     }
 }

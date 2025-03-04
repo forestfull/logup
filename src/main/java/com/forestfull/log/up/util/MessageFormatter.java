@@ -51,6 +51,10 @@ public abstract class MessageFormatter {
                     messageFormatters[i] = new Thread();
                     break;
 
+                case LogFormatter.MessagePattern.STACKTRACE:
+                    messageFormatters[i] = new StackTrace();
+                    break;
+
                 case LogFormatter.MessagePattern.NEW_LINE:
                     messageFormatters[i] = new LineSeparator();
                     break;
