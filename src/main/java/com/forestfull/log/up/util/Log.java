@@ -126,9 +126,8 @@ public class Log {
 
         final StringBuilder logMessage = new StringBuilder();
 
-        for (MessageFormatter messageFormatter : LogUpFactoryBean.messageFormatter) {
+        for (MessageFormatter messageFormatter : LogUpFactoryBean.messageFormatter)
             logMessage.append(messageFormatter.call(level, messages));
-        }
 
         logMessage.append(System.lineSeparator());
 
@@ -170,7 +169,7 @@ public class Log {
          * @param msg The log message to output.
          * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
-        protected static synchronized void console(final String msg) {
+        protected static void console(final String msg) {
             final Writer fdOut = new PrintWriter(new FileWriter(FileDescriptor.out));
 
             try {
@@ -187,8 +186,8 @@ public class Log {
          * @param msg The log message to output.
          * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
-        protected static synchronized void file(String msg) {
-            final FileRecorder fileRecorder = LogUpFactoryBean.fileRecorder;
+        protected static void file(String msg) {
+            final FileRecorder fileRecorder = LogUpFactoryBean.fileRecorder; // readonly
 
             String logFileDirectory = fileRecorder.getDirectory();
 
@@ -284,7 +283,7 @@ public class Log {
             write(Level.ERROR, msgList.toArray());
         }
 
-        protected static synchronized void initConsole() {
+        protected static void initConsole() {
             Level level = LogUpFactoryBean.level; // touch
             console("=================================================================================================================================================================" + System.lineSeparator());
             console("Log Up by forest full's vigfoot" + System.lineSeparator());
