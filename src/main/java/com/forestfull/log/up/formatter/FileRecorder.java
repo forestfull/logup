@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ConfigurationProperties(prefix = "logup.file-recode")
 public class FileRecorder {
     /**
      * The default format for the log file name.

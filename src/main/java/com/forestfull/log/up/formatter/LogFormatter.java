@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ConfigurationProperties(prefix = "logup.log-format")
 public class LogFormatter {
     /**
      * The format string for the log messages.
