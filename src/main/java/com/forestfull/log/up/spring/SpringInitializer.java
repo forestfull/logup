@@ -8,7 +8,6 @@ public class SpringInitializer extends Log.LogFactory implements ApplicationCont
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
-        applicationContext.getBeanFactory().registerSingleton("observableConfig", new ObservableConfig());
         Log.LogFactory.initConsole();
     }
 }

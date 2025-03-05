@@ -1,0 +1,5 @@
+logup:
+  level: INFO # ALL, INFO, WARN, ERROR, OFF
+  log-format:
+    placeholder: "{datetime} {level} {thread} - {msg}"
+    date-time-format: yyyy-MM-dd HH:mm:ss
