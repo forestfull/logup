@@ -26,6 +26,7 @@ public class Log {
     /**
      * Creates a LogFactory instance with the stack trace information.
      * <p> Note: Ensure that the currentSourceCodeLineNumber is not duplicated for the same clazz. </p>
+     * <p><b>Additionally, passing parameters as constants is recommended; otherwise, it may lead to performance degradation issues.</b></p>
      *
      * <p>Example.</p>
      * <code>Log.stacktrace(this.getClass(), 88).info("your logging Message")</code>
