@@ -102,6 +102,7 @@ public class ObservableAspect {
             case ALL:
             case DEBUG:
                 Log.writeForCustomPlaceholder(Level.DEBUG, placeholder, args);
+                break;
             case INFO:
                 Log.writeForCustomPlaceholder(Level.INFO, placeholder, args);
                 break;

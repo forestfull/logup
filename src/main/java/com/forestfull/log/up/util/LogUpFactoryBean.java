@@ -29,14 +29,18 @@ public class LogUpFactoryBean {
     static FileRecorder fileRecorder;
 
     static {
+        initialize();
+    }
+
+    protected static void initialize() {
         configureProperties();
-        defaultInitialize();
+        fixIncorrectProperties();
 
         final String[] splitWithDelimiter = MessageFormatter.splitWithDelimiter(logFormatter.getPlaceholder());
         LogUpFactoryBean.messageFormatter = MessageFormatter.replaceMatchPlaceholder(splitWithDelimiter);
     }
 
-    private static void defaultInitialize() {
+    private static void fixIncorrectProperties() {
         if (LogUpFactoryBean.level == null) {
             LogUpConfigLoader.loggingInitializeManual();
             LogUpFactoryBean.level = Level.ALL;
@@ -61,7 +65,13 @@ public class LogUpFactoryBean {
     }
 
     private static void configureProperties() {
-        LogUpProperties logUpProperties = LogUpConfigLoader.loadConfig();
+        LogUpProperties logUpProperties = null;
+
+        try {
+            logUpProperties = LogUpConfigLoader.loadConfig();
+
+        } catch (NoClassDefFoundError ignore) {}
+
         if (logUpProperties == null) return;
 
         Level level = logUpProperties.getLevel();

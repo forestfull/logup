@@ -118,7 +118,6 @@ public class Log {
     static void write(final Level level, final Object... messages) {
         if (level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
-        if (LogUpFactoryBean.logFormatter == null) return;
 
         final StringBuilder logMessage = new StringBuilder();
 
@@ -135,12 +134,11 @@ public class Log {
     static void writeForCustomPlaceholder(final Level level, final String placeHolder, final Object... messages) {
         if (level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
-        if (LogUpFactoryBean.logFormatter == null) return;
 
         final StringBuilder logMessage = new StringBuilder();
         logMessage.append(placeHolder
-                .replaceAll(LogFormatter.MessagePattern.DATETIME, LogUpFactoryBean.logFormatter.getDateTimeFormat().format(System.currentTimeMillis()))
-                .replaceAll(LogFormatter.MessagePattern.LEVEL, level.getColor() + level.name() + Level.COLOR.RESET));
+                .replaceAll("\\" + LogFormatter.MessagePattern.DATETIME, LogUpFactoryBean.logFormatter.getDateTimeFormat().format(System.currentTimeMillis()))
+                .replaceAll("\\" + LogFormatter.MessagePattern.LEVEL, level.getColor() + level.name() + Level.COLOR.RESET));
 
         for (Object message : messages)
             logMessage.append(message);
@@ -280,7 +278,7 @@ public class Log {
         }
 
         protected static void initConsole() {
-            Level level = LogUpFactoryBean.level; // touch
+            LogUpFactoryBean.initialize(); // touch
             console("=================================================================================================================================================================" + System.lineSeparator());
             console("Log Up by forest full's vigfoot" + System.lineSeparator());
             console("=================================================================================================================================================================" + System.lineSeparator());

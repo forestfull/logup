@@ -36,8 +36,9 @@ public class LogUpConfigLoader {
      *
      * @return LogUpProperties object with the loaded configuration or null if binding fails
      * @author <a href="https://vigfoot.com">Vigfoot</a>
+     * @throws NoClassDefFoundError "StandardEnvironment"
      */
-    public static LogUpProperties loadConfig() {
+    public static LogUpProperties loadConfig() throws NoClassDefFoundError {
         // Spring 환경 설정 초기화
         StandardEnvironment environment = new StandardEnvironment();
         MutablePropertySources propertySources = environment.getPropertySources();
