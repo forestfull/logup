@@ -1,2 +1,1 @@
 org.springframework.context.ApplicationContextInitializer=com.forestfull.log.up.spring.SpringInitializer
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.forestfull.log.up.spring.LogUpAutoConfiguration
