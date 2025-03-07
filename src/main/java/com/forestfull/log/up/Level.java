@@ -20,7 +20,7 @@ public enum Level {
     /**
      * All messages (lowest level).
      */
-    ALL(""),
+    ALL(COLOR.CYAN),
 
     /**
      * Debug messages (low level).

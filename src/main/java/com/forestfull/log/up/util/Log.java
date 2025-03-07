@@ -117,7 +117,7 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     static void write(final Level level, final Object... messages) {
-        if (level.compareTo(LogUpFactoryBean.level) < 0) return;
+        if (level != Level.ALL && level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
 
         final StringBuilder logMessage = new StringBuilder();
@@ -132,17 +132,16 @@ public class Log {
             LogFactory.file(logMessage.toString());
     }
 
-    static void writeForCustomPlaceholder(final Level level, final String placeHolder, final Object... messages) {
-        if (level.compareTo(LogUpFactoryBean.level) < 0) return;
+    static void writeWithoutMessageFormatter(final Level level, final Object... messages) {
+        if (level != Level.ALL && level.compareTo(LogUpFactoryBean.level) < 0) return;
         if (messages == null || messages.length == 0) return;
 
         final StringBuilder logMessage = new StringBuilder();
-        logMessage.append(placeHolder
-                .replaceAll("\\" + LogFormatter.MessagePattern.DATETIME, LogUpFactoryBean.logFormatter.getDateTimeFormat().format(System.currentTimeMillis()))
-                .replaceAll("\\" + LogFormatter.MessagePattern.LEVEL, level.getColor() + level.name() + Level.COLOR.RESET));
 
         for (Object message : messages)
             logMessage.append(message);
+
+        logMessage.append(System.lineSeparator());
 
         LogFactory.console(logMessage.toString());
         if (LogUpFactoryBean.fileRecorder != null)

@@ -9,6 +9,13 @@ import java.lang.annotation.*;
  * <p>AOP functionality is supported only in Spring projects.
  * <p>If declared without enabling "arguments" and "returnValue", only method call detection is logged.
  *
+ * <h3>Scope:
+ * <p>- Applies only to methods of beans managed by the Spring context.
+ *
+ * <h3>Caveats:
+ * <p>- Does not apply to methods of objects that are not registered as Spring beans.
+ * <p>- May not apply to final methods or classes due to proxy-based implementation.
+ *
  * @author <a href="https://vigfoot.com">Vigfoot</a>
  */
 @Documented

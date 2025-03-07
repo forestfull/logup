@@ -1,7 +1,6 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
-import com.forestfull.log.up.formatter.LogFormatter;
 import com.forestfull.log.up.spring.Observable;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,42 +34,33 @@ public class ObservableAspect {
         if (observable == null) return null;
 
         final Level level = observable.level();
-        String placeholder = observable.placeholder();
-
-        if (placeholder == null || placeholder.trim().isEmpty()) {
-            placeholder = LogFormatter.MessagePattern.DATETIME
-                    + ' ' + LogFormatter.MessagePattern.LEVEL
-                    + " - " + LogFormatter.MessagePattern.MESSAGE;
-        }
-
-        placeholder += System.lineSeparator();
 
         StringBuilder argumentsBuilder;
 
         if (observable.arguments()) {
             argumentsBuilder = new StringBuilder();
-            argumentsBuilder.append("@Observable detected calling: ").append(method.getName());
+            argumentsBuilder.append("-- @Observable detected calling: ").append(level.getColor()).append(method.getName());
 
             if (method.getParameterTypes().length != 0) {
-                argumentsBuilder.append(" -> (");
+                argumentsBuilder.append(" -> ");
                 final Object[] joinPointArgs = joinPoint.getArgs();
 
                 for (int i = 0; i < joinPointArgs.length; i++) {
-                    argumentsBuilder.append("(").append(joinPointArgs[i].getClass().getName()).append(")").append(joinPointArgs[i])
-                            .append(i + 1 < joinPointArgs.length ? ", " : "");
+                    argumentsBuilder.append("(").append(joinPointArgs[i].getClass().getName()).append(") \"").append(joinPointArgs[i])
+                            .append(i + 1 < joinPointArgs.length ? "\", " : "\"");
                 }
-                argumentsBuilder.append(')');
+                argumentsBuilder.append(Level.COLOR.RESET);
 
             } else {
                 argumentsBuilder.append("()");
             }
 
-            logOfLevel(placeholder, level, argumentsBuilder);
+            logOfLevel(level, argumentsBuilder);
         } else if (!observable.returnValue()) {
             argumentsBuilder = new StringBuilder();
-            argumentsBuilder.append("@Observable detected calling: ").append(method.getName());
+            argumentsBuilder.append("-- @Observable detected calling: ").append(level.getColor()).append(method.getName()).append(Level.COLOR.RESET);
 
-            logOfLevel(placeholder, level, argumentsBuilder);
+            logOfLevel(level, argumentsBuilder);
         }
 
         // Execute the method
@@ -78,12 +68,13 @@ public class ObservableAspect {
 
         if (observable.returnValue()) {
             argumentsBuilder = new StringBuilder();
-            argumentsBuilder.append("@Observable detected return: ").append(method.getName());
+            argumentsBuilder.append("-- @Observable detected  return: ").append(level.getColor()).append(method.getName());
 
             if (method.getReturnType() != Void.TYPE)
-                argumentsBuilder.append(" <- (").append("(").append(returnValue.getClass().getName()).append(")\"").append(returnValue).append("\")");
+                argumentsBuilder.append(" <- (").append(returnValue.getClass().getName()).append(") \"").append(returnValue).append("\"");
+            argumentsBuilder.append(Level.COLOR.RESET);
 
-            logOfLevel(placeholder, level, argumentsBuilder);
+            logOfLevel(level, argumentsBuilder);
         }
 
         return returnValue;
@@ -92,25 +83,26 @@ public class ObservableAspect {
     /**
      * Logs the message at the specified level using the provided placeholder and arguments.
      *
-     * @param placeholder the placeholder format for the log message
-     * @param level       the log level
-     * @param args        the arguments for the log message
+     * @param level the log level
+     * @param args  the arguments for the log message
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
-    private static void logOfLevel(String placeholder, final Level level, final Object... args) {
+    private static void logOfLevel(final Level level, final Object... args) {
         switch (level) {
             case ALL:
+                Log.writeWithoutMessageFormatter(Level.ALL, args);
+                break;
             case DEBUG:
-                Log.writeForCustomPlaceholder(Level.DEBUG, placeholder, args);
+                Log.writeWithoutMessageFormatter(Level.DEBUG, args);
                 break;
             case INFO:
-                Log.writeForCustomPlaceholder(Level.INFO, placeholder, args);
+                Log.writeWithoutMessageFormatter(Level.INFO, args);
                 break;
             case WARN:
-                Log.writeForCustomPlaceholder(Level.WARN, placeholder, args);
+                Log.writeWithoutMessageFormatter(Level.WARN, args);
                 break;
             case ERROR:
-                Log.writeForCustomPlaceholder(Level.ERROR, placeholder, args);
+                Log.writeWithoutMessageFormatter(Level.ERROR, args);
                 break;
         }
     }
