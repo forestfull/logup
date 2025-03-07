@@ -1,9 +1,12 @@
 package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.formatter.LogFormatter;
+import oshi.SystemInfo;
+import oshi.hardware.CentralProcessor;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +46,10 @@ public abstract class MessageFormatter {
                     messageFormatters[i] = new DateMessageFormatter();
                     break;
 
+                case LogFormatter.MessagePattern.CPU_TICK:
+                    messageFormatters[i] = new CPUTick();
+                    break;
+
                 case LogFormatter.MessagePattern.LEVEL:
                     messageFormatters[i] = new Level();
                     break;
@@ -69,6 +76,41 @@ public abstract class MessageFormatter {
         @Override
         public String call(final com.forestfull.log.up.Level level, final Object... args) {
             return LogUpFactoryBean.logFormatter.getDateTimeFormat().format(System.currentTimeMillis());
+        }
+    }
+
+    static class CPUTick extends MessageFormatter {
+
+        private static final CentralProcessor processor = new SystemInfo().getHardware().getProcessor();
+        private static final long MINIMUM_MILLISECONDS = 1000L;
+
+        private static long prevTimeMilliSeconds = System.currentTimeMillis();
+        private static long[] prevTicks = processor.getSystemCpuLoadTicks();
+        private static String cpu_usage = "/----------/";
+
+        @Override
+        String call(com.forestfull.log.up.Level level, Object... args) {
+            if (System.currentTimeMillis() - prevTimeMilliSeconds < MINIMUM_MILLISECONDS) return cpu_usage;
+
+            long totalCpu = 0;
+            long[] ticks = processor.getSystemCpuLoadTicks();
+            prevTimeMilliSeconds = System.currentTimeMillis();
+
+            for (int i = 0; i < ticks.length; i++) {
+                totalCpu += ticks[i] - prevTicks[i];
+            }
+
+            int idleIndex = CentralProcessor.TickType.IDLE.getIndex();
+            int cpuUsage = (int) Math.ceil((totalCpu - (ticks[idleIndex] - prevTicks[idleIndex])) / (double) totalCpu * 10);
+            cpu_usage = "/";
+
+            for (int i = 0; i < 10; i++)
+                cpu_usage += cpuUsage > i ? '*' : '-';
+
+            cpu_usage += '/';
+            prevTicks = ticks;
+
+            return cpu_usage;
         }
     }
 

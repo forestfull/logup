@@ -63,6 +63,12 @@ public class LogFormatter {
          */
         public static final String DATETIME = "{datetime}";
 
+
+        /**
+         * This feature measures CPU usage at intervals as short as 1 second and visualizes the results.
+         */
+        public static final String CPU_TICK = "{cpu}";
+
         /**
          * Placeholder for the thread that generated the log.
          */
@@ -88,6 +94,6 @@ public class LogFormatter {
         /**
          * Default log format combining date-time, level, thread, message, and a new line.
          */
-        public static final String DEFAULT = DATETIME + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE;
+        public static final String DEFAULT = DATETIME + ' ' + CPU_TICK + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE;
     }
 }
