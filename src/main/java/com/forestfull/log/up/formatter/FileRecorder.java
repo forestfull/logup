@@ -1,7 +1,9 @@
 package com.forestfull.log.up.formatter;
 
-import lombok.*;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
 
