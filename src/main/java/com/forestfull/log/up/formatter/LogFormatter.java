@@ -32,8 +32,7 @@ public class LogFormatter extends Log {
         try {
             this.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
         } catch (NullPointerException | IllegalArgumentException e) {
-            // TODO 에러 처리 메시지
-            writeWithoutMessageFormatter(Level.ERROR, e.getMessage());
+            writeWithoutMessageFormatter(Level.ERROR, "LogFormatter's DateTimeFormat changed to default pattern because the given date format pattern is invalid");
             this.dateTimeFormat = new SimpleDateFormat(getDefaultDateTimeFormat());
         }
     }

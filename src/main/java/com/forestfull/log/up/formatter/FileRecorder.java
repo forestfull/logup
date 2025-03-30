@@ -46,8 +46,7 @@ public class FileRecorder extends Log {
         try {
             this.dateFormat = new SimpleDateFormat(dateFormat);
         } catch (NullPointerException | IllegalArgumentException e) {
-            // TODO 에러 처리 메시지
-            writeWithoutMessageFormatter(Level.ERROR, e.getMessage());
+            writeWithoutMessageFormatter(Level.ERROR, "FileRecorder's DateFormat changed to default pattern because the given date format pattern is invalid");
             this.dateFormat = new SimpleDateFormat(getDefaultDateFormat());
         }
     }
