@@ -1,5 +1,7 @@
 package com.forestfull.log.up.formatter;
 
+import com.forestfull.log.up.Level;
+import com.forestfull.log.up.util.Log;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +18,7 @@ import java.text.SimpleDateFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileRecorder {
+public class FileRecorder extends Log {
     /**
      * The default format for the log file name.
      */
@@ -45,6 +47,7 @@ public class FileRecorder {
             this.dateFormat = new SimpleDateFormat(dateFormat);
         } catch (NullPointerException | IllegalArgumentException e) {
             // TODO 에러 처리 메시지
+            writeWithoutMessageFormatter(Level.ERROR, e.getMessage());
             this.dateFormat = new SimpleDateFormat(getDefaultDateFormat());
         }
     }

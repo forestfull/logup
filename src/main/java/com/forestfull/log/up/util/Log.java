@@ -129,6 +129,7 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     static void write(final Level level, final Object... messages) {
+        if (LogUpFactoryBean.logUpProperties == null) return;
         if (level != Level.ALL && level.compareTo(LogUpFactoryBean.logUpProperties.getLevel()) < 0) return;
         if (messages == null || messages.length == 0) return;
 
@@ -144,7 +145,8 @@ public class Log {
             LogFactory.file(logMessage.toString());
     }
 
-    static void writeWithoutMessageFormatter(final Level level, final Object... messages) {
+    protected static void writeWithoutMessageFormatter(final Level level, final Object... messages) {
+        if (LogUpFactoryBean.logUpProperties == null) return;
         if (level != Level.ALL && level.compareTo(LogUpFactoryBean.logUpProperties.getLevel()) < 0) return;
         if (messages == null || messages.length == 0) return;
 

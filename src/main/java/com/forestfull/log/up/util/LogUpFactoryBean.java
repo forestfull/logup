@@ -16,7 +16,9 @@ import java.util.Optional;
  * <li><b>OFF</b>
  * <li><b>ERROR</b>
  * <li><b>WARN</b>
+ * <li><b>TEST</b>
  * <li><b>INFO</b>
+ * <li><b>DEBUG</b>
  * <li><b>ALL</b>
  * </ul>
  *
@@ -125,7 +127,9 @@ public class LogUpFactoryBean {
          * <li><b>OFF</b>
          * <li><b>ERROR</b> (high)
          * <li><b>WARN</b>
-         * <li><b>INFO</b> (row)
+         * <li><b>TEST</b>
+         * <li><b>INFO</b>
+         * <li><b>DEBUG</b> (row)
          * <li><b>ALL</b>
          * </ul>
          *
@@ -137,7 +141,7 @@ public class LogUpFactoryBean {
             try {
                 this.level = Level.valueOf(String.valueOf(level).toUpperCase());
             } catch (IllegalArgumentException e) {
-                // TODO 에러 처리 메시지
+                Log.writeWithoutMessageFormatter(Level.ERROR, "not a valid level: " + level);
                 this.level = Level.ALL;
             }
             return this;
@@ -152,9 +156,8 @@ public class LogUpFactoryBean {
          * <b>core method</b> of properties's configuration
          */
         public void start() {
-            if (LogUpFactoryBean.logUpProperties != null){
-                // TIP: 이미 빌드 되있으면 다시 안함
-                // TODO 에러 처리 메시지
+            if (LogUpFactoryBean.logUpProperties != null) {
+                Log.writeWithoutMessageFormatter(Level.ERROR, "LogUp already started");
                 return;
             }
 

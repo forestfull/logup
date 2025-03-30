@@ -8,6 +8,7 @@ import lombok.Getter;
  *   <li><b>OFF</b> - No logging (highest level).
  *   <li><b>ERROR</b> - Error messages (high level).
  *   <li><b>WARN</b> - Warning messages.
+ *   <li><b>TEST</b> - Unit Test messages (TDD).
  *   <li><b>INFO</b> - Informational messages.
  *   <li><b>DEBUG</b> - Debug messages (low level).
  *   <li><b>ALL</b> - All messages (lowest level).

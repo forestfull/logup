@@ -1,5 +1,7 @@
 package com.forestfull.log.up.formatter;
 
+import com.forestfull.log.up.Level;
+import com.forestfull.log.up.util.Log;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
@@ -13,7 +15,7 @@ import java.text.SimpleDateFormat;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LogFormatter {
+public class LogFormatter extends Log {
     /**
      * The format string for the log messages.
      */
@@ -31,6 +33,7 @@ public class LogFormatter {
             this.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
         } catch (NullPointerException | IllegalArgumentException e) {
             // TODO 에러 처리 메시지
+            writeWithoutMessageFormatter(Level.ERROR, e.getMessage());
             this.dateTimeFormat = new SimpleDateFormat(getDefaultDateTimeFormat());
         }
     }
