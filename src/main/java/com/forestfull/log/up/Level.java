@@ -23,11 +23,6 @@ public enum Level {
     ALL(COLOR.CYAN),
 
     /**
-     * Test Unit messages (development mode).
-     */
-    TEST(COLOR.EMPTY),
-
-    /**
      * Debug messages (low level).
      */
     DEBUG(COLOR.GREEN),
@@ -36,6 +31,11 @@ public enum Level {
      * Informational messages.
      */
     INFO(COLOR.BLUE),
+
+    /**
+     * Test Unit messages (development mode).
+     */
+    TEST(COLOR.EMPTY),
 
     /**
      * Warning messages.

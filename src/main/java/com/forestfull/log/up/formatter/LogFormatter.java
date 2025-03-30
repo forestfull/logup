@@ -70,7 +70,7 @@ public class LogFormatter {
         /**
          * Placeholder for the thread that generated the log.
          */
-        public static final String LOCATION = "{location}";
+        public static final String THREAD = "{location}";
 
         /**
          * Placeholder for the log level.
@@ -87,6 +87,6 @@ public class LogFormatter {
         /**
          * Default log format combining date-time, level, thread, message, and a new line.
          */
-        public static final String DEFAULT = DATETIME + ' ' + CPU_TICK + ' ' + LEVEL + ' ' + LOCATION + " - " + MESSAGE;
+        public static final String DEFAULT = DATETIME + ' ' + CPU_TICK + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE;
     }
 }

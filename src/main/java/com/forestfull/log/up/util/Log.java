@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A utility class for logging messages at different levels (INFO, WARN, ERROR).
@@ -137,7 +138,7 @@ public class Log {
             logMessage.append(messageFormatter.call(level, messages));
 
         logMessage.append(System.lineSeparator());
-        
+
         LogFactory.console(logMessage.toString());
         if (LogUpFactoryBean.fileRecorder != null)
             LogFactory.file(logMessage.toString());
@@ -249,7 +250,10 @@ public class Log {
             final List<Object> msgList = new ArrayList<>(Arrays.asList(msg));
             if (StringUtils.hasText(buffer)) msgList.add(buffer);
 
-            write(Level.TEST, msgList.toArray());
+            write(Level.TEST, msgList.stream()
+                    .map(String::valueOf)
+                    .map(m -> m.replaceAll("\\u001B\\[[0-9]+m", ""))
+                    .toArray());
         }
 
         /**

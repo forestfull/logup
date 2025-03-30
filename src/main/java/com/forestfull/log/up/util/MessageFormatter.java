@@ -53,8 +53,8 @@ public abstract class MessageFormatter {
                     messageFormatters[i] = new Level();
                     break;
 
-                case LogFormatter.MessagePattern.LOCATION:
-                    messageFormatters[i] = new SourceLocation();
+                case LogFormatter.MessagePattern.THREAD:
+                    messageFormatters[i] = new Thread();
                     break;
 
                 case LogFormatter.MessagePattern.MESSAGE:
@@ -124,7 +124,7 @@ public abstract class MessageFormatter {
         }
     }
 
-    static class SourceLocation extends MessageFormatter {
+    static class Thread extends MessageFormatter {
         private static final String PID = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
 
         @Override
