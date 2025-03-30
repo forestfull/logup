@@ -1,34 +1,26 @@
-# Log Up (by <a href="https://forestfull.com">Forestfull</a>'s <a href="https://vigfoot.com">vigfoot</a>)
+# Log Up
 
-## Log Up is a simple and efficient Java logging library designed for easy usage without the need for instantiation.
+**Log Up** is a simple and efficient Java logging library that can be easily used without instantiation.  
+It supports the `@Observable` annotation for tracing method executions in a Spring environment and provides various logging features.
 
-(Log Up는 인스턴스화할 필요 없이 간단하게 사용할 수 있는 자바 로그 라이브러리입니다.)
-
-## Additionally, it supports method tracking in Spring projects with the `@Observable` annotation.
-
-(또한, 스프링 프로젝트에서 `@Observable` 애노테이션을 통해 메서드 추적을 지원합니다.)
-
-## Supported environments
-
-- JDK 1.8 ~ Current
-- The @Observable method tracking feature is only available in Spring.   
-  (스프링에서만 @Observable 메서드 추적 기능을 사용할 수 있습니다.)
+(**Log Up**은 인스턴스화 없이 쉽게 사용할 수 있는 간단하고 효율적인 Java 로깅 라이브러리입니다.   
+Spring 환경에서 메서드 실행을 추적할 수 있는 `@Observable` 어노테이션을 지원하며, 다양한 로깅 기능을 제공합니다.)
 
 ## Features
 
-- **Simple Logging**: Use `Log.info(arg)` without the need for instantiation.  
-  (**간단한 로깅**: 인스턴스화할 필요 없이 `Log.info(arg)`를 사용합니다.)
-
-- **Spring Integration**: Track method executions in Spring beans with the `@Observable` annotation.  
-  (**스프링 통합**: 스프링 빈의 메서드를 `@Observable` 애노테이션으로 추적합니다.)
-
-- Log input arguments and return values based on configuration of `@Observable` annotation.  
-  (`@Observable` 설정에 따라 입력 인자와 반환 값을 로그로 기록할 수 있습니다.)
+- **Simple Logging**: Messages can be logged using static methods like `Log.info("message")`, `Log.warn("message")`, and `Log.error("message")`.   
+(**간단한 로깅**: `Log.info("메시지")`, `Log.warn("메시지")`, `Log.error("메시지")` 같은 정적 메서드로 메시지를 로깅할 수 있습니다.)
+- **Spring Integration**: Use the `@Observable` annotation to trace method executions in Spring beans, logging input arguments and return values.   
+(**Spring 통합**: Spring 빈에서 메서드 실행을 추적하기 위해 `@Observable` 어노테이션을 사용해 입력 인자와 반환 값을 로깅할 수 있습니다.)
+- **Source Code Location Tracking**: The `location()` method retrieves the caller's source code location (class, method, line number).   
+(**소스 코드 위치 추적**: `location()` 메서드로 호출자의 소스 코드 위치(클래스, 메서드, 줄 번호)를 얻을 수 있습니다.)
+- **Test Logging**: The `test("message")` method logs messages without color formatting, making it suitable for test environments.   
+(**테스트 로깅**: 색상 포맷팅 없이 메시지를 로깅하는 `test("메시지")` 메서드를 제공하여 테스트 환경에 적합합니다.)
 
 ## Installation
 
-Add the following dependency to your project to use Forestfull Log Up  
-(Forestfull Log Up를 사용하려면 다음 종속성을 프로젝트에 추가하세요)
+If you are using Maven, add the following dependency to your `pom.xml`   
+(Maven을 사용하는 경우, `pom.xml`에 다음 의존성을 추가하세요.)
 
 ```xml
 <dependency>
@@ -38,50 +30,66 @@ Add the following dependency to your project to use Forestfull Log Up
 </dependency>
 ```
 
-## Usage
-
-- Simple Logging  
-  You can log messages directly without instantiating the Log class  
-  (Log 클래스를 인스턴스화할 필요 없이 바로 로그 메시지를 기록할 수 있습니다)
+## Usage Examples
+Simple Logging   
+(간단한 로깅)
 
 ```java
+import com.forestfull.log.up.util.Log;
 
-public void mySourceCode(String input) {
-    Log.info("This is an informational message.");
-    Log.warn("This is a warning message.");
-    Log.error("This is a error message.");
-}
-
-```
-
-- Method Tracking in Spring  
-  Annotate your Spring beans' methods with `@Observable` to enable tracking of method executions, input arguments, and return values  
-  (스프링 빈의 메서드를 `@Observable` 애노테이션으로 추적하면 메서드 실행, 입력 인자, 반환 값을 기록할 수 있습니다)
-
-```java
-import org.springframework.stereotype.Service;
-import com.forestfull.log.up.Observable;
-
-@Service
-public class MyService {
-
-    @Observable(arguments = true, returnValue = true)
-    public String process(String input) {
-        return "Processed: " + input;
+public class MyClass {
+    public void myMethod() {
+        Log.info("정보 메시지입니다.");
+        Log.warn("경고 메시지입니다.");
+        Log.error("에러 메시지입니다.");
     }
 }
 ```
 
-In this example, every time process is called,   
-Log Up will log the method execution along with the input arguments and return values,   
-based on the configuration set for the @Observable annotation.   
-(이 예시에서는 process 메서드가 호출될 때마다 Log Up이 메서드 실행과 입력 인자, 반환 값을 @Observable 애노테이션 설정에 따라 기록합니다.)
+## Method Tracing in Spring
 
---- 
+To trace method executions in a Spring environment, use the `@Observable` annotation   
+(Spring 환경에서 메서드 실행을 추적하려면 @Observable 어노테이션을 사용하세요.)
 
-I hope this continues seamlessly for you!  
-Let me know if there is anything else you need assistance with or  
-if there are any more details you'd like to add.
+```java
+import com.forestfull.log.up.annotation.Observable;
+import org.springframework.stereotype.Service;
 
-(이 설명이 여러분에게 원활하게 도움이 되길 바랍니다.  
-추가 도움이 필요하시거나 더 많은 세부 사항을 추가하고 싶으시다면 알려주세요.)
+@Service
+public class MyService {
+    @Observable(arguments = true, returnValue = true)
+    public String process(String input) {
+        return "처리됨: " + input;
+    }
+}
+```
+
+## Source Code Location Tracking
+
+To identify the caller’s location, use the `location` method   
+(호출자의 위치를 확인하려면 location 메서드를 활용하세요.)
+
+```java
+import com.forestfull.log.up.util.Log;
+
+public class MyClass {
+    public void myMethod() {
+        Log.location(MyClass.class, 4).info("정보 메시지입니다.");
+    }
+}
+```
+
+## Test Logging
+
+To log without colors for Test-Driven Development (TDD), use the `test` method   
+(TDD를 위해 색상 없이 로깅하려면 test 메서드를 활용하세요.)
+
+```java
+import com.forestfull.log.up.util.Log;
+
+public class MyClass {
+    public void myTestMethod() {
+        Log.test("색상 없는 테스트 메시지입니다.");
+    }
+}
+```
