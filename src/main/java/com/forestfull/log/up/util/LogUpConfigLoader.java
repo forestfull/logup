@@ -132,9 +132,9 @@ public class LogUpConfigLoader {
         Log.LogFactory.console("logup.level=INFO" + System.lineSeparator());
         Log.LogFactory.console("logup.log-format.placeholder=" + LogFormatter.MessagePattern.DEFAULT + System.lineSeparator());
         Log.LogFactory.console("logup.log-format.date-time-format=" + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.directory=log/" + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.placeholder=" + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator());
-        Log.LogFactory.console("logup.file-recode.date-format=" + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator());
+        Log.LogFactory.console("logup.file-record.directory=log/" + System.lineSeparator());
+        Log.LogFactory.console("logup.file-record.placeholder=" + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator());
+        Log.LogFactory.console("logup.file-record.date-format=" + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator());
         Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
         Log.LogFactory.console(System.lineSeparator() + " # Priority.2 - classpath: application.yml or (config/application.yml, config/application.yaml, application.yaml) " + System.lineSeparator());
         Log.LogFactory.console("logup:" + System.lineSeparator());
@@ -142,7 +142,7 @@ public class LogUpConfigLoader {
         Log.LogFactory.console("  log-format:" + System.lineSeparator());
         Log.LogFactory.console("    placeholder: \"" + LogFormatter.MessagePattern.DEFAULT + "\"" + System.lineSeparator());
         Log.LogFactory.console("    date-time-format: " + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator());
-        Log.LogFactory.console("  file-recode:" + System.lineSeparator());
+        Log.LogFactory.console("  file-record:" + System.lineSeparator());
         Log.LogFactory.console("    directory: log/ # is default" + System.lineSeparator());
         Log.LogFactory.console("    placeholder: " + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator());
         Log.LogFactory.console("    date-format: " + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator());
