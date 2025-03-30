@@ -6,7 +6,8 @@ import com.forestfull.log.up.formatter.LogFormatter;
 import com.forestfull.log.up.spring.LogUpProperties;
 import org.springframework.util.StringUtils;
 
-import java.text.SimpleDateFormat;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * LogUp's general Configuration (LogUp 전역 환경 설정)
@@ -23,85 +24,61 @@ import java.text.SimpleDateFormat;
  * @see Log
  */
 public class LogUpFactoryBean {
-    static Level level;
+    static LogUpProperties logUpProperties;
     static MessageFormatter[] messageFormatter;
-    static LogFormatter logFormatter;
-    static FileRecorder fileRecorder;
 
     static {
         initialize();
     }
 
     protected static void initialize() {
-        configureProperties();
-        fixIncorrectProperties();
+        if (configureProperties() == null) {
+            LogUpConfigLoader.loggingInitializeManual();
 
-        final String[] splitWithDelimiter = MessageFormatter.splitWithDelimiter(logFormatter.getPlaceholder());
-        LogUpFactoryBean.messageFormatter = MessageFormatter.replaceMatchPlaceholder(splitWithDelimiter);
+        } else {
+            final String[] splitWithDelimiter = MessageFormatter.splitWithDelimiter(logUpProperties.getLogFormat().getPlaceholder());
+            LogUpFactoryBean.messageFormatter = MessageFormatter.replaceMatchPlaceholder(splitWithDelimiter);
+
+        }
     }
 
-    private static void fixIncorrectProperties() {
-        if (LogUpFactoryBean.level == null) {
-            LogUpConfigLoader.loggingInitializeManual();
-            LogUpFactoryBean.level = Level.ALL;
+    private static LogUpProperties configureProperties() {
+        try {
+            LogUpFactoryBean.logUpProperties = LogUpConfigLoader.loadConfig();
+        } catch (NoClassDefFoundError ignore) {
         }
 
-        if (LogUpFactoryBean.logFormatter == null)
-            LogUpFactoryBean.logFormatter = LogFormatter.builder().build();
+        if (LogUpFactoryBean.logUpProperties == null) return null;
 
-        if (LogUpFactoryBean.logFormatter.getPlaceholder() == null)
-            LogUpFactoryBean.logFormatter.setPlaceholder(LogFormatter.getDefaultPlaceHolder());
+        final Optional<LogFormatter> logFormatOptional = Optional.ofNullable(logUpProperties.getLogFormat());
+        final LogFormatter logFormatter = LogFormatter.builder().build(); // TIP: 초기 기본값은 builder에서 지정
 
-        if (LogUpFactoryBean.logFormatter.getDateTimeFormat() == null)
-            LogUpFactoryBean.logFormatter.setDateTimeFormat(LogFormatter.getDefaultDateTimeFormat());
+        if (logFormatOptional.isPresent()) {
+            final LogFormatter logFormat = logFormatOptional.get();
+            if (Objects.nonNull(logFormat.getDateTimeFormat())) logFormatter.setDateTimeFormat(logFormat.getDateTimeFormat());
+            if (StringUtils.hasText(logFormat.getPlaceholder())) logFormatter.setPlaceholder(logFormat.getPlaceholder());
+        }
 
-        if (LogUpFactoryBean.fileRecorder == null) return;
+        final Optional<FileRecorder> fileRecorderOptional = Optional.ofNullable(logUpProperties.getFileRecord());
+        FileRecorder fileRecorder = null; // TIP: 초기값은 null(= 선언 안할 시 해당 기능 미제공)
 
-        if (LogUpFactoryBean.fileRecorder.getPlaceholder() == null)
-            LogUpFactoryBean.fileRecorder.setPlaceholder(FileRecorder.getDefaultPlaceHolder());
+        if (fileRecorderOptional.isPresent()) {
+            fileRecorder = FileRecorder.builder().build(); // TIP: 기본값은 builder에서 지정
+            FileRecorder fileRecord = fileRecorderOptional.get();
 
-        if (LogUpFactoryBean.fileRecorder.getDateFormat() == null)
-            LogUpFactoryBean.fileRecorder.setDateFormat(FileRecorder.getDefaultDateFormat());
-    }
-
-    private static void configureProperties() {
-        LogUpProperties logUpProperties = null;
-
-        try {
-            logUpProperties = LogUpConfigLoader.loadConfig();
-
-        } catch (NoClassDefFoundError ignore) {}
-
-        if (logUpProperties == null) return;
-
-        Level level = logUpProperties.getLevel();
-        if (level == null) return;
-        if (logUpProperties.getLogFormat() == null) return;
-
-        final String logFormatPlaceholder = logUpProperties.getLogFormat().getPlaceholder();
-        final SimpleDateFormat logFormatDateTimeFormat = logUpProperties.getLogFormat().getDateTimeFormat();
-
-        FileRecorder fileRecord = logUpProperties.getFileRecord();
-        if (fileRecord != null && fileRecord.getDateFormat() != null) {
-            fileRecord = FileRecorder.builder()
-                    .dateFormat(fileRecord.getDateFormat())
-                    .build();
-
-            if (StringUtils.hasText(fileRecord.getDirectory())) fileRecord.setDirectory(fileRecord.getDirectory());
-            if (StringUtils.hasText(fileRecord.getPlaceholder())) fileRecord.setDirectory(fileRecord.getPlaceholder());
+            if (Objects.nonNull(fileRecord.getDateFormat())) fileRecorder.setDateFormat(fileRecord.getDateFormat());
+            if (StringUtils.hasText(fileRecord.getDirectory())) fileRecorder.setDirectory(fileRecord.getDirectory());
+            if (StringUtils.hasText(fileRecord.getPlaceholder())) fileRecorder.setDirectory(fileRecord.getPlaceholder());
         }
 
         LogUpFactoryBean.builder()
-                .level(level)
-                .logFormatter(LogFormatter.builder().dateTimeFormat(logFormatDateTimeFormat).placeholder(logFormatPlaceholder).build())
-                .fileRecorder(fileRecord)
+                .level(logUpProperties.getLevel())
+                .poolSize(logUpProperties.getPoolSize())
+                .logFormatter(logFormatter)
+                .fileRecorder(fileRecorder)
                 .start();
-    }
 
-    LogUpFactoryBean(final LogFormatter logFormatter, final FileRecorder fileRecorder, final Level level) {
-        LogUpFactoryBean.logFormatter = logFormatter;
-        LogUpFactoryBean.fileRecorder = fileRecorder;
-        LogUpFactoryBean.level = level;
+        return LogUpFactoryBean.logUpProperties;
     }
 
     public static LogUpFactoryBeanBuilder builder() {
@@ -112,6 +89,7 @@ public class LogUpFactoryBean {
         private LogFormatter logFormatter;
         private FileRecorder fileRecorder;
         private Level level;
+        private Integer poolSize;
 
         LogUpFactoryBeanBuilder() {
         }
@@ -159,18 +137,34 @@ public class LogUpFactoryBean {
             try {
                 this.level = Level.valueOf(String.valueOf(level).toUpperCase());
             } catch (IllegalArgumentException e) {
+                // TODO 에러 처리 메시지
                 this.level = Level.ALL;
             }
             return this;
         }
 
-        public void start() {
-            if (LogUpFactoryBean.level != null) return; //TIP 이미 빌드 되있으면 다시 안함
+        public LogUpFactoryBeanBuilder poolSize(final int poolSize) {
+            this.poolSize = poolSize;
+            return this;
+        }
 
-            LogUpFactoryBean.level = this.level;
-            LogUpFactoryBean.logFormatter = this.logFormatter;
-            LogUpFactoryBean.fileRecorder = this.fileRecorder;
-            ;
+        /**
+         * <b>core method</b> of properties's configuration
+         */
+        public void start() {
+            if (LogUpFactoryBean.logUpProperties != null){
+                // TIP: 이미 빌드 되있으면 다시 안함
+                // TODO 에러 처리 메시지
+                return;
+            }
+
+            final LogUpProperties properties = new LogUpProperties();
+            properties.setLevel(this.level);
+            properties.setPoolSize(this.poolSize);
+            properties.setLogFormat(this.logFormatter);
+            properties.setFileRecord(this.fileRecorder);
+
+            LogUpFactoryBean.logUpProperties = properties;
         }
     }
 }

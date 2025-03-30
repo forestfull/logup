@@ -74,7 +74,7 @@ public abstract class MessageFormatter {
 
         @Override
         public String call(final com.forestfull.log.up.Level level, final Object... args) {
-            return LogUpFactoryBean.logFormatter.getDateTimeFormat().format(System.currentTimeMillis());
+            return LogUpFactoryBean.logUpProperties.getLogFormat().getDateTimeFormat().format(System.currentTimeMillis());
         }
     }
 

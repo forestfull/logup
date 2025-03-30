@@ -129,7 +129,7 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     static void write(final Level level, final Object... messages) {
-        if (level != Level.ALL && level.compareTo(LogUpFactoryBean.level) < 0) return;
+        if (level != Level.ALL && level.compareTo(LogUpFactoryBean.logUpProperties.getLevel()) < 0) return;
         if (messages == null || messages.length == 0) return;
 
         final StringBuilder logMessage = new StringBuilder();
@@ -140,12 +140,12 @@ public class Log {
         logMessage.append(System.lineSeparator());
 
         LogFactory.console(logMessage.toString());
-        if (LogUpFactoryBean.fileRecorder != null)
+        if (LogUpFactoryBean.logUpProperties.getFileRecord() != null)
             LogFactory.file(logMessage.toString());
     }
 
     static void writeWithoutMessageFormatter(final Level level, final Object... messages) {
-        if (level != Level.ALL && level.compareTo(LogUpFactoryBean.level) < 0) return;
+        if (level != Level.ALL && level.compareTo(LogUpFactoryBean.logUpProperties.getLevel()) < 0) return;
         if (messages == null || messages.length == 0) return;
 
         final StringBuilder logMessage = new StringBuilder();
@@ -156,7 +156,7 @@ public class Log {
         logMessage.append(System.lineSeparator());
 
         LogFactory.console(logMessage.toString());
-        if (LogUpFactoryBean.fileRecorder != null)
+        if (LogUpFactoryBean.logUpProperties.getFileRecord() != null)
             LogFactory.file(logMessage.toString());
     }
 
@@ -193,7 +193,7 @@ public class Log {
          * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
         protected static void file(String msg) {
-            final FileRecorder fileRecorder = LogUpFactoryBean.fileRecorder; // readonly
+            final FileRecorder fileRecorder = LogUpFactoryBean.logUpProperties.getFileRecord(); // readonly
 
             String logFileDirectory = fileRecorder.getDirectory();
 
@@ -229,7 +229,7 @@ public class Log {
                 }
 
                 final FileOutputStream outputStream = new FileOutputStream(logFile, true);
-                String plainMessage = msg.replaceAll("\\u001B\\[[0-9]+m", "");
+                String plainMessage = msg.replaceAll("\\u001B\\[[0-9]+m", ""); // TIP: 치환 작업 - 파일 쓰기에는 콘솔 색상 아스키 코드 포함 안함
 
                 outputStream.write(plainMessage.getBytes(StandardCharsets.UTF_8));
                 outputStream.flush();

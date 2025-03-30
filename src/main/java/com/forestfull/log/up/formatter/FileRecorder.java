@@ -41,7 +41,21 @@ public class FileRecorder {
      * @param dateFormat the date format for the log file
      */
     public void setDateFormat(String dateFormat) {
-        this.dateFormat = new SimpleDateFormat(dateFormat);
+        try {
+            this.dateFormat = new SimpleDateFormat(dateFormat);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            // TODO 에러 처리 메시지
+            this.dateFormat = new SimpleDateFormat(getDefaultDateFormat());
+        }
+    }
+
+    /**
+     * Sets the date format for the log file.
+     *
+     * @param dateFormat the date format for the log file
+     */
+    public void setDateFormat(SimpleDateFormat dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
     /**

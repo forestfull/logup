@@ -27,16 +27,16 @@ public class LogFormatter {
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat(getDefaultDateTimeFormat());
 
     public void setDateTimeFormat(String dateTimeFormat) {
-        this.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
+        try {
+            this.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            // TODO 에러 처리 메시지
+            this.dateTimeFormat = new SimpleDateFormat(getDefaultDateTimeFormat());
+        }
     }
 
-    /**
-     * Returns the default placeholder format string.
-     *
-     * @return the default placeholder format string
-     */
-    public static String getDefaultPlaceHolder() {
-        return MessagePattern.DEFAULT;
+    public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
+        this.dateTimeFormat = dateTimeFormat;
     }
 
     /**

@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "logup")
 public class LogUpProperties {
-    private Level level;
+    private Integer poolSize;
+    private Level level = Level.INFO; //default level
     @NestedConfigurationProperty
     private LogFormatter logFormat;
     @NestedConfigurationProperty
