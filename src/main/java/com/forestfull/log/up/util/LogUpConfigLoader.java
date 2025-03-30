@@ -138,7 +138,7 @@ public class LogUpConfigLoader {
         Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
         Log.LogFactory.console(System.lineSeparator() + " # Priority.2 - classpath: application.yml or (config/application.yml, config/application.yaml, application.yaml) " + System.lineSeparator());
         Log.LogFactory.console("logup:" + System.lineSeparator());
-        Log.LogFactory.console("  level: INFO # ALL, INFO, WARN, ERROR, OFF" + System.lineSeparator());
+        Log.LogFactory.console("  level: INFO # ALL, DEBUG, INFO, TEST(Plain Text), WARN, ERROR, OFF" + System.lineSeparator());
         Log.LogFactory.console("  log-format:" + System.lineSeparator());
         Log.LogFactory.console("    placeholder: \"" + LogFormatter.MessagePattern.DEFAULT + "\"" + System.lineSeparator());
         Log.LogFactory.console("    date-time-format: " + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator());
