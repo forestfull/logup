@@ -6,7 +6,6 @@ import oshi.hardware.CentralProcessor;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,8 +53,8 @@ public abstract class MessageFormatter {
                     messageFormatters[i] = new Level();
                     break;
 
-                case LogFormatter.MessagePattern.THREAD:
-                    messageFormatters[i] = new Thread();
+                case LogFormatter.MessagePattern.LOCATION:
+                    messageFormatters[i] = new SourceLocation();
                     break;
 
                 case LogFormatter.MessagePattern.MESSAGE:
@@ -118,15 +117,21 @@ public abstract class MessageFormatter {
 
         @Override
         public String call(final com.forestfull.log.up.Level level, final Object... args) {
-            return level.getColor() + (level == com.forestfull.log.up.Level.INFO | level == com.forestfull.log.up.Level.WARN ? ' ' : "") + level.name() + com.forestfull.log.up.Level.COLOR.RESET;
+            if (level == com.forestfull.log.up.Level.TEST)
+                return level.name();
+
+            return level.getColor() + level.name() + com.forestfull.log.up.Level.COLOR.RESET;
         }
     }
 
-    static class Thread extends MessageFormatter {
+    static class SourceLocation extends MessageFormatter {
         private static final String PID = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
 
         @Override
         public String call(final com.forestfull.log.up.Level level, final Object... args) {
+            if (level == com.forestfull.log.up.Level.TEST)
+                return "[PID:" + PID + "] " + java.lang.Thread.currentThread().getName();
+
             return com.forestfull.log.up.Level.COLOR.PURPLE +
                     "[PID:" + PID + "] " +
                     com.forestfull.log.up.Level.COLOR.RESET +
@@ -142,6 +147,9 @@ public abstract class MessageFormatter {
         String call(final com.forestfull.log.up.Level level, final Object... args) {
             StringBuilder message = new StringBuilder();
             for (Object arg : args) message.append(arg);
+
+            if (level == com.forestfull.log.up.Level.TEST)
+                return message.toString();
 
             return level.getColor() + message + com.forestfull.log.up.Level.OFF.getColor();
         }

@@ -1,8 +1,6 @@
 package com.forestfull.log.up.formatter;
 
 import lombok.*;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 
@@ -72,12 +70,7 @@ public class LogFormatter {
         /**
          * Placeholder for the thread that generated the log.
          */
-        public static final String THREAD = "{thread}";
-
-        /**
-         * Placeholder for the stack trace.
-         */
-        public static final String STACKTRACE = "{stacktrace}";
+        public static final String LOCATION = "{location}";
 
         /**
          * Placeholder for the log level.
@@ -94,6 +87,6 @@ public class LogFormatter {
         /**
          * Default log format combining date-time, level, thread, message, and a new line.
          */
-        public static final String DEFAULT = DATETIME + ' ' + CPU_TICK + ' ' + LEVEL + ' ' + THREAD + " - " + MESSAGE;
+        public static final String DEFAULT = DATETIME + ' ' + CPU_TICK + ' ' + LEVEL + ' ' + LOCATION + " - " + MESSAGE;
     }
 }

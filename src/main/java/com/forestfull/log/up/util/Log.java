@@ -2,7 +2,6 @@ package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
 import com.forestfull.log.up.formatter.FileRecorder;
-import com.forestfull.log.up.formatter.LogFormatter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
 
@@ -38,7 +37,7 @@ public class Log {
      * @return a LogFactory instance with stack trace information
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
-    public static Log.LogFactory stacktrace(Class<?> clazz, int currentSourceCodeLineNumber) {
+    public static Log.LogFactory location(Class<?> clazz, int currentSourceCodeLineNumber) {
         final String key = clazz.hashCode() + "-" + currentSourceCodeLineNumber;
         SourceInfo sourceInfo = sourceInfoMap.get(key);
 
@@ -59,6 +58,18 @@ public class Log {
         logFactory.setBuffer(System.lineSeparator() + sourceInfo.getSourceInfo());
 
         return logFactory;
+    }
+
+    /**
+     * Logs a debug message in a JUnit test.
+     * <p>Example.</p>
+     * <code>Log.test("your logging Message")</code>
+     *
+     * @param msg The message to log.
+     * @author <a href="https://vigfoot.com">Vigfoot</a>
+     */
+    public static void test(Object... msg) {
+        write(Level.TEST, msg);
     }
 
     /**
@@ -126,7 +137,7 @@ public class Log {
             logMessage.append(messageFormatter.call(level, messages));
 
         logMessage.append(System.lineSeparator());
-
+        
         LogFactory.console(logMessage.toString());
         if (LogUpFactoryBean.fileRecorder != null)
             LogFactory.file(logMessage.toString());
@@ -217,12 +228,28 @@ public class Log {
                 }
 
                 final FileOutputStream outputStream = new FileOutputStream(logFile, true);
-                outputStream.write((msg.getBytes(StandardCharsets.UTF_8)));
+                String plainMessage = msg.replaceAll("\\u001B\\[[0-9]+m", "");
+
+                outputStream.write(plainMessage.getBytes(StandardCharsets.UTF_8));
                 outputStream.flush();
                 outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace(System.err);
             }
+        }
+
+
+        /**
+         * Logs a debug message in a JUnit test.
+         *
+         * @param msg The message to log.
+         * @author <a href="https://vigfoot.com">Vigfoot</a>
+         */
+        public void test(Object... msg) {
+            final List<Object> msgList = new ArrayList<>(Arrays.asList(msg));
+            if (StringUtils.hasText(buffer)) msgList.add(buffer);
+
+            write(Level.TEST, msgList.toArray());
         }
 
         /**

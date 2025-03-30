@@ -23,6 +23,11 @@ public enum Level {
     ALL(COLOR.CYAN),
 
     /**
+     * Test Unit messages (development mode).
+     */
+    TEST(COLOR.EMPTY),
+
+    /**
      * Debug messages (low level).
      */
     DEBUG(COLOR.GREEN),
@@ -62,5 +67,6 @@ public enum Level {
         public static final String CYAN = "\u001B[36m";
         public static final String PURPLE = "\u001B[35m";
         public static final String WHITE = "\u001B[37m";
+        public static final String EMPTY = "";
     }
 }
