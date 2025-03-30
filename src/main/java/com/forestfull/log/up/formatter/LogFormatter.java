@@ -1,8 +1,8 @@
 package com.forestfull.log.up.formatter;
 
-import com.forestfull.log.up.Level;
 import com.forestfull.log.up.util.Log;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.text.SimpleDateFormat;
 
@@ -13,9 +13,7 @@ import java.text.SimpleDateFormat;
  */
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class LogFormatter extends Log {
+public class LogFormatter {
     /**
      * The format string for the log messages.
      */
@@ -32,7 +30,7 @@ public class LogFormatter extends Log {
         try {
             this.dateTimeFormat = new SimpleDateFormat(dateTimeFormat);
         } catch (NullPointerException | IllegalArgumentException e) {
-            writeWithoutMessageFormatter(Level.ERROR, "LogFormatter's DateTimeFormat changed to default pattern because the given date format pattern is invalid");
+            Log.LogFactory.builder().message("LogFormatter's DateTimeFormat changed to default pattern because the given date format pattern is invalid" + System.lineSeparator()).build().run();
             this.dateTimeFormat = new SimpleDateFormat(getDefaultDateTimeFormat());
         }
     }
@@ -72,7 +70,7 @@ public class LogFormatter extends Log {
         /**
          * Placeholder for the thread that generated the log.
          */
-        public static final String THREAD = "{location}";
+        public static final String THREAD = "{thread}";
 
         /**
          * Placeholder for the log level.

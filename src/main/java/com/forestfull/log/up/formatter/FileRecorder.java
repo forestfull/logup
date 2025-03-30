@@ -1,11 +1,8 @@
 package com.forestfull.log.up.formatter;
 
-import com.forestfull.log.up.Level;
 import com.forestfull.log.up.util.Log;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
 
@@ -16,9 +13,7 @@ import java.text.SimpleDateFormat;
  */
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class FileRecorder extends Log {
+public class FileRecorder {
     /**
      * The default format for the log file name.
      */
@@ -46,7 +41,7 @@ public class FileRecorder extends Log {
         try {
             this.dateFormat = new SimpleDateFormat(dateFormat);
         } catch (NullPointerException | IllegalArgumentException e) {
-            writeWithoutMessageFormatter(Level.ERROR, "FileRecorder's DateFormat changed to default pattern because the given date format pattern is invalid");
+            Log.LogFactory.builder().message("FileRecorder's DateFormat changed to default pattern because the given date format pattern is invalid" + System.lineSeparator()).build().run();
             this.dateFormat = new SimpleDateFormat(getDefaultDateFormat());
         }
     }
@@ -66,7 +61,7 @@ public class FileRecorder extends Log {
      * @return the default placeholder string
      */
     public static String getDefaultPlaceHolder() {
-        return FileRecorder.FilePattern.PROJECT_NAME + "{date}.log";
+        return FileRecorder.FilePattern.DEFAULT;
     }
 
     /**

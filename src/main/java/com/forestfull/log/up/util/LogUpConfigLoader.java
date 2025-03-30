@@ -49,7 +49,7 @@ public class LogUpConfigLoader {
         // 설정 파일 로드
         injectPropertySources(activeProfile, propertySources);
 
-        return Binder.get(environment).bind("logup", Bindable.of(LogUpProperties.class)).orElse(null);
+        return Binder.get(environment).bind("logup", Bindable.of(LogUpProperties.class)).orElseThrow(NoClassDefFoundError::new);
     }
 
     /**
@@ -125,33 +125,36 @@ public class LogUpConfigLoader {
 
 
     static void loggingInitializeManual() {
-        Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
-        Log.LogFactory.console("LogUp Setting Example");
-        Log.LogFactory.console(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.1 - classpath: application.properties or (config/application.properties)" + System.lineSeparator());
-        Log.LogFactory.console("logup.level=INFO" + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.placeholder=" + LogFormatter.MessagePattern.DEFAULT + System.lineSeparator());
-        Log.LogFactory.console("logup.log-format.date-time-format=" + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator());
-        Log.LogFactory.console("logup.file-record.directory=log/" + System.lineSeparator());
-        Log.LogFactory.console("logup.file-record.placeholder=" + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator());
-        Log.LogFactory.console("logup.file-record.date-format=" + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator());
-        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.2 - classpath: application.yml or (config/application.yml, config/application.yaml, application.yaml) " + System.lineSeparator());
-        Log.LogFactory.console("logup:" + System.lineSeparator());
-        Log.LogFactory.console("  level: INFO # ALL, DEBUG, INFO, TEST(Plain Text), WARN, ERROR, OFF" + System.lineSeparator());
-        Log.LogFactory.console("  log-format:" + System.lineSeparator());
-        Log.LogFactory.console("    placeholder: \"" + LogFormatter.MessagePattern.DEFAULT + "\"" + System.lineSeparator());
-        Log.LogFactory.console("    date-time-format: " + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator());
-        Log.LogFactory.console("  file-record:" + System.lineSeparator());
-        Log.LogFactory.console("    directory: log/ # is default" + System.lineSeparator());
-        Log.LogFactory.console("    placeholder: " + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator());
-        Log.LogFactory.console("    date-format: " + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator());
-        Log.LogFactory.console("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator());
-        Log.LogFactory.console(System.lineSeparator() + " # Priority.3 - source code" + System.lineSeparator());
-        Log.LogFactory.console("LogUpFactoryBean.builder()" + System.lineSeparator());
-        Log.LogFactory.console("                    .level(Level.INFO)" + System.lineSeparator());
-        Log.LogFactory.console("                    .logFormatter(LogFormatter.builder().build())" + System.lineSeparator());
-        Log.LogFactory.console("                    .fileRecorder(FileRecorder.builder().build())" + System.lineSeparator());
-        Log.LogFactory.console("                    .build();" + System.lineSeparator() + System.lineSeparator());
+        Log.LogFactory.builder().message(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("LogUp Setting Example").build().run();
+        Log.LogFactory.builder().message(System.lineSeparator() + "=================================================================================================================================================================" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message(System.lineSeparator() + " # Priority.1 - classpath: application.properties or (config/application.properties)" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup.level=INFO" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup.pool-size=0" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup.log-format.placeholder=" + LogFormatter.MessagePattern.DEFAULT + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup.log-format.date-time-format=" + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup.file-record.directory=log/" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup.file-record.placeholder=" + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup.file-record.date-format=" + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message(System.lineSeparator() + " # Priority.2 - classpath: application.yml or (config/application.yml, config/application.yaml, application.yaml) " + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("logup:" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("  level: INFO # ALL, DEBUG, INFO, TEST(Plain Text), WARN, ERROR, OFF" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("  pool-size: 0 # async = pool-size > 0 , sync pool-size == 0 || pool-size == null" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("  log-format:" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("    placeholder: \"" + LogFormatter.MessagePattern.DEFAULT + "\"" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("    date-time-format: " + LogFormatter.getDefaultDateTimeFormat() + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("  file-record:" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("    directory: log/ # is default" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("    placeholder: " + FileRecorder.getDefaultPlaceHolder() + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("    date-format: " + FileRecorder.getDefaultDateFormat() + System.lineSeparator() + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("-----------------------------------------------------------------------------------------------------------------------------------------------------------------" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message(System.lineSeparator() + " # Priority.3 - source code" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("LogUpFactoryBean.builder()" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("                    .level(Level.INFO)" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("                    .poolSize(0)" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("                    .logFormatter(LogFormatter.builder().build())" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("                    .fileRecorder(FileRecorder.builder().build())" + System.lineSeparator()).build().run();
+        Log.LogFactory.builder().message("                    .start();" + System.lineSeparator() + System.lineSeparator()).build().run();
     }
 }

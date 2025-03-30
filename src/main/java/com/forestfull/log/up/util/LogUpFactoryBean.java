@@ -8,6 +8,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * LogUp's general Configuration (LogUp 전역 환경 설정)
@@ -26,31 +28,30 @@ import java.util.Optional;
  * @see Log
  */
 public class LogUpFactoryBean {
-    static LogUpProperties logUpProperties;
-    static MessageFormatter[] messageFormatter;
+    static LogUpProperties logUpProperties = null;
+    static MessageFormatter[] messageFormatter = null;
+    static ExecutorService threadPool = null;
 
     static {
         initialize();
+
     }
 
     protected static void initialize() {
-        if (configureProperties() == null) {
-            LogUpConfigLoader.loggingInitializeManual();
+        configureProperties();
 
-        } else {
-            final String[] splitWithDelimiter = MessageFormatter.splitWithDelimiter(logUpProperties.getLogFormat().getPlaceholder());
-            LogUpFactoryBean.messageFormatter = MessageFormatter.replaceMatchPlaceholder(splitWithDelimiter);
-
-        }
+        final String[] splitWithDelimiter = MessageFormatter.splitWithDelimiter(LogUpFactoryBean.logUpProperties.getLogFormat().getPlaceholder());
+        LogUpFactoryBean.messageFormatter = MessageFormatter.replaceMatchPlaceholder(splitWithDelimiter);
     }
 
-    private static LogUpProperties configureProperties() {
+    private static void configureProperties() {
+        LogUpProperties logUpProperties;
         try {
-            LogUpFactoryBean.logUpProperties = LogUpConfigLoader.loadConfig();
+            logUpProperties = LogUpConfigLoader.loadConfig();
         } catch (NoClassDefFoundError ignore) {
+            logUpProperties = new LogUpProperties();
+            LogUpConfigLoader.loggingInitializeManual();
         }
-
-        if (LogUpFactoryBean.logUpProperties == null) return null;
 
         final Optional<LogFormatter> logFormatOptional = Optional.ofNullable(logUpProperties.getLogFormat());
         final LogFormatter logFormatter = LogFormatter.builder().build(); // TIP: 초기 기본값은 builder에서 지정
@@ -73,14 +74,12 @@ public class LogUpFactoryBean {
             if (StringUtils.hasText(fileRecord.getPlaceholder())) fileRecorder.setDirectory(fileRecord.getPlaceholder());
         }
 
-        LogUpFactoryBean.builder()
+        LogUpFactoryBean.logUpProperties = LogUpFactoryBean.builder()
                 .level(logUpProperties.getLevel())
                 .poolSize(logUpProperties.getPoolSize())
                 .logFormatter(logFormatter)
                 .fileRecorder(fileRecorder)
                 .start();
-
-        return LogUpFactoryBean.logUpProperties;
     }
 
     public static LogUpFactoryBeanBuilder builder() {
@@ -141,13 +140,13 @@ public class LogUpFactoryBean {
             try {
                 this.level = Level.valueOf(String.valueOf(level).toUpperCase());
             } catch (IllegalArgumentException e) {
-                Log.writeWithoutMessageFormatter(Level.ERROR, "not a valid level: " + level);
+                Log.LogFactory.builder().message("not a valid level: " + level + System.lineSeparator()).build().run();
                 this.level = Level.ALL;
             }
             return this;
         }
 
-        public LogUpFactoryBeanBuilder poolSize(final int poolSize) {
+        public LogUpFactoryBeanBuilder poolSize(final Integer poolSize) {
             this.poolSize = poolSize;
             return this;
         }
@@ -155,19 +154,26 @@ public class LogUpFactoryBean {
         /**
          * <b>core method</b> of properties's configuration
          */
-        public void start() {
+        public LogUpProperties start() {
             if (LogUpFactoryBean.logUpProperties != null) {
-                Log.writeWithoutMessageFormatter(Level.ERROR, "LogUp already started");
-                return;
+                Log.LogFactory.builder().message("LogUp already started" + System.lineSeparator()).build().run();
+                return LogUpFactoryBean.logUpProperties;
             }
 
             final LogUpProperties properties = new LogUpProperties();
             properties.setLevel(this.level);
-            properties.setPoolSize(this.poolSize);
             properties.setLogFormat(this.logFormatter);
             properties.setFileRecord(this.fileRecorder);
 
-            LogUpFactoryBean.logUpProperties = properties;
+            if (Objects.nonNull(this.poolSize) && this.poolSize > 0) {
+                LogUpFactoryBean.threadPool = Executors.newFixedThreadPool(this.poolSize);
+
+            } else {
+                Log.singleLogFactory = Log.LogFactory.builder().build();
+
+            }
+
+            return properties;
         }
     }
 }

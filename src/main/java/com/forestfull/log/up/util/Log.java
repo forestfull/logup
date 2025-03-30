@@ -2,13 +2,15 @@ package com.forestfull.log.up.util;
 
 import com.forestfull.log.up.Level;
 import com.forestfull.log.up.formatter.FileRecorder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * A utility class for logging messages at different levels (INFO, WARN, ERROR).
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
  */
 public class Log {
 
+    static LogFactory singleLogFactory = null;
     private static final Map<String, SourceInfo> sourceInfoMap = new HashMap<>();
 
     private Log() {
@@ -140,9 +143,14 @@ public class Log {
 
         logMessage.append(System.lineSeparator());
 
-        LogFactory.console(logMessage.toString());
-        if (LogUpFactoryBean.logUpProperties.getFileRecord() != null)
-            LogFactory.file(logMessage.toString());
+        if (LogUpFactoryBean.threadPool == null) {
+            singleLogFactory.setMessage(logMessage.toString());
+            singleLogFactory.run();
+
+        } else {
+            LogUpFactoryBean.threadPool.submit(LogFactory.builder().message(logMessage.toString()).build());
+
+        }
     }
 
     protected static void writeWithoutMessageFormatter(final Level level, final Object... messages) {
@@ -157,9 +165,15 @@ public class Log {
 
         logMessage.append(System.lineSeparator());
 
-        LogFactory.console(logMessage.toString());
-        if (LogUpFactoryBean.logUpProperties.getFileRecord() != null)
-            LogFactory.file(logMessage.toString());
+        if (LogUpFactoryBean.threadPool == null) {
+            singleLogFactory.setMessage(logMessage.toString());
+            singleLogFactory.run();
+
+        } else {
+            LogUpFactoryBean.threadPool.submit(LogFactory.builder().message(logMessage.toString()).build());
+
+        }
+
     }
 
     /**
@@ -168,8 +182,18 @@ public class Log {
      * @author <a href="https://vigfoot.com">Vigfoot</a>
      */
     @Setter
-    public static class LogFactory {
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LogFactory implements Runnable {
         private String buffer;
+        private String message;
+
+        @Override
+        public void run() {
+            console(message);
+            if (LogUpFactoryBean.logUpProperties != null && LogUpFactoryBean.logUpProperties.getFileRecord() != null) file(message);
+        }
 
         /**
          * Outputs the log message to the console.
@@ -177,7 +201,7 @@ public class Log {
          * @param msg The log message to output.
          * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
-        protected static void console(final String msg) {
+        protected synchronized void console(final String msg) {
             final Writer fdOut = new PrintWriter(new FileWriter(FileDescriptor.out));
 
             try {
@@ -194,7 +218,7 @@ public class Log {
          * @param msg The log message to output.
          * @author <a href="https://vigfoot.com">Vigfoot</a>
          */
-        protected static void file(String msg) {
+        protected synchronized void file(String msg) {
             final FileRecorder fileRecorder = LogUpFactoryBean.logUpProperties.getFileRecord(); // readonly
 
             String logFileDirectory = fileRecorder.getDirectory();
@@ -310,11 +334,11 @@ public class Log {
             write(Level.ERROR, msgList.toArray());
         }
 
-        protected static void initConsole() {
+        protected static synchronized void initConsole() {
             LogUpFactoryBean.initialize(); // touch
-            console("=================================================================================================================================================================" + System.lineSeparator());
-            console("Log Up by forest full's vigfoot" + System.lineSeparator());
-            console("=================================================================================================================================================================" + System.lineSeparator());
+            LogFactory.builder().message("=================================================================================================================================================================" + System.lineSeparator()).build().run();
+            LogFactory.builder().message("Log Up by forest full's vigfoot" + System.lineSeparator()).build().run();
+            LogFactory.builder().message("=================================================================================================================================================================" + System.lineSeparator()).build().run();
         }
     }
 }

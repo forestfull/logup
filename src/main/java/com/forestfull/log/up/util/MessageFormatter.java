@@ -79,7 +79,6 @@ public abstract class MessageFormatter {
     }
 
     static class CPUTick extends MessageFormatter {
-
         private static final CentralProcessor processor = new SystemInfo().getHardware().getProcessor();
         private static final long MINIMUM_MILLISECONDS = 1000L;
 
@@ -88,7 +87,7 @@ public abstract class MessageFormatter {
         private static String cpu_usage = "/----------/";
 
         @Override
-        String call(com.forestfull.log.up.Level level, Object... args) {
+        synchronized String call(com.forestfull.log.up.Level level, Object... args) {
             if (System.currentTimeMillis() - prevTimeMilliSeconds < MINIMUM_MILLISECONDS) return cpu_usage;
 
             long totalCpu = 0;
@@ -128,7 +127,7 @@ public abstract class MessageFormatter {
         private static final String PID = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
 
         @Override
-        public String call(final com.forestfull.log.up.Level level, final Object... args) {
+        public synchronized String call(final com.forestfull.log.up.Level level, final Object... args) {
             if (level == com.forestfull.log.up.Level.TEST)
                 return "[PID:" + PID + "] " + java.lang.Thread.currentThread().getName();
 
@@ -164,7 +163,7 @@ public abstract class MessageFormatter {
         }
 
         @Override
-        String call(final com.forestfull.log.up.Level level, final Object... args) {
+        synchronized String call(final com.forestfull.log.up.Level level, final Object... args) {
             return this.mime;
         }
     }
